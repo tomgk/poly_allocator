@@ -8,3 +8,4 @@ add_library(poly-allocator STATIC
   arena_allocator.hpp
 )
 target_include_directories(poly-allocator PUBLIC .)
+set_target_properties(poly-allocator PROPERTIES LINKER_LANGUAGE CXX)
