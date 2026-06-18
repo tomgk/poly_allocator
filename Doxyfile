@@ -2,7 +2,7 @@ PROJECT_NAME           = "poly_allocator"
 PROJECT_BRIEF          = "A high-performance growth-based arena allocator for C++"
 PROJECT_LOGO           = 
 
-OUTPUT_DIRECTORY       = ./docs
+OUTPUT_DIRECTORY       = .
 CREATE_SUBDIRS         = NO
 
 QUIET                  = NO
