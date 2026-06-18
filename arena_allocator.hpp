@@ -5,9 +5,13 @@
 #include <cstring>
 #include <cassert>
 #include <new>
+#include <typeinfo>
 
 /**
  * ArenaAllocator: A growth-based arena allocator that stores objects in a std::vector<std::byte>.
+ * 
+ * Template parameter:
+ * - StoreTypeInfo: If true, stores type information for each allocation (default: false)
  * 
  * Properties:
  * - Objects are stored contiguously with proper alignment
@@ -15,13 +19,24 @@
  * - All objects are moved to the new vector with proper construction/destruction
  * - Destroyed objects leave gaps but remain in place
  * - Each allocation tracks whether the object is still alive via a flag
+ * - Optional type information storage for runtime type checking
  */
+template <bool StoreTypeInfo = false>
 class ArenaAllocator {
 private:
     struct AllocationHeader {
         std::size_t size;      // Size of the actual object (excluding header)
         bool is_alive;         // Flag indicating if object is still alive
         void (*destructor)(void*); // Destructor function pointer
+        
+        // Conditionally include type info pointer
+        std::conditional_t<StoreTypeInfo, const std::type_info*, struct {} > type_info;
+        
+        AllocationHeader() : size(0), is_alive(false), destructor(nullptr) {
+            if constexpr (StoreTypeInfo) {
+                type_info = nullptr;
+            }
+        }
     };
 
     static constexpr std::size_t INITIAL_CAPACITY = 256;
@@ -158,6 +173,11 @@ public:
         header.destructor = [](void* ptr) {
             reinterpret_cast<T*>(ptr)->~T();
         };
+        
+        // Store type information if enabled
+        if constexpr (StoreTypeInfo) {
+            header.type_info = &typeid(T);
+        }
 
         // Construct object in place with forwarded arguments
         T* obj = new (buffer.data() + object_offset) T(std::forward<Args>(args)...);
@@ -195,6 +215,31 @@ public:
         }
 
         assert(false && "Object not found in arena");
+    }
+
+    /**
+     * Get type information for an allocated object (only available if StoreTypeInfo is true)
+     */
+    template <typename T>
+    const std::type_info* get_type_info(T* ptr) const 
+        requires StoreTypeInfo
+    {
+        if (!ptr) return nullptr;
+
+        std::size_t offset = 0;
+        while (offset < current_offset) {
+            AllocationHeader& header = get_header(offset);
+            std::size_t object_size = header.size;
+            std::byte* object_ptr = get_object_pointer(offset);
+
+            if (object_ptr == reinterpret_cast<std::byte*>(ptr)) {
+                return header.type_info;
+            }
+
+            offset += HEADER_SIZE + object_size;
+        }
+
+        return nullptr;
     }
 
     /**
