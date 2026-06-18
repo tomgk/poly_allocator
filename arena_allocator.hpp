@@ -1,12 +1,13 @@
-#pragma once
+//#pragma once
 
-#include <vector>
-#include <memory>
-#include <cstring>
-#include <cassert>
-#include <new>
-#include <typeinfo>
-#include <iterator>
+#include<vector>
+#include<memory>
+#include<cstring>
+#include<cassert>
+#include<new>
+#include<typeinfo>
+#include<iterator>
+#include<variant>
 
 /**
  * @brief A growth-based arena allocator that stores objects in contiguous memory.
@@ -26,6 +27,23 @@
  */
 template <bool StoreTypeInfo = false>
 class ArenaAllocator {
+private:
+    /**
+     * @brief Metadata stored before each allocation.
+     */
+    struct AllocationHeader {
+        std::size_t size;                           ///< Size of the actual object (excluding header)
+        bool is_alive;                              ///< Flag indicating if object is still alive
+        void (*destructor)(void*);                  ///< Function pointer to object's destructor
+        [[no_unique_address]]
+        std::conditional_t<StoreTypeInfo, const std::type_info*, std::monostate > type_info;  ///< Optional: RTTI information
+
+        AllocationHeader() : size(0), is_alive(false), destructor(nullptr) {
+            if constexpr (StoreTypeInfo) {
+                type_info = nullptr;
+            }
+        }
+    };
 public:
     /**
      * @brief Forward iterator for traversing alive allocations in the arena.
@@ -43,9 +61,10 @@ public:
         using iterator_category = std::forward_iterator_tag;
 
     private:
+
         friend class ArenaAllocator;
         
-        const ArenaAllocator* arena;
+        ArenaAllocator* arena;
         std::size_t offset;
 
         /**
@@ -54,7 +73,7 @@ public:
          * @param offset Byte offset in the buffer
          * @param find_alive If true, advance to first alive allocation
          */
-        Iterator(const ArenaAllocator* arena, std::size_t offset, bool find_alive)
+        Iterator(ArenaAllocator* arena, std::size_t offset, bool find_alive)
             : arena(arena), offset(offset) {
             if (find_alive) {
                 advance_to_next_alive();
@@ -132,6 +151,15 @@ public:
             return arena->get_header(offset);
         }
 
+        template<typename T>
+        T& get() requires StoreTypeInfo
+        {
+            if(typeid(T) != *get_header().type_info)
+                throw std::invalid_argument("wrong type");
+
+            return *reinterpret_cast<T*>(arena->get_object_pointer(offset));
+        }
+
         /**
          * @brief Get the size of the current allocation.
          * @return Size of the allocated object in bytes
@@ -142,22 +170,6 @@ public:
     };
 
 private:
-    /**
-     * @brief Metadata stored before each allocation.
-     */
-    struct AllocationHeader {
-        std::size_t size;                           ///< Size of the actual object (excluding header)
-        bool is_alive;                              ///< Flag indicating if object is still alive
-        void (*destructor)(void*);                  ///< Function pointer to object's destructor
-        std::conditional_t<StoreTypeInfo, const std::type_info*, struct {} > type_info;  ///< Optional: RTTI information
-
-        AllocationHeader() : size(0), is_alive(false), destructor(nullptr) {
-            if constexpr (StoreTypeInfo) {
-                type_info = nullptr;
-            }
-        }
-    };
-
     static constexpr std::size_t INITIAL_CAPACITY = 256;    ///< Initial buffer capacity
     static constexpr std::size_t HEADER_SIZE = sizeof(AllocationHeader);
 
@@ -421,7 +433,7 @@ public:
      * @brief Get an iterator to the first alive allocation.
      * @return Iterator positioned at the first alive allocation
      */
-    Iterator begin() const {
+    Iterator begin() {
         return Iterator(this, 0, true);
     }
 
@@ -429,7 +441,7 @@ public:
      * @brief Get an iterator past the last allocation.
      * @return Iterator positioned at current_offset (end sentinel)
      */
-    Iterator end() const {
+    Iterator end() {
         return Iterator(this, current_offset, false);
     }
 

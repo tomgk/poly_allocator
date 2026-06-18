@@ -9,3 +9,8 @@ add_library(poly-allocator STATIC
 )
 target_include_directories(poly-allocator PUBLIC .)
 set_target_properties(poly-allocator PROPERTIES LINKER_LANGUAGE CXX)
+
+add_library(poly-allocator-test STATIC
+  arena_allocator_test.cpp
+)
+target_link_libraries(poly-allocator-test poly-allocator)
