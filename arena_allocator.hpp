@@ -6,6 +6,7 @@
 #include <cassert>
 #include <new>
 #include <typeinfo>
+#include <iterator>
 
 /**
  * ArenaAllocator: A growth-based arena allocator that stores objects in a std::vector<std::byte>.
@@ -20,9 +21,91 @@
  * - Destroyed objects leave gaps but remain in place
  * - Each allocation tracks whether the object is still alive via a flag
  * - Optional type information storage for runtime type checking
+ * - Iterable over alive allocations
  */
 template <bool StoreTypeInfo = false>
 class ArenaAllocator {
+public:
+    /**
+     * Iterator for traversing alive allocations
+     */
+    class Iterator {
+    public:
+        using difference_type = std::ptrdiff_t;
+        using value_type = void*;
+        using pointer = void**;
+        using reference = void*&;
+        using iterator_category = std::forward_iterator_tag;
+
+    private:
+        friend class ArenaAllocator;
+        
+        const ArenaAllocator* arena;
+        std::size_t offset;
+
+        Iterator(const ArenaAllocator* arena, std::size_t offset)
+            : arena(arena), offset(offset) {
+            // Skip to the first alive allocation
+            advance_to_next_alive();
+        }
+
+        void advance_to_next_alive() {
+            while (offset < arena->current_offset) {
+                const AllocationHeader& header = arena->get_header(offset);
+                if (header.is_alive) {
+                    break;
+                }
+                offset += HEADER_SIZE + header.size;
+            }
+        }
+
+    public:
+        Iterator(const Iterator&) = default;
+        Iterator& operator=(const Iterator&) = default;
+
+        bool operator==(const Iterator& other) const {
+            return offset == other.offset;
+        }
+
+        bool operator!=(const Iterator& other) const {
+            return offset != other.offset;
+        }
+
+        void* operator*() const {
+            if (offset >= arena->current_offset) return nullptr;
+            return reinterpret_cast<void*>(arena->get_object_pointer(offset));
+        }
+
+        Iterator& operator++() {
+            if (offset < arena->current_offset) {
+                const AllocationHeader& header = arena->get_header(offset);
+                offset += HEADER_SIZE + header.size;
+                advance_to_next_alive();
+            }
+            return *this;
+        }
+
+        Iterator operator++(int) {
+            Iterator temp = *this;
+            ++(*this);
+            return temp;
+        }
+
+        /**
+         * Get the header for the current allocation
+         */
+        const AllocationHeader& get_header() const {
+            return arena->get_header(offset);
+        }
+
+        /**
+         * Get the size of the current allocation
+         */
+        std::size_t get_size() const {
+            return arena->get_header(offset).size;
+        }
+    };
+
 private:
     struct AllocationHeader {
         std::size_t size;      // Size of the actual object (excluding header)
@@ -59,10 +142,18 @@ private:
         return *reinterpret_cast<AllocationHeader*>(buffer.data() + offset);
     }
 
+    const AllocationHeader& get_header(std::size_t offset) const {
+        return *reinterpret_cast<const AllocationHeader*>(buffer.data() + offset);
+    }
+
     /**
      * Get the object pointer given the offset (points to data after header)
      */
     std::byte* get_object_pointer(std::size_t offset) {
+        return buffer.data() + offset + HEADER_SIZE;
+    }
+
+    const std::byte* get_object_pointer(std::size_t offset) const {
         return buffer.data() + offset + HEADER_SIZE;
     }
 
@@ -240,6 +331,20 @@ public:
         }
 
         return nullptr;
+    }
+
+    /**
+     * Get iterator to the first alive allocation
+     */
+    Iterator begin() const {
+        return Iterator(this, 0);
+    }
+
+    /**
+     * Get iterator past the last allocation
+     */
+    Iterator end() const {
+        return Iterator(this, current_offset);
     }
 
     /**
