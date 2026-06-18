@@ -127,13 +127,11 @@ public:
     }
 
     /**
-     * Allocate memory for an object of type T
+     * Allocate memory for an object of type T and construct it with the given arguments
      * Returns a pointer to the allocated object
      */
-    template <typename T>
-    T* allocate() {
-        static_assert(std::is_default_constructible_v<T>, "T must be default constructible");
-
+    template <typename T, typename... Args>
+    T* allocate(Args&&... args) {
         // Calculate required space: header + alignment padding + object
         std::size_t header_offset = current_offset;
         std::size_t object_offset = align_offset(header_offset + HEADER_SIZE, alignof(T));
@@ -161,8 +159,8 @@ public:
             reinterpret_cast<T*>(ptr)->~T();
         };
 
-        // Construct object in place
-        T* obj = new (buffer.data() + object_offset) T();
+        // Construct object in place with forwarded arguments
+        T* obj = new (buffer.data() + object_offset) T(std::forward<Args>(args)...);
 
         // Update offset
         current_offset = object_offset + sizeof(T);
