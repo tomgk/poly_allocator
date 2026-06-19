@@ -301,7 +301,8 @@ public:
     /**
      * @brief Construct an empty arena allocator.
      */
-    ArenaAllocator() {
+    ArenaAllocator()
+    {
         buffer.reserve(INITIAL_CAPACITY);
     }
 
@@ -319,14 +320,16 @@ public:
      * @note The returned pointer is valid until the next reallocation
      */
     template <typename T, typename... Args>
-    T* allocate(Args&&... args) {
+    T* allocate(Args&&... args)
+    {
         // Calculate required space: header + alignment padding + object
         std::size_t header_offset = current_offset;
         std::size_t object_offset = align_offset(header_offset + HEADER_SIZE, alignof(T));
         std::size_t required_size = object_offset - header_offset + sizeof(T);
 
         // Check if reallocation is needed
-        if (current_offset + required_size > buffer.capacity()) {
+        if (current_offset + required_size > buffer.capacity())
+        {
             reallocate(required_size);
             // Recalculate offsets after reallocation
             header_offset = current_offset;
@@ -334,7 +337,8 @@ public:
         }
 
         // Ensure buffer is large enough
-        if (buffer.size() < object_offset + sizeof(T)) {
+        if (buffer.size() < object_offset + sizeof(T))
+        {
             buffer.resize(object_offset + sizeof(T));
         }
 
@@ -343,12 +347,14 @@ public:
             buffer.data() + header_offset);
         header.size = sizeof(T);
         header.is_alive = true;
-        header.destructor = [](void* ptr) {
+        header.destructor = [](void* ptr)
+        {
             reinterpret_cast<T*>(ptr)->~T();
         };
         
         // Store type information if enabled
-        if constexpr (StoreTypeInfo) {
+        if constexpr (StoreTypeInfo)
+        {
             header.type_info = &typeid(T);
         }
 
@@ -373,19 +379,23 @@ public:
      * @note Must be called with a pointer returned by allocate() on this allocator
      */
     template <typename T>
-    void deallocate(T* ptr) {
+    void deallocate(T* ptr)
+    {
         if (!ptr) return;
 
         // Find the object and mark it as dead, but don't move anything
         std::size_t offset = 0;
-        while (offset < current_offset) {
+        while (offset < current_offset)
+        {
             AllocationHeader& header = get_header(offset);
             std::size_t object_size = header.size;
             std::byte* object_ptr = get_object_pointer(offset);
 
-            if (object_ptr == reinterpret_cast<std::byte*>(ptr)) {
+            if (object_ptr == reinterpret_cast<std::byte*>(ptr))
+            {
                 // Call destructor and mark as dead
-                if (header.is_alive && header.destructor) {
+                if (header.is_alive && header.destructor)
+                {
                     header.destructor(object_ptr);
                 }
                 header.is_alive = false;
@@ -414,7 +424,8 @@ public:
         if (!ptr) return nullptr;
 
         std::size_t offset = 0;
-        while (offset < current_offset) {
+        while (offset < current_offset)
+        {
             const AllocationHeader& header = get_header(offset);
             std::size_t object_size = header.size;
             const std::byte* object_ptr = get_object_pointer(offset);
@@ -432,7 +443,8 @@ public:
      * @brief Get an iterator to the first alive allocation.
      * @return Iterator positioned at the first alive allocation
      */
-    Iterator begin() {
+    Iterator begin()
+    {
         return Iterator(this, 0, true);
     }
 
@@ -440,7 +452,8 @@ public:
      * @brief Get an iterator past the last allocation.
      * @return Iterator positioned at current_offset (end sentinel)
      */
-    Iterator end() {
+    Iterator end()
+    {
         return Iterator(this, current_offset, false);
     }
 
@@ -451,7 +464,8 @@ public:
      * 
      * @return Number of bytes currently used in the buffer
      */
-    std::size_t get_used_bytes() const {
+    std::size_t get_used_bytes() const
+    {
         return current_offset;
     }
 
@@ -459,7 +473,8 @@ public:
      * @brief Get the current buffer capacity in bytes.
      * @return Total capacity of the underlying buffer
      */
-    std::size_t get_capacity() const {
+    std::size_t get_capacity() const
+    {
         return buffer.capacity();
     }
 
@@ -469,13 +484,16 @@ public:
      * Calls destructors for all alive objects and resets the allocator to empty state.
      * The buffer is cleared but not deallocated (capacity is reset).
      */
-    void clear() {
+    void clear()
+    {
         std::size_t offset = 0;
-        while (offset < current_offset) {
+        while (offset < current_offset)
+        {
             AllocationHeader& header = get_header(offset);
             std::size_t object_size = header.size;
 
-            if (header.is_alive && header.destructor) {
+            if (header.is_alive && header.destructor)
+            {
                 header.destructor(get_object_pointer(offset));
             }
 
@@ -488,7 +506,8 @@ public:
     /**
      * @brief Destructor that clears all allocations.
      */
-    ~ArenaAllocator() {
+    ~ArenaAllocator()
+    {
         clear();
     }
 };
