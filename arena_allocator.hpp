@@ -316,9 +316,7 @@ private:
             std::size_t object_size = header.size;
 
             if (header.is_alive && header.destructor)
-            {
                 header.destructor(get_object_pointer(offset));
-            }
 
             offset += HEADER_SIZE + object_size;
         }
