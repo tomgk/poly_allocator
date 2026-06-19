@@ -26,7 +26,8 @@
  * @note When StoreTypeInfo is false, no runtime overhead is incurred for type tracking.
  */
 template <bool StoreTypeInfo = false>
-class ArenaAllocator {
+class ArenaAllocator
+{
 private:
     /**
      * @brief Metadata stored before each allocation.
@@ -38,8 +39,10 @@ private:
         [[no_unique_address]]
         std::conditional_t<StoreTypeInfo, const std::type_info*, std::monostate > type_info;  ///< Optional: RTTI information
 
-        AllocationHeader() : size(0), is_alive(false), destructor(nullptr) {
-            if constexpr (StoreTypeInfo) {
+        AllocationHeader() : size(0), is_alive(false), destructor(nullptr)
+        {
+            if constexpr (StoreTypeInfo)
+            {
                 type_info = nullptr;
             }
         }
@@ -74,8 +77,10 @@ public:
          * @param find_alive If true, advance to first alive allocation
          */
         Iterator(ArenaAllocator* arena, std::size_t offset, bool find_alive)
-            : arena(arena), offset(offset) {
-            if (find_alive) {
+            : arena(arena), offset(offset)
+        {
+            if (find_alive)
+            {
                 advance_to_next_alive();
             }
         }
@@ -83,12 +88,14 @@ public:
         /**
          * @brief Advance offset to the next alive allocation.
          */
-        void advance_to_next_alive() {
-            while (offset < arena->current_offset) {
+        void advance_to_next_alive()
+        {
+            while (offset < arena->current_offset)
+            {
                 const AllocationHeader& header = arena->get_header(offset);
-                if (header.is_alive) {
+                if (header.is_alive)
                     break;
-                }
+
                 offset += HEADER_SIZE + header.size;
             }
         }
@@ -100,14 +107,16 @@ public:
         /**
          * @brief Check equality of two iterators.
          */
-        bool operator==(const Iterator& other) const {
+        bool operator==(const Iterator& other) const
+        {
             return offset == other.offset;
         }
 
         /**
          * @brief Check inequality of two iterators.
          */
-        bool operator!=(const Iterator& other) const {
+        bool operator!=(const Iterator& other) const
+        {
             return offset != other.offset;
         }
 
@@ -115,7 +124,8 @@ public:
          * @brief Dereference iterator to get void pointer to current allocation.
          * @return Pointer to the allocated object, or nullptr if at end
          */
-        void* operator*() const {
+        void* operator*() const
+        {
             if (offset >= arena->current_offset) return nullptr;
             return reinterpret_cast<void*>(arena->get_object_pointer(offset));
         }
@@ -124,8 +134,10 @@ public:
          * @brief Pre-increment operator.
          * @return Reference to this iterator after advancing
          */
-        Iterator& operator++() {
-            if (offset < arena->current_offset) {
+        Iterator& operator++()
+        {
+            if (offset < arena->current_offset)
+            {
                 const AllocationHeader& header = arena->get_header(offset);
                 offset += HEADER_SIZE + header.size;
                 advance_to_next_alive();
@@ -137,7 +149,8 @@ public:
          * @brief Post-increment operator.
          * @return Copy of iterator before advancing
          */
-        Iterator operator++(int) {
+        Iterator operator++(int)
+        {
             Iterator temp = *this;
             ++(*this);
             return temp;
@@ -147,7 +160,8 @@ public:
          * @brief Get the allocation header for the current object.
          * @return Reference to the AllocationHeader
          */
-        const AllocationHeader& get_header() const {
+        const AllocationHeader& get_header() const
+        {
             return arena->get_header(offset);
         }
 
@@ -164,7 +178,8 @@ public:
          * @brief Get the size of the current allocation.
          * @return Size of the allocated object in bytes
          */
-        std::size_t get_size() const {
+        std::size_t get_size() const
+        {
             return arena->get_header(offset).size;
         }
     };
@@ -182,7 +197,8 @@ private:
      * @param alignment Required alignment in bytes
      * @return Aligned offset
      */
-    static std::size_t align_offset(std::size_t offset, std::size_t alignment) {
+    static std::size_t align_offset(std::size_t offset, std::size_t alignment)
+    {
         return (offset + alignment - 1) & ~(alignment - 1);
     }
 
@@ -191,7 +207,8 @@ private:
      * @param offset Byte offset in buffer
      * @return Reference to AllocationHeader
      */
-    AllocationHeader& get_header(std::size_t offset) {
+    AllocationHeader& get_header(std::size_t offset)
+    {
         return *reinterpret_cast<AllocationHeader*>(buffer.data() + offset);
     }
 
@@ -200,7 +217,8 @@ private:
      * @param offset Byte offset in buffer
      * @return Const reference to AllocationHeader
      */
-    const AllocationHeader& get_header(std::size_t offset) const {
+    const AllocationHeader& get_header(std::size_t offset) const
+    {
         return *reinterpret_cast<const AllocationHeader*>(buffer.data() + offset);
     }
 
@@ -209,7 +227,8 @@ private:
      * @param offset Byte offset of the header
      * @return Pointer to object data (after header)
      */
-    std::byte* get_object_pointer(std::size_t offset) {
+    std::byte* get_object_pointer(std::size_t offset)
+    {
         return buffer.data() + offset + HEADER_SIZE;
     }
 
@@ -218,7 +237,8 @@ private:
      * @param offset Byte offset of the header
      * @return Const pointer to object data (after header)
      */
-    const std::byte* get_object_pointer(std::size_t offset) const {
+    const std::byte* get_object_pointer(std::size_t offset) const
+    {
         return buffer.data() + offset + HEADER_SIZE;
     }
 
@@ -230,11 +250,13 @@ private:
      * 
      * @param required_size Minimum additional bytes needed
      */
-    void reallocate(std::size_t required_size) {
+    void reallocate(std::size_t required_size)
+    {
         std::size_t new_capacity = buffer.capacity();
         
         // Double capacity until it fits
-        while (new_capacity < current_offset + required_size) {
+        while (new_capacity < current_offset + required_size)
+        {
             new_capacity *= 2;
         }
 
@@ -247,11 +269,13 @@ private:
 
         // Move all alive objects to the new buffer
         std::size_t offset = 0;
-        while (offset < current_offset) {
+        while (offset < current_offset)
+        {
             AllocationHeader& old_header = get_header(offset);
             std::size_t object_size = old_header.size;
 
-            if (old_header.is_alive) {
+            if (old_header.is_alive)
+            {
                 // Align the new offset
                 std::size_t aligned_new_offset = align_offset(new_offset, alignof(AllocationHeader));
                 
@@ -281,11 +305,13 @@ private:
 
         // Destroy all objects in the old buffer
         offset = 0;
-        while (offset < current_offset) {
+        while (offset < current_offset)
+        {
             AllocationHeader& header = get_header(offset);
             std::size_t object_size = header.size;
 
-            if (header.is_alive && header.destructor) {
+            if (header.is_alive && header.destructor)
+            {
                 header.destructor(get_object_pointer(offset));
             }
 
