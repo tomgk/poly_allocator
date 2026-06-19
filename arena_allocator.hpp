@@ -280,11 +280,13 @@ private:
                 std::size_t aligned_new_offset = align_offset(new_offset, alignof(AllocationHeader));
                 
                 // Ensure new_buffer has enough space
-                if (new_buffer.capacity() < aligned_new_offset + HEADER_SIZE + object_size) {
-                    new_buffer.reserve(std::max(new_buffer.capacity() * 2, 
-                                              aligned_new_offset + HEADER_SIZE + object_size + 256));
-                }
-                new_buffer.resize(aligned_new_offset + HEADER_SIZE + object_size);
+                if (new_buffer.capacity() < aligned_new_offset + HEADER_SIZE + object_size)
+                    throw std::invalid_argument("wrong allocation");
+                //{
+                //    new_buffer.reserve(std::max(new_buffer.capacity() * 2,
+                //                              aligned_new_offset + HEADER_SIZE + object_size + 256));
+                //}
+                //new_buffer.resize(aligned_new_offset + HEADER_SIZE + object_size);
 
                 // Copy header
                 AllocationHeader& new_header = *reinterpret_cast<AllocationHeader*>(
