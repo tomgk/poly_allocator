@@ -308,6 +308,8 @@ private:
             offset += HEADER_SIZE + object_size;
         }
 
+        //TODO: merge with previous loop to have a well defined ArenaAllocator
+        //in case construct move or destructor(?) doesn't work
         // Destroy all objects in the old buffer
         offset = 0;
         while (offset < current_offset)
