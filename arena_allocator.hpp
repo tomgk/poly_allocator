@@ -415,13 +415,12 @@ public:
 
         std::size_t offset = 0;
         while (offset < current_offset) {
-            AllocationHeader& header = get_header(offset);
+            const AllocationHeader& header = get_header(offset);
             std::size_t object_size = header.size;
-            std::byte* object_ptr = get_object_pointer(offset);
+            const std::byte* object_ptr = get_object_pointer(offset);
 
-            if (object_ptr == reinterpret_cast<std::byte*>(ptr)) {
+            if (object_ptr == reinterpret_cast<std::byte*>(ptr))
                 return header.type_info;
-            }
 
             offset += HEADER_SIZE + object_size;
         }

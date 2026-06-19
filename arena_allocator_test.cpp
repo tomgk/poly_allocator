@@ -6,7 +6,7 @@ void test()
 
     auto ptr = a.allocate<int>(12);
     a.deallocate(ptr);
-    //a.get_type_info(ptr);
+    a.get_type_info(ptr);
     a.get_capacity();
     a.get_used_bytes();
     a.clear();
