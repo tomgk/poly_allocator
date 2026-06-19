@@ -264,8 +264,9 @@ private:
 
         // Create new buffer
         std::vector<std::byte> new_buffer;
-        new_buffer.reserve(new_capacity);
-        new_buffer.resize(0);
+        //new_buffer.reserve(new_capacity);
+        //new_buffer.resize(0);
+        new_buffer.resize(new_capacity);
 
         std::size_t new_offset = 0;
 
