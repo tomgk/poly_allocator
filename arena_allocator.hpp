@@ -32,7 +32,8 @@ private:
     /**
      * @brief Metadata stored before each allocation.
      */
-    struct AllocationHeader {
+    struct AllocationHeader
+    {
         std::size_t size;                           ///< Size of the actual object (excluding header)
         bool is_alive;                              ///< Flag indicating if object is still alive
         void (*destructor)(void*);                  ///< Function pointer to object's destructor
@@ -55,7 +56,8 @@ public:
      * allocation metadata. Iterators become invalid if the arena is reallocated
      * during iteration.
      */
-    class Iterator {
+    class Iterator
+    {
     public:
         using difference_type = std::ptrdiff_t;
         using value_type = void*;
