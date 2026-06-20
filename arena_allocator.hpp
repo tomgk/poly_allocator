@@ -8,6 +8,7 @@
 #include<typeinfo>
 #include<iterator>
 #include<variant>
+#include<iostream>
 
 /**
  * @brief A growth-based arena allocator that stores objects in contiguous memory.
@@ -254,6 +255,7 @@ private:
      */
     void reallocate(std::size_t required_size)
     {
+        std::cout << "reallocate" << std::endl;
         std::size_t new_capacity = buffer.capacity();
         
         // Double capacity until it fits
@@ -380,7 +382,8 @@ public:
         header.is_alive = true;
         header.destructor = [](void* ptr)
         {
-            reinterpret_cast<T*>(ptr)->~T();
+            auto str = reinterpret_cast<T*>(ptr);
+            str->~T();
         };
         
         // Store type information if enabled
