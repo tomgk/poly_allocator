@@ -7,7 +7,7 @@ TEST(HelloTest, BasicAssertions)
 
     auto ptr = a.allocate<int>(12);
     //TODO: add test fofr that
-    //a.deallocate(ptr);
+    a.deallocate(ptr);
     a.get_type_info(ptr);
     std::cout << "capacity: " << a.get_capacity() << std::endl;
     a.get_used_bytes();
