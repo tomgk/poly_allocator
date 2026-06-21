@@ -1,7 +1,7 @@
 #include "arena_allocator.hpp"
 #include <gtest/gtest.h>
 
-TEST(HelloTest, BasicAssertions)
+TEST(ArenaAllocator, BasicAssertions)
 {
     ArenaAllocator<true> a;
 
