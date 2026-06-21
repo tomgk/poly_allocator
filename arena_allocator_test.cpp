@@ -1,6 +1,15 @@
 #include "arena_allocator.hpp"
 #include <gtest/gtest.h>
 
+TEST(ArenaAllocator, deallocate)
+{
+    ArenaAllocator<true> a;
+
+    auto ptr = a.allocate<int>(12);
+    a.deallocate(ptr);
+    a.get_type_info(ptr);
+}
+
 TEST(ArenaAllocator, MixedWithoutResize)
 {
     ArenaAllocator<true> a;
@@ -78,15 +87,6 @@ TEST(ArenaAllocator, DISABLED_MixedWithResize)
     }
 
     std::cout << "capacity: " << a.get_capacity() << std::endl;
-}
-
-TEST(ArenaAllocator, deallocate)
-{
-    ArenaAllocator<true> a;
-
-    auto ptr = a.allocate<int>(12);
-    a.deallocate(ptr);
-    a.get_type_info(ptr);
 }
 
 void test()
