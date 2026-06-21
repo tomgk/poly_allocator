@@ -1,3 +1,4 @@
+#define ARENA_ALLOCATOR_LOG
 #include "arena_allocator.hpp"
 #include <gtest/gtest.h>
 
@@ -87,6 +88,7 @@ TEST(ArenaAllocator, DISABLED_MixedWithResize)
     }
 
     std::cout << "capacity: " << a.get_capacity() << std::endl;
+    std::cout << "Starting deallocation..." << std::endl;
 }
 
 void test()

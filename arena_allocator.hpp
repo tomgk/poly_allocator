@@ -10,6 +10,10 @@
 #include<variant>
 #include<iostream>
 
+#ifdef ARENA_ALLOCATOR_LOG
+#include<iostream>
+#endif
+
 /**
  * @brief A growth-based arena allocator that stores objects in contiguous memory.
  * 
@@ -382,6 +386,9 @@ public:
         header.is_alive = true;
         header.destructor = [](void* ptr)
         {
+#ifdef ARENA_ALLOCATOR_LOG
+            std::cout << "Destruct " << typeid(T).name() << std::endl;
+#endif
             auto str = reinterpret_cast<T*>(ptr);
             str->~T();
         };
