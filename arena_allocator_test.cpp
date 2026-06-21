@@ -1,7 +1,7 @@
 #include "arena_allocator.hpp"
 #include <gtest/gtest.h>
 
-TEST(ArenaAllocator, BasicAssertions)
+TEST(ArenaAllocator, MixedWithoutResize)
 {
     ArenaAllocator<true> a;
 
