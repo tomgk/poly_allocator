@@ -61,7 +61,8 @@ public:
      * allocation metadata. Iterators become invalid if the arena is reallocated
      * during iteration.
      */
-    class Iterator
+    template<bool Const>
+    class IteratorImpl
     {
     public:
         using difference_type = std::ptrdiff_t;
@@ -83,7 +84,7 @@ public:
          * @param offset Byte offset in the buffer
          * @param find_alive If true, advance to first alive allocation
          */
-        Iterator(ArenaAllocator* arena, std::size_t offset, bool find_alive)
+        IteratorImpl(ArenaAllocator* arena, std::size_t offset, bool find_alive)
             : arena(arena), offset(offset)
         {
             if (find_alive)
@@ -108,13 +109,13 @@ public:
         }
 
     public:
-        Iterator(const Iterator&) = default;
-        Iterator& operator=(const Iterator&) = default;
+        IteratorImpl(const IteratorImpl&) = default;
+        IteratorImpl& operator=(const IteratorImpl&) = default;
 
         /**
          * @brief Check equality of two iterators.
          */
-        bool operator==(const Iterator& other) const
+        bool operator==(const IteratorImpl& other) const
         {
             return offset == other.offset;
         }
@@ -122,7 +123,7 @@ public:
         /**
          * @brief Check inequality of two iterators.
          */
-        bool operator!=(const Iterator& other) const
+        bool operator!=(const IteratorImpl& other) const
         {
             return offset != other.offset;
         }
@@ -141,7 +142,7 @@ public:
          * @brief Pre-increment operator.
          * @return Reference to this iterator after advancing
          */
-        Iterator& operator++()
+        IteratorImpl& operator++()
         {
             if (offset < arena->current_offset)
             {
@@ -156,9 +157,9 @@ public:
          * @brief Post-increment operator.
          * @return Copy of iterator before advancing
          */
-        Iterator operator++(int)
+        IteratorImpl operator++(int)
         {
-            Iterator temp = *this;
+            IteratorImpl temp = *this;
             ++(*this);
             return temp;
         }
@@ -190,6 +191,8 @@ public:
             return arena->get_header(offset).size;
         }
     };
+
+    using Iterator = IteratorImpl<false>;
 
 private:
     static constexpr std::size_t INITIAL_CAPACITY = 256;    ///< Initial buffer capacity
