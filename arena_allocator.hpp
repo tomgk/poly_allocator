@@ -1,10 +1,8 @@
 //#pragma once
 
 #include<vector>
-#include<memory>
 #include<cstring>
 #include<cassert>
-#include<new>
 #include<typeinfo>
 #include<iterator>
 #include<variant>
@@ -13,6 +11,8 @@
 #ifdef ARENA_ALLOCATOR_LOG
 #include<iostream>
 #endif
+
+std::string getTypeName(const std::type_info &type);
 
 /**
  * @brief A growth-based arena allocator that stores objects in contiguous memory.
