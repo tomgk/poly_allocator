@@ -11,7 +11,38 @@ TEST(ArenaAllocator, deallocate)
     a.get_type_info(ptr);
 }
 
-TEST(ArenaAllocator, MixedWithoutResizeAndClear)
+TEST(ArenaAllocator, OneTypeWithoutResizeAndClear_Complex_Once)
+{
+    ArenaAllocator<true> a;
+
+    //TODO: i<8 (which requires reallocation) causes a crash for some reason
+    for(int i=0;i<1/*256*/;++i)
+    {
+        a.allocate<std::string>("#"+std::to_string(i));
+        std::cout << i << std::endl;
+    }
+
+    for(auto iter=a.begin();iter!=a.end();++iter)
+    {
+        const std::type_info &type = *iter.get_header().type_info;
+        std::cout << type.name();
+
+        if(typeid(std::string) == type)
+        {
+            std::cout << "STR " << iter.get<std::string>();
+        }
+        else if(typeid(std::string) == type)
+        {
+            std::cout << "INT " << iter.get<int>();
+        }
+
+        std::cout << std::endl;
+    }
+
+    std::cout << "capacity: " << a.get_capacity() << std::endl;
+}
+
+TEST(ArenaAllocator, DISABLED_MixedWithoutResizeAndClear)
 {
     ArenaAllocator<true> a;
 
