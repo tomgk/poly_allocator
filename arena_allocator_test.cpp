@@ -2,6 +2,28 @@
 #include "arena_allocator.hpp"
 #include <gtest/gtest.h>
 
+static void dump(ArenaAllocator<true> &a)
+{
+    for(auto iter=a.begin();iter!=a.end();++iter)
+    {
+        const std::type_info &type = *iter.get_header().type_info;
+        std::cout << type.name();
+
+        if(typeid(std::string) == type)
+        {
+            std::cout << "STR " << iter.get<std::string>();
+        }
+        else if(typeid(std::string) == type)
+        {
+            std::cout << "INT " << iter.get<int>();
+        }
+
+        std::cout << std::endl;
+    }
+
+    std::cout << "capacity: " << a.get_capacity() << std::endl;
+}
+
 TEST(ArenaAllocator, deallocate)
 {
     ArenaAllocator<true> a;
@@ -17,24 +39,7 @@ TEST(ArenaAllocator, OneTypeWithoutResizeAndClear_Complex_Once)
 
     a.allocate<std::string>("#0");
 
-    for(auto iter=a.begin();iter!=a.end();++iter)
-    {
-        const std::type_info &type = *iter.get_header().type_info;
-        std::cout << type.name();
-
-        if(typeid(std::string) == type)
-        {
-            std::cout << "STR " << iter.get<std::string>();
-        }
-        else if(typeid(std::string) == type)
-        {
-            std::cout << "INT " << iter.get<int>();
-        }
-
-        std::cout << std::endl;
-    }
-
-    std::cout << "capacity: " << a.get_capacity() << std::endl;
+    dump(a);
 }
 
 TEST(ArenaAllocator, DISABLED_OneTypeWithoutResizeAndClear_Complex_MultipleFull)
@@ -48,24 +53,7 @@ TEST(ArenaAllocator, DISABLED_OneTypeWithoutResizeAndClear_Complex_MultipleFull)
         std::cout << i << std::endl;
     }
 
-    for(auto iter=a.begin();iter!=a.end();++iter)
-    {
-        const std::type_info &type = *iter.get_header().type_info;
-        std::cout << type.name();
-
-        if(typeid(std::string) == type)
-        {
-            std::cout << "STR " << iter.get<std::string>();
-        }
-        else if(typeid(std::string) == type)
-        {
-            std::cout << "INT " << iter.get<int>();
-        }
-
-        std::cout << std::endl;
-    }
-
-    std::cout << "capacity: " << a.get_capacity() << std::endl;
+    dump(a);
 }
 
 TEST(ArenaAllocator, DISABLED_MixedWithoutResizeAndClear)
@@ -85,24 +73,7 @@ TEST(ArenaAllocator, DISABLED_MixedWithoutResizeAndClear)
         std::cout << i << std::endl;
     }
 
-    for(auto iter=a.begin();iter!=a.end();++iter)
-    {
-        const std::type_info &type = *iter.get_header().type_info;
-        std::cout << type.name();
-
-        if(typeid(std::string) == type)
-        {
-            std::cout << "STR " << iter.get<std::string>();
-        }
-        else if(typeid(std::string) == type)
-        {
-            std::cout << "INT " << iter.get<int>();
-        }
-
-        std::cout << std::endl;
-    }
-
-    std::cout << "capacity: " << a.get_capacity() << std::endl;
+    dump(a);
 }
 
 TEST(ArenaAllocator, DISABLED_MixedWithoutResize)
@@ -123,24 +94,7 @@ TEST(ArenaAllocator, DISABLED_MixedWithoutResize)
         std::cout << i << std::endl;
     }
 
-    for(auto iter=a.begin();iter!=a.end();++iter)
-    {
-        const std::type_info &type = *iter.get_header().type_info;
-        std::cout << type.name();
-
-        if(typeid(std::string) == type)
-        {
-            std::cout << "STR " << iter.get<std::string>();
-        }
-        else if(typeid(std::string) == type)
-        {
-            std::cout << "INT " << iter.get<int>();
-        }
-
-        std::cout << std::endl;
-    }
-
-    std::cout << "capacity: " << a.get_capacity() << std::endl;
+    dump(a);
 }
 
 TEST(ArenaAllocator, DISABLED_MixedWithResize)
@@ -162,24 +116,8 @@ TEST(ArenaAllocator, DISABLED_MixedWithResize)
         std::cout << i << std::endl;
     }
 
-    for(auto iter=a.begin();iter!=a.end();++iter)
-    {
-        const std::type_info &type = *iter.get_header().type_info;
-        std::cout << type.name();
+    dump(a);
 
-        if(typeid(std::string) == type)
-        {
-            std::cout << "STR " << iter.get<std::string>();
-        }
-        else if(typeid(std::string) == type)
-        {
-            std::cout << "INT " << iter.get<int>();
-        }
-
-        std::cout << std::endl;
-    }
-
-    std::cout << "capacity: " << a.get_capacity() << std::endl;
     std::cout << "Starting deallocation..." << std::endl;
 }
 
