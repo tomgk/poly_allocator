@@ -2,7 +2,7 @@
 #include "arena_allocator.hpp"
 #include <gtest/gtest.h>
 
-static void dump(const ArenaAllocator<true> &a)
+static void dump(const ArenaAllocator<StoreTypeInfoType::yes> &a)
 {
     for(auto iter=a.begin();iter!=a.end();++iter)
     {
@@ -24,12 +24,19 @@ static void dump(const ArenaAllocator<true> &a)
     std::cout << "capacity: " << a.get_capacity() << std::endl;
 }
 
-/*
-static void dump2(const ArenaAllocator<true> &a)
+#if 0
+static void dump2(const TypeAwareArenaAllocator &a)
 {
-    for(auto &val : a)
+    if(false)
     {
-        const std::type_info &type = val.get_header().type_info;
+        TypeAwareArenaAllocator::ConstIterator iter = a.begin();
+        const auto &val = *iter;
+        //const TypeAwareArenaAllocator::Entry<true> &val = *iter;
+    }
+/*
+    for(TypeAwareArenaAllocator::Entry<true> &val : a)
+    {
+        const std::type_info &type = *val.get_header().type_info;
         std::cout << type.name();
 
         if(typeid(std::string) == type)
@@ -45,12 +52,13 @@ static void dump2(const ArenaAllocator<true> &a)
     }
 
     std::cout << "capacity: " << a.get_capacity() << std::endl;
-}
 */
+}
+#endif
 
 TEST(ArenaAllocator, deallocate)
 {
-    ArenaAllocator<true> a;
+    TypeAwareArenaAllocator a;
 
     auto ptr = a.allocate<int>(12);
     a.deallocate(ptr);
@@ -59,7 +67,7 @@ TEST(ArenaAllocator, deallocate)
 
 TEST(ArenaAllocator, OneTypeWithoutResizeAndClear_Complex_Once)
 {
-    ArenaAllocator<true> a;
+    TypeAwareArenaAllocator a;
 
     a.allocate<std::string>("#0");
 
@@ -68,7 +76,7 @@ TEST(ArenaAllocator, OneTypeWithoutResizeAndClear_Complex_Once)
 
 TEST(ArenaAllocator, DISABLED_OneTypeWithoutResizeAndClear_Complex_MultipleFull)
 {
-    ArenaAllocator<true> a;
+    TypeAwareArenaAllocator a;
 
     //TODO: i<8 (which requires reallocation) causes a crash for some reason
     for(int i=0;i<7;++i)
@@ -82,7 +90,7 @@ TEST(ArenaAllocator, DISABLED_OneTypeWithoutResizeAndClear_Complex_MultipleFull)
 
 TEST(ArenaAllocator, DISABLED_MixedWithoutResizeAndClear)
 {
-    ArenaAllocator<true> a;
+    TypeAwareArenaAllocator a;
 
     auto ptr = a.allocate<int>(12);
     a.deallocate(ptr);
@@ -102,7 +110,7 @@ TEST(ArenaAllocator, DISABLED_MixedWithoutResizeAndClear)
 
 TEST(ArenaAllocator, DISABLED_MixedWithoutResize)
 {
-    ArenaAllocator<true> a;
+    TypeAwareArenaAllocator a;
 
     auto ptr = a.allocate<int>(12);
     a.deallocate(ptr);
@@ -123,7 +131,7 @@ TEST(ArenaAllocator, DISABLED_MixedWithoutResize)
 
 TEST(ArenaAllocator, DISABLED_MixedWithResize)
 {
-    ArenaAllocator<true> a;
+    TypeAwareArenaAllocator a;
 
     auto ptr = a.allocate<int>(12);
     a.deallocate(ptr);
@@ -147,7 +155,7 @@ TEST(ArenaAllocator, DISABLED_MixedWithResize)
 
 void test()
 {
-    ArenaAllocator<true> a;
+    TypeAwareArenaAllocator a;
 
     auto ptr = a.allocate<int>(12);
     a.deallocate(ptr);

@@ -14,6 +14,11 @@
 
 std::string getTypeName(const std::type_info &type);
 
+enum class StoreTypeInfoType : bool
+{
+    no, yes
+};
+
 /**
  * @brief A growth-based arena allocator that stores objects in contiguous memory.
  * 
@@ -30,9 +35,10 @@ std::string getTypeName(const std::type_info &type);
  * 
  * @note When StoreTypeInfo is false, no runtime overhead is incurred for type tracking.
  */
-template <bool StoreTypeInfo = false>
+template <StoreTypeInfoType S = StoreTypeInfoType::no>
 class ArenaAllocator
 {
+    static constexpr bool StoreTypeInfo = (bool)S;
 private:
     /**
      * @brief Metadata stored before each allocation.
@@ -54,10 +60,15 @@ private:
         }
     };
 public:
+    enum class EntryConstness : bool
+    {
+        no, yes
+    };
 
-    template<bool Const>
+    template<EntryConstness C>
     class Entry
     {
+        static constexpr bool Const = (bool)C;
     protected:
         using Alloc = std::conditional_t<Const, const ArenaAllocator, ArenaAllocator>;
 
@@ -104,11 +115,12 @@ public:
      * allocation metadata. Iterators become invalid if the arena is reallocated
      * during iteration.
      */
-    template<bool Const>
+    template<EntryConstness C>
     //TODO: make inheritance private
-    class IteratorImpl : public Entry<Const>
+    class IteratorImpl : public Entry<C>
     {
-        using parent = Entry<Const>;
+        static constexpr bool Const = (bool)C;
+        using parent = Entry<C>;
     public:
         using difference_type = std::ptrdiff_t;
         using value_type = parent;
@@ -240,8 +252,8 @@ public:
         }
     };
 
-    using Iterator = IteratorImpl<false>;
-    using ConstIterator = IteratorImpl<true>;
+    using Iterator = IteratorImpl<EntryConstness::no>;
+    using ConstIterator = IteratorImpl<EntryConstness::yes>;
 
 private:
     static constexpr std::size_t INITIAL_CAPACITY = 256;    ///< Initial buffer capacity
@@ -622,3 +634,6 @@ public:
         clear();
     }
 };
+
+using PlainArenaAllocator = ArenaAllocator<StoreTypeInfoType::no>;
+using TypeAwareArenaAllocator = ArenaAllocator<StoreTypeInfoType::yes>;
