@@ -54,122 +54,22 @@ private:
         }
     };
 public:
-    /**
-     * @brief Forward iterator for traversing alive allocations in the arena.
-     * 
-     * The iterator automatically skips dead allocations and provides access to
-     * allocation metadata. Iterators become invalid if the arena is reallocated
-     * during iteration.
-     */
+
     template<bool Const>
-    class IteratorImpl
+    class Entry
     {
-    public:
-        using difference_type = std::ptrdiff_t;
-        using value_type = void*;
-        using pointer = void**;
-        using reference = void*&;
-        using iterator_category = std::forward_iterator_tag;
-
-    private:
-
-        friend class ArenaAllocator;
-
+    protected:
         using Alloc = std::conditional_t<Const, const ArenaAllocator, ArenaAllocator>;
-        
+
         Alloc* arena;
         std::size_t offset;
-
-        /**
-         * @brief Construct iterator at given byte offset.
-         * @param arena Pointer to the arena
-         * @param offset Byte offset in the buffer
-         * @param find_alive If true, advance to first alive allocation
-         */
-        IteratorImpl(Alloc* arena, std::size_t offset, bool find_alive)
+    public:
+        Entry(Alloc* arena, std::size_t offset)
             : arena(arena), offset(offset)
         {
-            if (find_alive)
-            {
-                advance_to_next_alive();
-            }
+
         }
 
-        /**
-         * @brief Advance offset to the next alive allocation.
-         */
-        void advance_to_next_alive()
-        {
-            while (offset < arena->current_offset)
-            {
-                const AllocationHeader& header = arena->get_header(offset);
-                if (header.is_alive)
-                    break;
-
-                offset += HEADER_SIZE + header.size;
-            }
-        }
-
-    public:
-        IteratorImpl(const IteratorImpl&) = default;
-        IteratorImpl& operator=(const IteratorImpl&) = default;
-
-        /**
-         * @brief Check equality of two iterators.
-         */
-        bool operator==(const IteratorImpl& other) const
-        {
-            return offset == other.offset;
-        }
-
-        /**
-         * @brief Check inequality of two iterators.
-         */
-        bool operator!=(const IteratorImpl& other) const
-        {
-            return offset != other.offset;
-        }
-
-        /**
-         * @brief Dereference iterator to get void pointer to current allocation.
-         * @return Pointer to the allocated object, or nullptr if at end
-         */
-        void* operator*() const
-        {
-            if (offset >= arena->current_offset) return nullptr;
-            return reinterpret_cast<void*>(arena->get_object_pointer(offset));
-        }
-
-        /**
-         * @brief Pre-increment operator.
-         * @return Reference to this iterator after advancing
-         */
-        IteratorImpl& operator++()
-        {
-            if (offset < arena->current_offset)
-            {
-                const AllocationHeader& header = arena->get_header(offset);
-                offset += HEADER_SIZE + header.size;
-                advance_to_next_alive();
-            }
-            return *this;
-        }
-
-        /**
-         * @brief Post-increment operator.
-         * @return Copy of iterator before advancing
-         */
-        IteratorImpl operator++(int)
-        {
-            IteratorImpl temp = *this;
-            ++(*this);
-            return temp;
-        }
-
-        /**
-         * @brief Get the allocation header for the current object.
-         * @return Reference to the AllocationHeader
-         */
         const AllocationHeader& get_header() const
         {
             return arena->get_header(offset);
@@ -195,6 +95,140 @@ public:
 
             return *reinterpret_cast<T*>(arena->get_object_pointer(offset));
         }
+    };
+
+    /**
+     * @brief Forward iterator for traversing alive allocations in the arena.
+     * 
+     * The iterator automatically skips dead allocations and provides access to
+     * allocation metadata. Iterators become invalid if the arena is reallocated
+     * during iteration.
+     */
+    template<bool Const>
+    //TODO: make inheritance private
+    class IteratorImpl : public Entry<Const>
+    {
+        using parent = Entry<Const>;
+    public:
+        using difference_type = std::ptrdiff_t;
+        using value_type = parent;
+        using pointer = parent*;
+        using reference = parent&;
+        using iterator_category = std::forward_iterator_tag;
+
+    private:
+
+        friend class ArenaAllocator;
+
+        /**
+         * @brief Construct iterator at given byte offset.
+         * @param arena Pointer to the arena
+         * @param offset Byte offset in the buffer
+         * @param find_alive If true, advance to first alive allocation
+         */
+        IteratorImpl(parent::Alloc* arena, std::size_t offset, bool find_alive):
+            parent(arena, offset)
+        {
+            if (find_alive)
+            {
+                advance_to_next_alive();
+            }
+        }
+
+        /**
+         * @brief Advance offset to the next alive allocation.
+         */
+        void advance_to_next_alive()
+        {
+            while (parent::offset < parent::arena->current_offset)
+            {
+                const AllocationHeader& header = parent::arena->get_header(parent::offset);
+                if (header.is_alive)
+                    break;
+
+                parent::offset += HEADER_SIZE + header.size;
+            }
+        }
+
+    public:
+        IteratorImpl(const IteratorImpl&) = default;
+        IteratorImpl& operator=(const IteratorImpl&) = default;
+
+        /**
+         * @brief Check equality of two iterators.
+         */
+        bool operator==(const IteratorImpl& other) const
+        {
+            return parent::offset == other.offset;
+        }
+
+        /**
+         * @brief Check inequality of two iterators.
+         */
+        bool operator!=(const IteratorImpl& other) const
+        {
+            return parent::offset != other.offset;
+        }
+
+        using Value = std::conditional_t<Const, const parent, parent>;
+
+        operator Value&()
+        {
+            return *this;
+        }
+
+        operator const Value&() const
+        {
+            return *this;
+        }
+
+        /**
+         * @brief Dereference iterator to get void pointer to current allocation.
+         * @return Pointer to the allocated object, or nullptr if at end
+         */
+        value_type& operator*() const
+        {
+            return *this;
+            /*
+            if (parent::offset >= parent::arena->current_offset) return nullptr;
+            return reinterpret_cast<void*>(parent::arena->get_object_pointer(parent::offset));
+            */
+        }
+
+        /**
+         * @brief Pre-increment operator.
+         * @return Reference to this iterator after advancing
+         */
+        IteratorImpl& operator++()
+        {
+            if (parent::offset < parent::arena->current_offset)
+            {
+                const AllocationHeader& header = parent::arena->get_header(parent::offset);
+                parent::offset += HEADER_SIZE + header.size;
+                advance_to_next_alive();
+            }
+            return *this;
+        }
+
+        /**
+         * @brief Post-increment operator.
+         * @return Copy of iterator before advancing
+         */
+        IteratorImpl operator++(int)
+        {
+            IteratorImpl temp = *this;
+            ++(*this);
+            return temp;
+        }
+
+        /**
+         * @brief Get the allocation header for the current object.
+         * @return Reference to the AllocationHeader
+         */
+        const AllocationHeader& get_header() const
+        {
+            return parent::arena->get_header(parent::offset);
+        }
 
         /**
          * @brief Get the size of the current allocation.
@@ -202,7 +236,7 @@ public:
          */
         std::size_t get_size() const
         {
-            return arena->get_header(offset).size;
+            return parent::arena->get_header(parent::offset).size;
         }
     };
 

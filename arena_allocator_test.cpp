@@ -24,6 +24,30 @@ static void dump(const ArenaAllocator<true> &a)
     std::cout << "capacity: " << a.get_capacity() << std::endl;
 }
 
+/*
+static void dump2(const ArenaAllocator<true> &a)
+{
+    for(auto &val : a)
+    {
+        const std::type_info &type = val.get_header().type_info;
+        std::cout << type.name();
+
+        if(typeid(std::string) == type)
+        {
+            std::cout << "STR " << val.get<std::string>();
+        }
+        else if(typeid(std::string) == type)
+        {
+            std::cout << "INT " << val.get<int>();
+        }
+
+        std::cout << std::endl;
+    }
+
+    std::cout << "capacity: " << a.get_capacity() << std::endl;
+}
+*/
+
 TEST(ArenaAllocator, deallocate)
 {
     ArenaAllocator<true> a;
