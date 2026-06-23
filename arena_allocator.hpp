@@ -198,7 +198,7 @@ public:
          * @brief Dereference iterator to get void pointer to current allocation.
          * @return Pointer to the allocated object, or nullptr if at end
          */
-        value_type& operator*() const
+        std::conditional_t<Const, const value_type&, value_type&> operator*() const
         {
             return *this;
             /*
