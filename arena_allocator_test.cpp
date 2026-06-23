@@ -24,7 +24,6 @@ static void dump(const ArenaAllocator<StoreTypeInfoType::yes> &a)
     std::cout << "capacity: " << a.get_capacity() << std::endl;
 }
 
-#if 0
 static void dump2(const TypeAwareArenaAllocator &a)
 {
     if(false)
@@ -33,8 +32,8 @@ static void dump2(const TypeAwareArenaAllocator &a)
         const auto &val = *iter;
         //const TypeAwareArenaAllocator::Entry<true> &val = *iter;
     }
-/*
-    for(TypeAwareArenaAllocator::Entry<true> &val : a)
+
+    for(const TypeAwareArenaAllocator::Entry<EntryConstness::yes> &val : a)
     {
         const std::type_info &type = *val.get_header().type_info;
         std::cout << type.name();
@@ -52,9 +51,8 @@ static void dump2(const TypeAwareArenaAllocator &a)
     }
 
     std::cout << "capacity: " << a.get_capacity() << std::endl;
-*/
+
 }
-#endif
 
 TEST(ArenaAllocator, deallocate)
 {

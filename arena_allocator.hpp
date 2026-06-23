@@ -19,6 +19,11 @@ enum class StoreTypeInfoType : bool
     no, yes
 };
 
+enum class EntryConstness : bool
+{
+    no, yes
+};
+
 /**
  * @brief A growth-based arena allocator that stores objects in contiguous memory.
  * 
@@ -60,11 +65,6 @@ private:
         }
     };
 public:
-    enum class EntryConstness : bool
-    {
-        no, yes
-    };
-
     template<EntryConstness C>
     class Entry
     {
@@ -104,7 +104,7 @@ public:
             if(typeid(T) != *get_header().type_info)
                 throw std::invalid_argument("wrong type");
 
-            return *reinterpret_cast<T*>(arena->get_object_pointer(offset));
+            return *reinterpret_cast<const T*>(arena->get_object_pointer(offset));
         }
     };
 
