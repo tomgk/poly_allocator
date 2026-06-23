@@ -206,6 +206,27 @@ LONG WINAPI crashCallback(EXCEPTION_POINTERS* exceptionInfo)
     return EXCEPTION_EXECUTE_HANDLER;
 }
 
+static std::string getWindowsExceptionString(DWORD code)
+{
+    // A clean lookup table mapping the official Windows headers to strings
+    static const std::unordered_map<DWORD, std::string> exceptionMap = {
+        { EXCEPTION_ACCESS_VIOLATION, "Access Violation (Dangling pointer / Nullptr read-write)" },
+        { 0xC0000374,                 "Heap Corruption (Double-delete or buffer overflow)" },
+        { EXCEPTION_STACK_OVERFLOW,    "Stack Overflow (Infinite recursion loop)" },
+        { 0x4000001F,                 "STATUS_WX86_BREAKPOINT (32-bit / 64-bit Architecture Kit Mismatch)" },
+        { EXCEPTION_INT_DIVIDE_BY_ZERO,"Integer Divide by Zero" },
+        { EXCEPTION_ILLEGAL_INSTRUCTION,"Illegal Instruction (Corrupted binary path)" },
+        { 0xE06D7363,                 "Unhandled C++ Exception (std::bad_function_call / throw)" }
+    };
+
+    auto it = exceptionMap.find(code);
+    if (it != exceptionMap.end()) {
+        return it->second;
+    }
+
+    return "Unknown Windows OS Signal / Unhandled Exception";
+}
+
 //THIS WORKS
 // The Vectored Exception callback signature
 LONG WINAPI vectoredCrashCallback(EXCEPTION_POINTERS* exceptionInfo)
@@ -218,6 +239,7 @@ LONG WINAPI vectoredCrashCallback(EXCEPTION_POINTERS* exceptionInfo)
     std::cerr << "\n=========================================\n";
     std::cerr << "VEH CALLBACK CAUGHT CRASH!\n";
     std::cerr << "Windows Signal Hex Code: 0x" << std::hex << code << "\n";
+    std::cerr << getWindowsExceptionString(exceptionInfo->ExceptionRecord->ExceptionCode) << std::endl;
     std::cerr << "=========================================\n";
 
     // EXCEPTION_CONTINUE_SEARCH lets the debugger catch it next so Qt Creator still shows the line
