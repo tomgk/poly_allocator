@@ -13,7 +13,7 @@ static void dump0(const ArenaAllocator<StoreTypeInfoType::yes> &a)
         {
             std::cout << "STR " << iter.get<std::string>();
         }
-        else if(typeid(std::string) == type)
+        else if(typeid(int) == type)
         {
             std::cout << "INT " << iter.get<int>();
         }
@@ -43,7 +43,7 @@ static void dump(const TypeAwareArenaAllocator &a)
         {
             std::cout << "STR " << val.get<std::string>();
         }
-        else if(typeid(std::string) == type)
+        else if(typeid(int) == type)
         {
             std::cout << "INT " << val.get<int>();
         }
