@@ -2,7 +2,7 @@
 #include "arena_allocator.hpp"
 #include <gtest/gtest.h>
 
-static void dump(const ArenaAllocator<StoreTypeInfoType::yes> &a)
+static void dump0(const ArenaAllocator<StoreTypeInfoType::yes> &a)
 {
     for(auto iter=a.begin();iter!=a.end();++iter)
     {
@@ -24,7 +24,7 @@ static void dump(const ArenaAllocator<StoreTypeInfoType::yes> &a)
     std::cout << "capacity: " << a.get_capacity() << std::endl;
 }
 
-static void dump2(const TypeAwareArenaAllocator &a)
+static void dump(const TypeAwareArenaAllocator &a)
 {
     if(false)
     {
@@ -33,6 +33,7 @@ static void dump2(const TypeAwareArenaAllocator &a)
         //const TypeAwareArenaAllocator::Entry<true> &val = *iter;
     }
 
+    //INFO: keep type non-auto to catch compiler errors after changes
     for(const TypeAwareArenaAllocator::Entry<EntryConstness::yes> &val : a)
     {
         const std::type_info &type = *val.get_header().type_info;
