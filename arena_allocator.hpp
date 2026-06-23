@@ -43,7 +43,7 @@ private:
         bool is_alive;                              ///< Flag indicating if object is still alive
         void (*destructor)(void*);                  ///< Function pointer to object's destructor
         [[no_unique_address]]
-        std::conditional_t<StoreTypeInfo, const std::type_info*, std::monostate > type_info;  ///< Optional: RTTI information
+        std::conditional_t<StoreTypeInfo, const std::type_info*, std::monostate> type_info;  ///< Optional: RTTI information
 
         AllocationHeader() : size(0), is_alive(false), destructor(nullptr)
         {
@@ -74,8 +74,10 @@ public:
     private:
 
         friend class ArenaAllocator;
+
+        using Alloc = std::conditional_t<Const, const ArenaAllocator, ArenaAllocator>;
         
-        ArenaAllocator* arena;
+        Alloc* arena;
         std::size_t offset;
 
         /**
@@ -84,7 +86,7 @@ public:
          * @param offset Byte offset in the buffer
          * @param find_alive If true, advance to first alive allocation
          */
-        IteratorImpl(ArenaAllocator* arena, std::size_t offset, bool find_alive)
+        IteratorImpl(Alloc* arena, std::size_t offset, bool find_alive)
             : arena(arena), offset(offset)
         {
             if (find_alive)
@@ -174,7 +176,19 @@ public:
         }
 
         template<typename T>
-        T& get() requires StoreTypeInfo
+        using ref_type = std::conditional_t<Const, const T, T>;
+
+        template<typename T>
+        ref_type<T>& get() requires StoreTypeInfo
+        {
+            if(typeid(T) != *get_header().type_info)
+                throw std::invalid_argument("wrong type");
+
+            return *reinterpret_cast<ref_type<T>*>(arena->get_object_pointer(offset));
+        }
+
+        template<typename T>
+        const T& get() const requires StoreTypeInfo
         {
             if(typeid(T) != *get_header().type_info)
                 throw std::invalid_argument("wrong type");
@@ -193,6 +207,7 @@ public:
     };
 
     using Iterator = IteratorImpl<false>;
+    using ConstIterator = IteratorImpl<true>;
 
 private:
     static constexpr std::size_t INITIAL_CAPACITY = 256;    ///< Initial buffer capacity
@@ -499,6 +514,24 @@ public:
     Iterator end()
     {
         return Iterator(this, current_offset, false);
+    }
+
+    /**
+     * @brief Get an iterator to the first alive allocation.
+     * @return Iterator positioned at the first alive allocation
+     */
+    ConstIterator begin() const
+    {
+        return ConstIterator(this, 0, true);
+    }
+
+    /**
+     * @brief Get an iterator past the last allocation.
+     * @return Iterator positioned at current_offset (end sentinel)
+     */
+    ConstIterator end() const
+    {
+        return ConstIterator(this, current_offset, false);
     }
 
     /**

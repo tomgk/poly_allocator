@@ -2,7 +2,7 @@
 #include "arena_allocator.hpp"
 #include <gtest/gtest.h>
 
-static void dump(ArenaAllocator<true> &a)
+static void dump(const ArenaAllocator<true> &a)
 {
     for(auto iter=a.begin();iter!=a.end();++iter)
     {
