@@ -54,6 +54,15 @@ static void dump(const TypeAwareArenaAllocator &a)
     std::cout << "capacity: " << a.get_capacity() << std::endl;
 }
 
+static std::string LONG_STRING = []{
+    std::string str;
+
+    for(size_t i=0;i<sizeof(std::string)+1;++i)
+        str += ('A'+i);
+
+    return str;
+}();
+
 class Data
 {
 private:
@@ -77,7 +86,7 @@ public:
     }
 };
 
-TEST(ArenaAllocator, deallocate)
+TEST(ArenaAllocator, deallocate_Data)
 {
     TypeAwareArenaAllocator a;
 
@@ -85,11 +94,43 @@ TEST(ArenaAllocator, deallocate)
     a.deallocate(ptr);
 }
 
-TEST(ArenaAllocator, clear)
+TEST(ArenaAllocator, deallocate_string_short)
+{
+    TypeAwareArenaAllocator a;
+
+    auto ptr = a.allocate<std::string>("12");
+    a.deallocate(ptr);
+}
+
+TEST(ArenaAllocator, deallocate_string_long)
+{
+    TypeAwareArenaAllocator a;
+
+    auto ptr = a.allocate<std::string>(LONG_STRING);
+    a.deallocate(ptr);
+}
+
+TEST(ArenaAllocator, clear_Data)
 {
     TypeAwareArenaAllocator a;
 
     a.allocate<Data>(12);
+    a.clear();
+}
+
+TEST(ArenaAllocator, clear_string_short)
+{
+    TypeAwareArenaAllocator a;
+
+    a.allocate<std::string>("12");
+    a.clear();
+}
+
+TEST(ArenaAllocator, clear_string_long)
+{
+    TypeAwareArenaAllocator a;
+
+    a.allocate<std::string>(LONG_STRING);
     a.clear();
 }
 
