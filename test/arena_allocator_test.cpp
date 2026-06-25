@@ -235,7 +235,8 @@ LONG WINAPI crashCallback(EXCEPTION_POINTERS* exceptionInfo)
     std::cerr << "Windows Exception Code: 0x" << std::hex << exceptionCode << "\n";
 
     // 2. Identify the exact underlying cause
-    switch (exceptionCode) {
+    switch (exceptionCode)
+    {
     case EXCEPTION_ACCESS_VIOLATION:     // 0xC0000005
         std::cerr << "Meaning: Access Violation (Dangling pointer / Nullptr read/write)\n";
         break;
