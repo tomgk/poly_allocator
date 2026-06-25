@@ -64,7 +64,7 @@ TEST(ArenaAllocator, deallocate)
     a.get_type_info(ptr);
 }
 
-TEST(ArenaAllocator, OneTypeWithoutResizeAndClear_Complex_Once)
+TEST(ArenaAllocator, Allocate_OneTypeWithoutResizeAndClear_Complex_Once)
 {
     TypeAwareArenaAllocator a;
 
@@ -73,7 +73,7 @@ TEST(ArenaAllocator, OneTypeWithoutResizeAndClear_Complex_Once)
     dump(a);
 }
 
-TEST(ArenaAllocator, DISABLED_OneTypeWithoutResizeAndClear_Complex_MultipleFull)
+TEST(ArenaAllocator, DISABLED_Allocate_OneTypeWithoutResizeAndClear_Complex_MultipleFull)
 {
     TypeAwareArenaAllocator a;
 
