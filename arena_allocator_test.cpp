@@ -61,7 +61,14 @@ TEST(ArenaAllocator, deallocate)
 
     auto ptr = a.allocate<int>(12);
     a.deallocate(ptr);
-    a.get_type_info(ptr);
+}
+
+TEST(ArenaAllocator, clear)
+{
+    TypeAwareArenaAllocator a;
+
+    a.allocate<int>(12);
+    a.clear();
 }
 
 TEST(ArenaAllocator, Allocate_OneTypeWithoutResizeAndClear_Complex_Once)
