@@ -21,13 +21,14 @@ enable_testing()
 
 #static since it's all templates anyway
 add_library(poly-allocator STATIC
-  arena_allocator.hpp
-  arena_allocator.cpp
+  lib/arena_allocator.hpp
+  lib/arena_allocator.cpp
 )
-target_include_directories(poly-allocator PUBLIC .)
+target_include_directories(poly-allocator PUBLIC lib)
 set_target_properties(poly-allocator PROPERTIES LINKER_LANGUAGE CXX)
 
 add_executable(poly-allocator-test
-  arena_allocator_test.cpp
+  test/arena_allocator_test.cpp
 )
+target_include_directories(poly-allocator-test PUBLIC test)
 target_link_libraries(poly-allocator-test poly-allocator GTest::gtest_main)
