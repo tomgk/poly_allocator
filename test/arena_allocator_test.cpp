@@ -65,7 +65,7 @@ static std::string LONG_STRING = []{
 
 #include "data.h"
 
-TEST(ArenaAllocator, deallocate_Data)
+TEST(ArenaAllocator_deallocate, Data)
 {
     TypeAwareArenaAllocator a;
 
@@ -73,7 +73,7 @@ TEST(ArenaAllocator, deallocate_Data)
     a.deallocate(ptr);
 }
 
-TEST(ArenaAllocator, deallocate_string_short)
+TEST(ArenaAllocator_deallocate, string_short)
 {
     TypeAwareArenaAllocator a;
 
@@ -81,7 +81,7 @@ TEST(ArenaAllocator, deallocate_string_short)
     a.deallocate(ptr);
 }
 
-TEST(ArenaAllocator, deallocate_string_long)
+TEST(ArenaAllocator_deallocate, string_long)
 {
     TypeAwareArenaAllocator a;
 
@@ -89,7 +89,7 @@ TEST(ArenaAllocator, deallocate_string_long)
     a.deallocate(ptr);
 }
 
-TEST(ArenaAllocator, clear_Data)
+TEST(ArenaAllocator_clear, Data)
 {
     TypeAwareArenaAllocator a;
 
@@ -97,7 +97,7 @@ TEST(ArenaAllocator, clear_Data)
     a.clear();
 }
 
-TEST(ArenaAllocator, clear_string_short)
+TEST(ArenaAllocator_clear, string_short)
 {
     TypeAwareArenaAllocator a;
 
@@ -105,7 +105,7 @@ TEST(ArenaAllocator, clear_string_short)
     a.clear();
 }
 
-TEST(ArenaAllocator, clear_string_long)
+TEST(ArenaAllocator_clear, string_long)
 {
     TypeAwareArenaAllocator a;
 
@@ -113,7 +113,7 @@ TEST(ArenaAllocator, clear_string_long)
     a.clear();
 }
 
-TEST(ArenaAllocator, Allocate_OneTypeWithoutResizeAndClear_Complex_Once)
+TEST(ArenaAllocator_allocate, OneTypeWithoutResizeAndClear_Complex_Once)
 {
     TypeAwareArenaAllocator a;
 
@@ -122,7 +122,7 @@ TEST(ArenaAllocator, Allocate_OneTypeWithoutResizeAndClear_Complex_Once)
     dump(a);
 }
 
-TEST(ArenaAllocator, DISABLED_Allocate_OneTypeWithoutResizeAndClear_Complex_MultipleFull)
+TEST(ArenaAllocator_allocate, DISABLED_OneTypeWithoutResizeAndClear_Complex_MultipleFull)
 {
     TypeAwareArenaAllocator a;
 
