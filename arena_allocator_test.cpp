@@ -52,14 +52,36 @@ static void dump(const TypeAwareArenaAllocator &a)
     }
 
     std::cout << "capacity: " << a.get_capacity() << std::endl;
-
 }
+
+class Data
+{
+private:
+    //use different bytes to distinguess values
+    static constexpr uint32_t  ALIVE = 0x12345678;
+    static constexpr uint32_t  DEAD  = 0x9ABCDEF0;
+    uint32_t m_state = ALIVE;
+    int m_value{};
+public:
+    Data(int value):
+        m_value(value)
+    {
+
+    }
+    ~Data()
+    {
+        if(m_state != ALIVE)
+            EXPECT_TRUE(false) << (void*)this << " is already dead";
+        else
+            m_state = DEAD;
+    }
+};
 
 TEST(ArenaAllocator, deallocate)
 {
     TypeAwareArenaAllocator a;
 
-    auto ptr = a.allocate<int>(12);
+    auto ptr = a.allocate<Data>(12);
     a.deallocate(ptr);
 }
 
@@ -67,7 +89,7 @@ TEST(ArenaAllocator, clear)
 {
     TypeAwareArenaAllocator a;
 
-    a.allocate<int>(12);
+    a.allocate<Data>(12);
     a.clear();
 }
 
