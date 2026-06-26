@@ -1,5 +1,15 @@
 #include "common.h"
 
+std::string LONG_STRING = []{
+    std::string str;
+
+    for(size_t i=0;i<sizeof(std::string)+1;++i)
+        str += ('A'+i);
+
+    return str;
+}();
+
+
 void dump0(const ArenaAllocator<StoreTypeInfoType::yes> &a)
 {
     for(auto iter=a.begin();iter!=a.end();++iter)

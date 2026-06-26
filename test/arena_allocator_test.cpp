@@ -4,15 +4,6 @@
 #include <gtest/gtest.h>
 #include "common.h"
 
-static std::string LONG_STRING = []{
-    std::string str;
-
-    for(size_t i=0;i<sizeof(std::string)+1;++i)
-        str += ('A'+i);
-
-    return str;
-}();
-
 #include "data.h"
 
 TEST(ArenaAllocator_deallocate, Data)
