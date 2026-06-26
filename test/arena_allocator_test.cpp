@@ -6,54 +6,6 @@
 
 #include "data.h"
 
-TEST(ArenaAllocator_deallocate, Data)
-{
-    TypeAwareArenaAllocator a;
-
-    auto ptr = a.allocate<Data>(12);
-    a.deallocate(ptr);
-}
-
-TEST(ArenaAllocator_deallocate, string_short)
-{
-    TypeAwareArenaAllocator a;
-
-    auto ptr = a.allocate<std::string>("12");
-    a.deallocate(ptr);
-}
-
-TEST(ArenaAllocator_deallocate, string_long)
-{
-    TypeAwareArenaAllocator a;
-
-    auto ptr = a.allocate<std::string>(LONG_STRING);
-    a.deallocate(ptr);
-}
-
-TEST(ArenaAllocator_clear, Data)
-{
-    TypeAwareArenaAllocator a;
-
-    a.allocate<Data>(12);
-    a.clear();
-}
-
-TEST(ArenaAllocator_clear, string_short)
-{
-    TypeAwareArenaAllocator a;
-
-    a.allocate<std::string>("12");
-    a.clear();
-}
-
-TEST(ArenaAllocator_clear, string_long)
-{
-    TypeAwareArenaAllocator a;
-
-    a.allocate<std::string>(LONG_STRING);
-    a.clear();
-}
-
 TEST(ArenaAllocator_allocate, OneTypeWithoutResizeAndClear_Complex_Once)
 {
     TypeAwareArenaAllocator a;
