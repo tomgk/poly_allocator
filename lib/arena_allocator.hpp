@@ -1,3 +1,5 @@
+#ifndef ARENA_ALLOCATOR_H
+#define ARENA_ALLOCATOR_H
 //#pragma once
 
 #include<vector>
@@ -637,3 +639,5 @@ public:
 
 using PlainArenaAllocator = ArenaAllocator<StoreTypeInfoType::no>;
 using TypeAwareArenaAllocator = ArenaAllocator<StoreTypeInfoType::yes>;
+
+#endif
