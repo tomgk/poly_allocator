@@ -31,6 +31,7 @@ add_executable(poly-allocator-test
   test/arena_allocator_test.cpp
   test/data.h test/data.cpp
   test/common.h test/common.cpp
+  test/exception_handling.h test/exception_handling.cpp
 )
 target_include_directories(poly-allocator-test PUBLIC test)
 target_link_libraries(poly-allocator-test poly-allocator GTest::gtest_main)
