@@ -274,7 +274,7 @@ static std::string getWindowsExceptionString(DWORD code)
         return it->second;
     }
 
-    return "Unknown Windows OS Signal / Unhandled Exception";
+    return "Unknown Windows OS Signal / Unhandled Exception, with code "+std::to_string(code);
 }
 
 //THIS WORKS
