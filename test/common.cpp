@@ -1,4 +1,4 @@
-#include "dump.h"
+#include "common.h"
 
 void dump0(const ArenaAllocator<StoreTypeInfoType::yes> &a)
 {

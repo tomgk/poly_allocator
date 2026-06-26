@@ -2,7 +2,7 @@
 #include "arena_allocator.hpp"
 
 #include <gtest/gtest.h>
-#include "dump.h"
+#include "common.h"
 
 static std::string LONG_STRING = []{
     std::string str;
