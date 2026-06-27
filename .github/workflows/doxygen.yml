@@ -50,7 +50,7 @@ jobs:
             git checkout --orphan docs
             git rm -rf .
           else
-            git checkout docs
+            git checkout docs --
           fi
 
       - name: Copy generated documentation
