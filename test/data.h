@@ -13,6 +13,8 @@ private:
     Data *m_self{};
     uint32_t m_state = ALIVE;
     int m_value{};
+    //just to
+    //char waste[50];
 public:
     Data(int value);
     Data(const Data &d);
