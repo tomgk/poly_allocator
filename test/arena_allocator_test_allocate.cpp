@@ -15,7 +15,7 @@ TEST(ArenaAllocator_allocate, OneTypeWithoutResizeAndClear_Complex_Once)
     dump(a);
 }
 
-TEST(ArenaAllocator_allocate, DISABLED_OneType_Data_WithoutResizeAndClear_Complex_MultipleFull)
+TEST(ArenaAllocator_allocate, OneType_Data_WithoutResizeAndClear_Complex_MultipleFull)
 {
     TypeAwareArenaAllocator a;
 
