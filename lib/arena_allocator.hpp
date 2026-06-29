@@ -54,11 +54,12 @@ private:
     {
         std::size_t size;                           ///< Size of the actual object (excluding header)
         bool is_alive;                              ///< Flag indicating if object is still alive
+        void (*copy)(void *src, void *dst);         ///< Function pointer to object's copy constructor
         void (*destructor)(void*);                  ///< Function pointer to object's destructor
         [[no_unique_address]]
         std::conditional_t<StoreTypeInfo, const std::type_info*, std::monostate> type_info;  ///< Optional: RTTI information
 
-        AllocationHeader() : size(0), is_alive(false), destructor(nullptr)
+        AllocationHeader() : size(0), is_alive(false), copy(nullptr), destructor(nullptr)
         {
             if constexpr (StoreTypeInfo)
             {
@@ -369,6 +370,7 @@ private:
                 new_header = old_header;
 
                 // Copy object data
+                ///\todo don't just memcpy
                 std::memcpy(new_buffer.data() + aligned_new_offset + HEADER_SIZE,
                            get_object_pointer(offset),
                            object_size);
@@ -450,10 +452,17 @@ public:
             buffer.data() + header_offset);
         header.size = sizeof(T);
         header.is_alive = true;
+        header.copy = [](void* src, void *dst)
+        {
+#ifdef ARENA_ALLOCATOR_LOG
+            std::cout << "Copy " << typeid(T).name() << " " << src << " to " << dst << std::endl;
+#endif
+            new (dst)T(*reinterpret_cast<T*>(src));
+        };
         header.destructor = [](void* ptr)
         {
 #ifdef ARENA_ALLOCATOR_LOG
-            std::cout << "Destruct " << typeid(T).name() << std::endl;
+            std::cout << "Destruct " << typeid(T).name() << ptr << std::endl;
 #endif
             auto str = reinterpret_cast<T*>(ptr);
             str->~T();
@@ -467,6 +476,10 @@ public:
 
         // Construct object in place with forwarded arguments
         T* obj = new (buffer.data() + object_offset) T(std::forward<Args>(args)...);
+
+#ifdef ARENA_ALLOCATOR_LOG
+        std::cout << "Construct " << typeid(T).name() << (void*)obj << std::endl;
+#endif
 
         // Update offset
         current_offset = object_offset + sizeof(T);
