@@ -9,10 +9,14 @@ private:
     //use different bytes to distinguess values
     static constexpr uint32_t  ALIVE = 0x12345678;
     static constexpr uint32_t  DEAD  = 0x9ABCDEF0;
+    //store own address to detect raw copy
+    Data *m_self{};
     uint32_t m_state = ALIVE;
     int m_value{};
 public:
     Data(int value);
+    Data(const Data &d);
+    Data &operator=(const Data &d);
     ~Data();
 };
 
