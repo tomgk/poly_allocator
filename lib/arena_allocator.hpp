@@ -369,11 +369,12 @@ private:
                     new_buffer.data() + aligned_new_offset);
                 new_header = old_header;
 
+                void *dst = new_buffer.data() + aligned_new_offset + HEADER_SIZE;
+                void *src = get_object_pointer(offset);
+
                 // Copy object data
                 ///\todo don't just memcpy
-                std::memcpy(new_buffer.data() + aligned_new_offset + HEADER_SIZE,
-                           get_object_pointer(offset),
-                           object_size);
+                std::memcpy(dst, src, object_size);
 
                 new_offset = aligned_new_offset + HEADER_SIZE + object_size;
             }
@@ -409,6 +410,11 @@ public:
     ArenaAllocator()
     {
         buffer.reserve(INITIAL_CAPACITY);
+    }
+
+    size_t byteSize() const
+    {
+        return buffer.size();
     }
 
     /**
