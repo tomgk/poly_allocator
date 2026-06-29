@@ -19,7 +19,7 @@ TEST(ArenaAllocator, DISABLED_MixedWithoutResizeAndClear)
     //TODO: i<8 (which requires reallocation) causes a crash for some reason
     for(int i=0;i<7/*256*/;++i)
     {
-        a.allocate<std::string>("#"+std::to_string(i));
+        a.allocate<Data>(i);//"#"+std::to_string(i));
         std::cout << i << std::endl;
     }
 
@@ -40,7 +40,7 @@ TEST(ArenaAllocator, DISABLED_MixedWithoutResize)
     //TODO: i<8 (which requires reallocation) causes a crash for some reason
     for(int i=0;i<7/*256*/;++i)
     {
-        a.allocate<std::string>("#"+std::to_string(i));
+        a.allocate<Data>(i);//"#"+std::to_string(i));
         std::cout << i << std::endl;
     }
 
@@ -62,7 +62,7 @@ TEST(ArenaAllocator, DISABLED_MixedWithResize)
 
     for(int i=0;i<8;++i)
     {
-        a.allocate<std::string>("#"+std::to_string(i));
+        a.allocate<Data>(i);//std::string>("#"+std::to_string(i));
         std::cout << i << std::endl;
     }
 
