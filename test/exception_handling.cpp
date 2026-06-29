@@ -75,7 +75,13 @@ LONG WINAPI vectoredCrashCallback(EXCEPTION_POINTERS* exceptionInfo)
     std::cerr << "=========================================\n";
 
     // EXCEPTION_CONTINUE_SEARCH lets the debugger catch it next so Qt Creator still shows the line
-    return EXCEPTION_CONTINUE_SEARCH;
+    if(IsDebuggerPresent())
+        return EXCEPTION_CONTINUE_SEARCH;
+    else
+    {
+        std::terminate();
+        return EXCEPTION_EXECUTE_HANDLER;//EXCEPTION_CONTINUE_EXECUTION;
+    }
 }
 
 void installExceptionHandlers()
