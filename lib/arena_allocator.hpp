@@ -462,19 +462,17 @@ public:
             str->~T();
         };
 
-        return allocate0<T>(construct, copy, destruct);
+        return allocate0<T>(construct, sizeof(T), copy, destruct);
     }
 
 private:
     template <typename T, typename C>
-    T* allocate0(C construct, CopyFunction copy, DestructorFunction destruct)
+    T* allocate0(C construct, size_t objectSize, CopyFunction copy, DestructorFunction destruct)
     {
         // Calculate required space: header + alignment padding + object
         std::size_t header_offset = current_offset;
         std::size_t object_offset = align_offset(header_offset + HEADER_SIZE, alignof(T));
         std::size_t required_size = object_offset - header_offset + sizeof(T);
-
-        std::size_t objectSize = sizeof(T);
 
         // Check if reallocation is needed
         if (current_offset + required_size > buffer.capacity())
