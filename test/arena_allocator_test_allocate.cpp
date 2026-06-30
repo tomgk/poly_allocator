@@ -6,6 +6,18 @@
 
 #include "data.h"
 
+TEST(ArenaAllocator_allocate, Primitive)
+{
+    TypeAwareArenaAllocator a;
+
+    auto count = a.byteSize()/sizeof(Data)+1;
+
+    for(size_t i=0;i<count;++i)
+        a.allocate<Data>(i);
+
+    dump(a);
+}
+
 TEST(ArenaAllocator_allocate, OneTypeWithoutResizeAndClear_Complex_Once)
 {
     TypeAwareArenaAllocator a;
