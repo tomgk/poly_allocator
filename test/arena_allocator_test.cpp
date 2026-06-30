@@ -71,25 +71,6 @@ TEST(ArenaAllocator, MixedWithResize)
     std::cout << "Starting deallocation..." << std::endl;
 }
 
-void test()
-{
-    TypeAwareArenaAllocator a;
-
-    auto ptr = a.allocate<int>(12);
-    a.deallocate(ptr);
-    a.get_type_info(ptr);
-    a.get_capacity();
-    a.get_used_bytes();
-    a.clear();
-
-    for(auto iter = a.begin();iter != a.end(); ++iter)
-    {
-        iter.get_header();
-        iter.get_size();
-        iter.get<int>();
-    }
-}
-
 #include "exception_handling.h"
 
 int main(int argc, char **argv)
