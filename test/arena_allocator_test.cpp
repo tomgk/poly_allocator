@@ -26,7 +26,7 @@ TEST(ArenaAllocator, DISABLED_MixedWithoutResizeAndClear)
     dump(a);
 }
 
-TEST(ArenaAllocator, DISABLED_MixedWithoutResize)
+TEST(ArenaAllocator, MixedWithoutResize)
 {
     TypeAwareArenaAllocator a;
 
@@ -47,7 +47,7 @@ TEST(ArenaAllocator, DISABLED_MixedWithoutResize)
     dump(a);
 }
 
-TEST(ArenaAllocator, DISABLED_MixedWithResize)
+TEST(ArenaAllocator, MixedWithResize)
 {
     TypeAwareArenaAllocator a;
 

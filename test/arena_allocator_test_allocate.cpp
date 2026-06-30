@@ -27,14 +27,29 @@ TEST(ArenaAllocator_allocate, OneTypeWithoutResizeAndClear_Complex_Once)
     dump(a);
 }
 
-TEST(ArenaAllocator_allocate, OneType_string_WithoutResizeAndClear_Complex_MultipleFull)
+TEST(ArenaAllocator_allocate, string_noreallocate)
 {
     TypeAwareArenaAllocator a;
 
     auto count = a.byteSize()/sizeof(Data);
 
-    //TODO: i<8 (which requires reallocation) causes a crash for some reason
-    for(int i=0;i<7;++i)
+    for(int i=0;i<count;++i)
+    {
+        a.allocate<std::string>("#"+std::to_string(i));
+
+        std::cout << i << std::endl;
+    }
+
+    dump(a);
+}
+
+TEST(ArenaAllocator_allocate, string_reallocate)
+{
+    TypeAwareArenaAllocator a;
+
+    auto count = a.byteSize()/sizeof(Data)+1;
+
+    for(int i=0;i<count;++i)
     {
         a.allocate<std::string>("#"+std::to_string(i));
 
