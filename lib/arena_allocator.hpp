@@ -473,7 +473,7 @@ public:
         header.destructor = [](void* ptr)
         {
 #ifdef ARENA_ALLOCATOR_LOG
-            std::cout << "Destruct " << typeid(T).name() << ptr << std::endl;
+            std::cout << "Destruct " << typeid(T).name() << " " << ptr << std::endl;
 #endif
             auto str = reinterpret_cast<T*>(ptr);
             str->~T();
