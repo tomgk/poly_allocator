@@ -2,6 +2,8 @@
 
 #include <gtest/gtest.h>
 
+static constexpr bool DATA_LOG = false;
+
 Data::Data(int value):
     m_value(value), m_self(this)
 {
@@ -10,12 +12,15 @@ Data::Data(int value):
 
 Data::Data(const Data &d): m_self(this), m_value(d.m_value)
 {
-    std::cout << "CCopy " << (void*)this << " from " << (void*)&d << std::endl;
+    if(DATA_LOG)
+        std::cout << "CCopy " << (void*)this << " from " << (void*)&d << std::endl;
 }
 
 Data &Data::operator=(const Data &d)
 {
-    std::cout << "ACopy " << (void*)this << " from " << (void*)&d << std::endl;
+    if(DATA_LOG)
+        std::cout << "ACopy " << (void*)this << " from " << (void*)&d << std::endl;
+
     m_value = d.m_value;
     return *this;
 }
