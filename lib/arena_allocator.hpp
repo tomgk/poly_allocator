@@ -46,6 +46,10 @@ template <StoreTypeInfoType S = StoreTypeInfoType::no>
 class ArenaAllocator
 {
     static constexpr bool StoreTypeInfo = (bool)S;
+
+    using CopyFunction = void (*)(void *src, void *dst);
+    using DestructorFunction = void (*)(void*);
+
 private:
     /**
      * @brief Metadata stored before each allocation.
@@ -54,8 +58,8 @@ private:
     {
         std::size_t size;                           ///< Size of the actual object (excluding header)
         bool is_alive;                              ///< Flag indicating if object is still alive
-        void (*copy)(void *src, void *dst);         ///< Function pointer to object's copy constructor
-        void (*destructor)(void*);                  ///< Function pointer to object's destructor
+        CopyFunction copy;                          ///< Function pointer to object's copy constructor
+        DestructorFunction destructor;              ///< Function pointer to object's destructor
         [[no_unique_address]]
         std::conditional_t<StoreTypeInfo, const std::type_info*, std::monostate> type_info;  ///< Optional: RTTI information
 
