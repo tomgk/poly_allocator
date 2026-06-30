@@ -455,7 +455,10 @@ public:
         // Ensure buffer is large enough
         if (buffer.size() < object_offset + sizeof(T))
         {
-            buffer.resize(object_offset + sizeof(T));
+            //throw std::runtime_error("buffer too small");
+            //buffer.resize(object_offset + sizeof(T));
+            ///\todo don't call reallocate twice
+            reallocate(object_offset + sizeof(T));
         }
 
         // Place header
