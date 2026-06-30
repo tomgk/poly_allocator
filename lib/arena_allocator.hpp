@@ -442,6 +442,33 @@ public:
     template <typename T, typename... Args>
     T* allocate(Args&&... args)
     {
+        auto construct = [&](void *ptr){
+            return new (ptr) T(std::forward<Args>(args)...);
+        };
+
+        CopyFunction copy = [](void* src, void *dst)
+        {
+#ifdef ARENA_ALLOCATOR_LOG
+            std::cout << "Copy " << typeid(T).name() << " " << src << " to " << dst << std::endl;
+#endif
+            new (dst)T(std::move(*reinterpret_cast<T*>(src)));
+        };
+        DestructorFunction destruct = [](void* ptr)
+        {
+#ifdef ARENA_ALLOCATOR_LOG
+            std::cout << "Destruct " << typeid(T).name() << " " << ptr << std::endl;
+#endif
+            auto str = reinterpret_cast<T*>(ptr);
+            str->~T();
+        };
+
+        return allocate0<T>(construct, copy, destruct);
+    }
+
+private:
+    template <typename T, typename C>
+    T* allocate0(C construct, CopyFunction copy, DestructorFunction destruct)
+    {
         // Calculate required space: header + alignment padding + object
         std::size_t header_offset = current_offset;
         std::size_t object_offset = align_offset(header_offset + HEADER_SIZE, alignof(T));
@@ -470,21 +497,8 @@ public:
             buffer.data() + header_offset);
         header.size = sizeof(T);
         header.is_alive = true;
-        header.copy = [](void* src, void *dst)
-        {
-#ifdef ARENA_ALLOCATOR_LOG
-            std::cout << "Copy " << typeid(T).name() << " " << src << " to " << dst << std::endl;
-#endif
-            new (dst)T(std::move(*reinterpret_cast<T*>(src)));
-        };
-        header.destructor = [](void* ptr)
-        {
-#ifdef ARENA_ALLOCATOR_LOG
-            std::cout << "Destruct " << typeid(T).name() << " " << ptr << std::endl;
-#endif
-            auto str = reinterpret_cast<T*>(ptr);
-            str->~T();
-        };
+        header.copy = copy;
+        header.destructor = destruct;
         
         // Store type information if enabled
         if constexpr (StoreTypeInfo)
@@ -493,7 +507,7 @@ public:
         }
 
         // Construct object in place with forwarded arguments
-        T* obj = new (buffer.data() + object_offset) T(std::forward<Args>(args)...);
+        T* obj = construct(buffer.data() + object_offset);
 
 #ifdef ARENA_ALLOCATOR_LOG
         std::cout << "Construct " << typeid(T).name() << (void*)obj << std::endl;
@@ -505,6 +519,7 @@ public:
         return obj;
     }
 
+public:
     /**
      * @brief Deallocate an object previously allocated via allocate().
      * 
