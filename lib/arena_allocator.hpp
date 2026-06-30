@@ -326,7 +326,6 @@ private:
      */
     void reallocate(std::size_t required_size)
     {
-        std::cout << "reallocate" << std::endl;
         std::size_t new_capacity = buffer.capacity();
         
         // Double capacity until it fits
@@ -334,6 +333,11 @@ private:
         {
             new_capacity *= 2;
         }
+
+        if(new_capacity > 1024 * 1024)
+            throw std::runtime_error("reached 1 MB");
+
+        std::cout << "reallocate: " << buffer.capacity() << " -> " << new_capacity << std::endl;
 
         // Create new buffer
         std::vector<std::byte> new_buffer;
@@ -374,7 +378,8 @@ private:
 
                 // Copy object data
                 ///\todo don't just memcpy
-                std::memcpy(dst, src, object_size);
+                //std::memcpy(dst, src, object_size);
+                new_header.copy(src, dst);
 
                 new_offset = aligned_new_offset + HEADER_SIZE + object_size;
             }
@@ -409,7 +414,7 @@ public:
      */
     ArenaAllocator()
     {
-        buffer.reserve(INITIAL_CAPACITY);
+        buffer.resize(INITIAL_CAPACITY);
     }
 
     size_t byteSize() const
