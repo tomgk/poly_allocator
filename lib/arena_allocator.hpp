@@ -474,6 +474,8 @@ private:
         std::size_t object_offset = align_offset(header_offset + HEADER_SIZE, alignof(T));
         std::size_t required_size = object_offset - header_offset + sizeof(T);
 
+        std::size_t objectSize = sizeof(T);
+
         // Check if reallocation is needed
         if (current_offset + required_size > buffer.capacity())
         {
@@ -484,18 +486,18 @@ private:
         }
 
         // Ensure buffer is large enough
-        if (buffer.size() < object_offset + sizeof(T))
+        if (buffer.size() < object_offset + objectSize)
         {
             //throw std::runtime_error("buffer too small");
-            //buffer.resize(object_offset + sizeof(T));
+            //buffer.resize(object_offset + objectSize);
             ///\todo don't call reallocate twice
-            reallocate(object_offset + sizeof(T));
+            reallocate(object_offset + objectSize);
         }
 
         // Place header
         AllocationHeader& header = *reinterpret_cast<AllocationHeader*>(
             buffer.data() + header_offset);
-        header.size = sizeof(T);
+        header.size = objectSize;
         header.is_alive = true;
         header.copy = copy;
         header.destructor = destruct;
