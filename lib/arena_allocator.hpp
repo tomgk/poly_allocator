@@ -468,7 +468,7 @@ public:
 #ifdef ARENA_ALLOCATOR_LOG
             std::cout << "Copy " << typeid(T).name() << " " << src << " to " << dst << std::endl;
 #endif
-            new (dst)T(*reinterpret_cast<T*>(src));
+            new (dst)T(std::move(*reinterpret_cast<T*>(src)));
         };
         header.destructor = [](void* ptr)
         {
