@@ -472,7 +472,7 @@ private:
         // Calculate required space: header + alignment padding + object
         std::size_t header_offset = current_offset;
         std::size_t object_offset = align_offset(header_offset + HEADER_SIZE, alignof(T));
-        std::size_t required_size = object_offset - header_offset + sizeof(T);
+        std::size_t required_size = object_offset - header_offset + objectSize;
 
         // Check if reallocation is needed
         if (current_offset + required_size > buffer.capacity())
@@ -534,7 +534,8 @@ public:
     template <typename T>
     void deallocate(T* ptr)
     {
-        if (!ptr) return;
+        if (!ptr)
+            throw std::runtime_error("nullptr");
 
         // Find the object and mark it as dead, but don't move anything
         std::size_t offset = 0;
