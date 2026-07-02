@@ -10,7 +10,7 @@ TEST(ArenaAllocator_clear, Data)
 {
     TypeAwareArenaAllocator a;
 
-    a.allocateWithNoOffset<Data>(12);
+    a.allocate<Data>(12);
     a.clear();
 }
 

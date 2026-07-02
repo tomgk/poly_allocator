@@ -507,6 +507,7 @@ public:
 #ifdef ARENA_ALLOCATOR_LOG
             std::cout << "Destruct " << typeid(T).name() << " " << ptr << std::endl;
 #endif
+            ///\todo check with std::is_constructible if there is a constructor with an offset
             auto str = reinterpret_cast<T*>(ptr);
             str->~T();
         };

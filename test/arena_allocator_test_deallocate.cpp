@@ -10,7 +10,7 @@ TEST(ArenaAllocator_deallocate, Data)
 {
     TypeAwareArenaAllocator a;
 
-    auto ptr = a.allocateWithNoOffset<Data>(12);
+    auto ptr = a.allocate<Data>(12);
     a.deallocate(ptr);
 }
 

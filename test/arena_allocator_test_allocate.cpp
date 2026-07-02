@@ -13,7 +13,7 @@ TEST(ArenaAllocator_allocate, ForceReallocate)
     auto count = a.byteSize()/sizeof(Data)+1;
 
     for(size_t i=0;i<count;++i)
-        a.allocateWithNoOffset<Data>(i);
+        a.allocate<Data>(i);
 
     dump(a);
 }
