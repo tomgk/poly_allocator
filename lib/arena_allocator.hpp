@@ -32,6 +32,12 @@ class CopyWithOffsetConstruct
 
 inline constexpr CopyWithOffsetConstruct copyWithOffsetConstruct;
 
+template<typename T>
+T* updateByOffset(T* org, std::ptrdiff_t offset)
+{
+    return reinterpret_cast<T*>(reinterpret_cast<std::byte*>(org)+offset);
+}
+
 /**
  * @brief A growth-based arena allocator that stores objects in contiguous memory.
  * 
@@ -506,6 +512,11 @@ public:
         };
 
         return allocate0<T>(construct, alignof(T), sizeof(T), copy, destruct);
+    }
+
+    void forceReallocate()
+    {
+        reallocate(buffer.capacity()+1);
     }
 
 private:
