@@ -2,6 +2,7 @@
 #define DATA_H
 
 #include<cstdint>
+#include "arena_allocator.hpp"
 
 class Data
 {
@@ -11,13 +12,15 @@ private:
     static constexpr uint32_t  DEAD  = 0x9ABCDEF0;
     //store own address to detect raw copy
     Data *m_self{};
+    Data *m_next{};
     uint32_t m_state = ALIVE;
     int m_value{};
     //just to
     //char waste[50];
 public:
     Data(int value);
-    Data(const Data &d);
+    Data(const Data &d) = delete;
+    Data(CopyWithOffsetConstruct, const Data &d, std::ptrdiff_t offset);
     Data &operator=(const Data &d);
     ~Data();
 };

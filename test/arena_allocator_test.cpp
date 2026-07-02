@@ -71,6 +71,19 @@ TEST(ArenaAllocator, MixedWithResize)
     std::cout << "Starting deallocation..." << std::endl;
 }
 
+/*
+TEST(ArenaAllocator_allocate, RelocatePointer)
+{
+    TypeAwareArenaAllocator a;
+
+    Data* ptr = a.allocate<Data>(12);
+    a.forceReallocate();
+    auto iter = a.begin();
+    Data* ptr2 = &iter.get();
+    x;
+}
+*/
+
 #include "exception_handling.h"
 
 int main(int argc, char **argv)
