@@ -10,7 +10,7 @@ TEST(ArenaAllocator_clear, Data)
 {
     TypeAwareArenaAllocator a;
 
-    a.allocate<Data>(12);
+    a.allocateWithNoOffset<Data>(12);
     a.clear();
 }
 
@@ -18,7 +18,7 @@ TEST(ArenaAllocator_clear, string_short)
 {
     TypeAwareArenaAllocator a;
 
-    a.allocate<std::string>("12");
+    a.allocateWithNoOffset<std::string>("12");
     a.clear();
 }
 
@@ -26,6 +26,6 @@ TEST(ArenaAllocator_clear, string_long)
 {
     TypeAwareArenaAllocator a;
 
-    a.allocate<std::string>(LONG_STRING);
+    a.allocateWithNoOffset<std::string>(LONG_STRING);
     a.clear();
 }

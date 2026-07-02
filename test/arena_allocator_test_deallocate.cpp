@@ -10,7 +10,7 @@ TEST(ArenaAllocator_deallocate, Data)
 {
     TypeAwareArenaAllocator a;
 
-    auto ptr = a.allocate<Data>(12);
+    auto ptr = a.allocateWithNoOffset<Data>(12);
     a.deallocate(ptr);
 }
 
@@ -18,7 +18,7 @@ TEST(ArenaAllocator_deallocate, string_short)
 {
     TypeAwareArenaAllocator a;
 
-    auto ptr = a.allocate<std::string>("12");
+    auto ptr = a.allocateWithNoOffset<std::string>("12");
     a.deallocate(ptr);
 }
 
@@ -26,6 +26,6 @@ TEST(ArenaAllocator_deallocate, string_long)
 {
     TypeAwareArenaAllocator a;
 
-    auto ptr = a.allocate<std::string>(LONG_STRING);
+    auto ptr = a.allocateWithNoOffset<std::string>(LONG_STRING);
     a.deallocate(ptr);
 }

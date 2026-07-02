@@ -26,6 +26,12 @@ enum class EntryConstness : bool
     no, yes
 };
 
+class CopyWithOffsetConstruct
+{
+};
+
+inline constexpr CopyWithOffsetConstruct copyWithOffsetConstruct;
+
 /**
  * @brief A growth-based arena allocator that stores objects in contiguous memory.
  * 
@@ -47,7 +53,7 @@ class ArenaAllocator
 {
     static constexpr bool StoreTypeInfo = (bool)S;
 
-    using CopyFunction = void (*)(void *src, void *dst);
+    using CopyFunction = void (*)(void *src, void *dst, std::ptrdiff_t offset);
     using DestructorFunction = void (*)(void*);
 
 private:
@@ -349,6 +355,8 @@ private:
         //new_buffer.resize(0);
         new_buffer.resize(new_capacity);
 
+        std::ptrdiff_t memoryRelocationOffset = &new_buffer.front() - &buffer.front();
+
         std::size_t new_offset = 0;
 
         // Move all alive objects to the new buffer
@@ -383,7 +391,7 @@ private:
                 // Copy object data
                 ///\todo don't just memcpy
                 //std::memcpy(dst, src, object_size);
-                new_header.copy(src, dst);
+                new_header.copy(src, dst, memoryRelocationOffset);
 
                 new_offset = aligned_new_offset + HEADER_SIZE + object_size;
             }
@@ -446,7 +454,42 @@ public:
             return new (ptr) T(std::forward<Args>(args)...);
         };
 
-        CopyFunction copy = [](void* src, void *dst)
+        CopyFunction copy = [](void* src, void *dst, std::ptrdiff_t offset)
+        {
+#ifdef ARENA_ALLOCATOR_LOG
+            std::cout << "Copy " << typeid(T).name() << " " << src << " to " << dst << std::endl;
+#endif
+            if constexpr(std::is_trivial_v<T> && std::is_standard_layout_v<T>)
+            {
+                std::cout << "no-offset copy" << std::endl;
+                new (dst)T(std::move(*reinterpret_cast<T*>(src)));
+            }
+            else
+            {
+                std::cout << "offset copy" << std::endl;
+                new (dst)T(copyWithOffsetConstruct, std::move(*reinterpret_cast<T*>(src)), offset);
+            }
+        };
+        DestructorFunction destruct = [](void* ptr)
+        {
+#ifdef ARENA_ALLOCATOR_LOG
+            std::cout << "Destruct " << typeid(T).name() << " " << ptr << std::endl;
+#endif
+            auto str = reinterpret_cast<T*>(ptr);
+            str->~T();
+        };
+
+        return allocate0<T>(construct, alignof(T), sizeof(T), copy, destruct);
+    }
+
+    template <typename T, typename... Args>
+    T* allocateWithNoOffset(Args&&... args)
+    {
+        auto construct = [&](void *ptr){
+            return new (ptr) T(std::forward<Args>(args)...);
+        };
+
+        CopyFunction copy = [](void* src, void *dst, std::ptrdiff_t offset)
         {
 #ifdef ARENA_ALLOCATOR_LOG
             std::cout << "Copy " << typeid(T).name() << " " << src << " to " << dst << std::endl;

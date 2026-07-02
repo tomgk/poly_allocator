@@ -13,7 +13,7 @@ TEST(ArenaAllocator_allocate, ForceReallocate)
     auto count = a.byteSize()/sizeof(Data)+1;
 
     for(size_t i=0;i<count;++i)
-        a.allocate<Data>(i);
+        a.allocateWithNoOffset<Data>(i);
 
     dump(a);
 }
@@ -34,7 +34,7 @@ TEST(ArenaAllocator_allocate, OneTypeWithoutResizeAndClear_Complex_Once)
 {
     TypeAwareArenaAllocator a;
 
-    a.allocate<std::string>("#0");
+    a.allocateWithNoOffset<std::string>("#0");
 
     dump(a);
 }
@@ -47,7 +47,7 @@ TEST(ArenaAllocator_allocate, string_noreallocate)
 
     for(int i=0;i<count;++i)
     {
-        a.allocate<std::string>("#"+std::to_string(i));
+        a.allocateWithNoOffset<std::string>("#"+std::to_string(i));
 
         std::cout << i << std::endl;
     }
@@ -63,7 +63,7 @@ TEST(ArenaAllocator_allocate, string_reallocate)
 
     for(int i=0;i<count;++i)
     {
-        a.allocate<std::string>("#"+std::to_string(i));
+        a.allocateWithNoOffset<std::string>("#"+std::to_string(i));
 
         std::cout << i << std::endl;
     }
