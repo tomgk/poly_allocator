@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>poly_allocator: ArenaAllocator&lt; StoreTypeInfo &gt; Class Template Reference</title>
+<title>poly_allocator: ArenaAllocator&lt; S &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -92,9 +92,10 @@ $(document).ready(function(){initNavTree('classArenaAllocator.html',''); initRes
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classArenaAllocator-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">ArenaAllocator&lt; StoreTypeInfo &gt; Class Template Reference</div></div>
+  <div class="headertitle"><div class="title">ArenaAllocator&lt; S &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -105,50 +106,72 @@ $(document).ready(function(){initNavTree('classArenaAllocator.html',''); initRes
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator_1_1Iterator.html">Iterator</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forward iterator for traversing alive allocations in the arena.  <a href="classArenaAllocator_1_1Iterator.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator_1_1Entry.html">Entry</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator_1_1IteratorImpl.html">IteratorImpl</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forward iterator for traversing alive allocations in the arena.  <a href="classArenaAllocator_1_1IteratorImpl.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a05df3b1fa52f76e4f04cf0be0561d013" id="r_a05df3b1fa52f76e4f04cf0be0561d013"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a05df3b1fa52f76e4f04cf0be0561d013">Iterator</a> = <a class="el" href="classArenaAllocator_1_1IteratorImpl.html">IteratorImpl</a>&lt; EntryConstness::no &gt;</td></tr>
+<tr class="separator:a05df3b1fa52f76e4f04cf0be0561d013"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9fd19cc8c33131bb2d18b96ed44c53d8" id="r_a9fd19cc8c33131bb2d18b96ed44c53d8"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a9fd19cc8c33131bb2d18b96ed44c53d8">ConstIterator</a> = <a class="el" href="classArenaAllocator_1_1IteratorImpl.html">IteratorImpl</a>&lt; EntryConstness::yes &gt;</td></tr>
+<tr class="separator:a9fd19cc8c33131bb2d18b96ed44c53d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a03f586055960c71650967f27a935a7aa" id="r_a03f586055960c71650967f27a935a7aa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a03f586055960c71650967f27a935a7aa">ArenaAllocator</a> ()</td></tr>
-<tr class="memdesc:a03f586055960c71650967f27a935a7aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct an empty arena allocator.  <br /></td></tr>
-<tr class="separator:a03f586055960c71650967f27a935a7aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8fba38f575026393397a2c2afad1d1e4" id="r_a8fba38f575026393397a2c2afad1d1e4"><td class="memTemplParams" colspan="2">template&lt;typename T , typename... Args&gt; </td></tr>
-<tr class="memitem:a8fba38f575026393397a2c2afad1d1e4"><td class="memTemplItemLeft" align="right" valign="top">T *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a8fba38f575026393397a2c2afad1d1e4">allocate</a> (Args &amp;&amp;... args)</td></tr>
-<tr class="memdesc:a8fba38f575026393397a2c2afad1d1e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate memory for an object of type T and construct it.  <br /></td></tr>
-<tr class="separator:a8fba38f575026393397a2c2afad1d1e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d61f755b2080238e638e20bd68481ad" id="r_a1d61f755b2080238e638e20bd68481ad"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a1d61f755b2080238e638e20bd68481ad"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a1d61f755b2080238e638e20bd68481ad">deallocate</a> (T *ptr)</td></tr>
-<tr class="memdesc:a1d61f755b2080238e638e20bd68481ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deallocate an object previously allocated via <a class="el" href="classArenaAllocator.html#a8fba38f575026393397a2c2afad1d1e4" title="Allocate memory for an object of type T and construct it.">allocate()</a>.  <br /></td></tr>
-<tr class="separator:a1d61f755b2080238e638e20bd68481ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a353a7febbb6e2580e6926969d87d00b7" id="r_a353a7febbb6e2580e6926969d87d00b7"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; <br />
+<tr class="memitem:a30331f7e068005dc0b7a6f02f6c9f967" id="r_a30331f7e068005dc0b7a6f02f6c9f967"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a30331f7e068005dc0b7a6f02f6c9f967">ArenaAllocator</a> ()</td></tr>
+<tr class="memdesc:a30331f7e068005dc0b7a6f02f6c9f967"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct an empty arena allocator.  <br /></td></tr>
+<tr class="separator:a30331f7e068005dc0b7a6f02f6c9f967"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af99248743d4eceb4cfe8f42af7815f3b" id="r_af99248743d4eceb4cfe8f42af7815f3b"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#af99248743d4eceb4cfe8f42af7815f3b">byteSize</a> () const</td></tr>
+<tr class="separator:af99248743d4eceb4cfe8f42af7815f3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1011c02ffa8636083de4c09ee97fb5a6" id="r_a1011c02ffa8636083de4c09ee97fb5a6"><td class="memTemplParams" colspan="2">template&lt;typename T , typename... Args&gt; </td></tr>
+<tr class="memitem:a1011c02ffa8636083de4c09ee97fb5a6"><td class="memTemplItemLeft" align="right" valign="top">T *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a1011c02ffa8636083de4c09ee97fb5a6">allocate</a> (Args &amp;&amp;... args)</td></tr>
+<tr class="memdesc:a1011c02ffa8636083de4c09ee97fb5a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate memory for an object of type T and construct it.  <br /></td></tr>
+<tr class="separator:a1011c02ffa8636083de4c09ee97fb5a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbd696e0be51530d77fbb7e82c1511f7" id="r_abbd696e0be51530d77fbb7e82c1511f7"><td class="memTemplParams" colspan="2">template&lt;typename T , typename... Args&gt; </td></tr>
+<tr class="memitem:abbd696e0be51530d77fbb7e82c1511f7"><td class="memTemplItemLeft" align="right" valign="top">T *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#abbd696e0be51530d77fbb7e82c1511f7">allocateWithNoOffset</a> (Args &amp;&amp;... args)</td></tr>
+<tr class="separator:abbd696e0be51530d77fbb7e82c1511f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a221ec30886adf80609635d0af2e9f47b" id="r_a221ec30886adf80609635d0af2e9f47b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a221ec30886adf80609635d0af2e9f47b">forceReallocate</a> ()</td></tr>
+<tr class="separator:a221ec30886adf80609635d0af2e9f47b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a232da1c84901395cda90c088bc7543d0" id="r_a232da1c84901395cda90c088bc7543d0"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a232da1c84901395cda90c088bc7543d0"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a232da1c84901395cda90c088bc7543d0">deallocate</a> (T *ptr)</td></tr>
+<tr class="memdesc:a232da1c84901395cda90c088bc7543d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deallocate an object previously allocated via <a class="el" href="classArenaAllocator.html#a1011c02ffa8636083de4c09ee97fb5a6" title="Allocate memory for an object of type T and construct it.">allocate()</a>.  <br /></td></tr>
+<tr class="separator:a232da1c84901395cda90c088bc7543d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f056716b600807495dd51c53d3b0ec2" id="r_a0f056716b600807495dd51c53d3b0ec2"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; <br />
 requires StoreTypeInfo</td></tr>
-<tr class="memitem:a353a7febbb6e2580e6926969d87d00b7"><td class="memTemplItemLeft" align="right" valign="top">const std::type_info *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a353a7febbb6e2580e6926969d87d00b7">get_type_info</a> (T *ptr) const</td></tr>
-<tr class="memdesc:a353a7febbb6e2580e6926969d87d00b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get runtime type information for an allocated object.  <br /></td></tr>
-<tr class="separator:a353a7febbb6e2580e6926969d87d00b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9fef8a3cce893e2aa695e9415c3a36ef" id="r_a9fef8a3cce893e2aa695e9415c3a36ef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classArenaAllocator_1_1Iterator.html">Iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a9fef8a3cce893e2aa695e9415c3a36ef">begin</a> () const</td></tr>
-<tr class="memdesc:a9fef8a3cce893e2aa695e9415c3a36ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get an iterator to the first alive allocation.  <br /></td></tr>
-<tr class="separator:a9fef8a3cce893e2aa695e9415c3a36ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03857f0f2eab12f10eb4e37cdf899116" id="r_a03857f0f2eab12f10eb4e37cdf899116"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classArenaAllocator_1_1Iterator.html">Iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a03857f0f2eab12f10eb4e37cdf899116">end</a> () const</td></tr>
-<tr class="memdesc:a03857f0f2eab12f10eb4e37cdf899116"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get an iterator past the last allocation.  <br /></td></tr>
-<tr class="separator:a03857f0f2eab12f10eb4e37cdf899116"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8883df0666c73f58daaf868fe1ce7eb" id="r_ae8883df0666c73f58daaf868fe1ce7eb"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#ae8883df0666c73f58daaf868fe1ce7eb">get_used_bytes</a> () const</td></tr>
-<tr class="memdesc:ae8883df0666c73f58daaf868fe1ce7eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current buffer usage in bytes.  <br /></td></tr>
-<tr class="separator:ae8883df0666c73f58daaf868fe1ce7eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a52269825efd0bb7d64694dcb03c92879" id="r_a52269825efd0bb7d64694dcb03c92879"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a52269825efd0bb7d64694dcb03c92879">get_capacity</a> () const</td></tr>
-<tr class="memdesc:a52269825efd0bb7d64694dcb03c92879"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current buffer capacity in bytes.  <br /></td></tr>
-<tr class="separator:a52269825efd0bb7d64694dcb03c92879"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13235fae6baad750945769638050e9f5" id="r_a13235fae6baad750945769638050e9f5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a13235fae6baad750945769638050e9f5">clear</a> ()</td></tr>
-<tr class="memdesc:a13235fae6baad750945769638050e9f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear the arena and destroy all alive objects.  <br /></td></tr>
-<tr class="separator:a13235fae6baad750945769638050e9f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47cb64733b1fe149f26418e6a3f74c0d" id="r_a47cb64733b1fe149f26418e6a3f74c0d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a47cb64733b1fe149f26418e6a3f74c0d">~ArenaAllocator</a> ()</td></tr>
-<tr class="memdesc:a47cb64733b1fe149f26418e6a3f74c0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor that clears all allocations.  <br /></td></tr>
-<tr class="separator:a47cb64733b1fe149f26418e6a3f74c0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f056716b600807495dd51c53d3b0ec2"><td class="memTemplItemLeft" align="right" valign="top">const std::type_info *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a0f056716b600807495dd51c53d3b0ec2">get_type_info</a> (T *ptr) const</td></tr>
+<tr class="memdesc:a0f056716b600807495dd51c53d3b0ec2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get runtime type information for an allocated object.  <br /></td></tr>
+<tr class="separator:a0f056716b600807495dd51c53d3b0ec2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e658d55f3c49fd3d80a8bb3f2737ace" id="r_a4e658d55f3c49fd3d80a8bb3f2737ace"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classArenaAllocator_1_1IteratorImpl.html">Iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a4e658d55f3c49fd3d80a8bb3f2737ace">begin</a> ()</td></tr>
+<tr class="memdesc:a4e658d55f3c49fd3d80a8bb3f2737ace"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get an iterator to the first alive allocation.  <br /></td></tr>
+<tr class="separator:a4e658d55f3c49fd3d80a8bb3f2737ace"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a289b77c251f1e4f5426de628eb80430e" id="r_a289b77c251f1e4f5426de628eb80430e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classArenaAllocator_1_1IteratorImpl.html">Iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a289b77c251f1e4f5426de628eb80430e">end</a> ()</td></tr>
+<tr class="memdesc:a289b77c251f1e4f5426de628eb80430e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get an iterator past the last allocation.  <br /></td></tr>
+<tr class="separator:a289b77c251f1e4f5426de628eb80430e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa16f80254bb394cdd74f467f5fed2359" id="r_aa16f80254bb394cdd74f467f5fed2359"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classArenaAllocator_1_1IteratorImpl.html">ConstIterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#aa16f80254bb394cdd74f467f5fed2359">begin</a> () const</td></tr>
+<tr class="memdesc:aa16f80254bb394cdd74f467f5fed2359"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get an iterator to the first alive allocation.  <br /></td></tr>
+<tr class="separator:aa16f80254bb394cdd74f467f5fed2359"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab216d91db57c34866be1196f49bc3dd6" id="r_ab216d91db57c34866be1196f49bc3dd6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classArenaAllocator_1_1IteratorImpl.html">ConstIterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#ab216d91db57c34866be1196f49bc3dd6">end</a> () const</td></tr>
+<tr class="memdesc:ab216d91db57c34866be1196f49bc3dd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get an iterator past the last allocation.  <br /></td></tr>
+<tr class="separator:ab216d91db57c34866be1196f49bc3dd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaac8564f05bdbe0fe389aa9490541cc7" id="r_aaac8564f05bdbe0fe389aa9490541cc7"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#aaac8564f05bdbe0fe389aa9490541cc7">get_used_bytes</a> () const</td></tr>
+<tr class="memdesc:aaac8564f05bdbe0fe389aa9490541cc7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current buffer usage in bytes.  <br /></td></tr>
+<tr class="separator:aaac8564f05bdbe0fe389aa9490541cc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c2ee803d7e32389dcb4023995f3a07c" id="r_a0c2ee803d7e32389dcb4023995f3a07c"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a0c2ee803d7e32389dcb4023995f3a07c">get_capacity</a> () const</td></tr>
+<tr class="memdesc:a0c2ee803d7e32389dcb4023995f3a07c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current buffer capacity in bytes.  <br /></td></tr>
+<tr class="separator:a0c2ee803d7e32389dcb4023995f3a07c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71de053135358c8224f3df7ff5a9942f" id="r_a71de053135358c8224f3df7ff5a9942f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a71de053135358c8224f3df7ff5a9942f">clear</a> ()</td></tr>
+<tr class="memdesc:a71de053135358c8224f3df7ff5a9942f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear the arena and destroy all alive objects.  <br /></td></tr>
+<tr class="separator:a71de053135358c8224f3df7ff5a9942f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9aeae9e28ef1fbf9252e15fb65fd45a" id="r_ae9aeae9e28ef1fbf9252e15fb65fd45a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#ae9aeae9e28ef1fbf9252e15fb65fd45a">~ArenaAllocator</a> ()</td></tr>
+<tr class="memdesc:ae9aeae9e28ef1fbf9252e15fb65fd45a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor that clears all allocations.  <br /></td></tr>
+<tr class="separator:ae9aeae9e28ef1fbf9252e15fb65fd45a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;bool StoreTypeInfo = false&gt;<br />
-class ArenaAllocator&lt; StoreTypeInfo &gt;</div><p>A growth-based arena allocator that stores objects in contiguous memory. </p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt;<br />
+class ArenaAllocator&lt; S &gt;</div><p>A growth-based arena allocator that stores objects in contiguous memory. </p>
 <p><a class="el" href="classArenaAllocator.html" title="A growth-based arena allocator that stores objects in contiguous memory.">ArenaAllocator</a> manages objects in a std::vector&lt;std::byte&gt; with the following characteristics:</p><ul>
 <li>Objects are stored contiguously with proper alignment</li>
 <li>When new allocation doesn't fit, the buffer doubles in size</li>
@@ -166,21 +189,58 @@ class ArenaAllocator&lt; StoreTypeInfo &gt;</div><p>A growth-based arena allocat
 </dl>
 <dl class="section note"><dt>Note</dt><dd>When StoreTypeInfo is false, no runtime overhead is incurred for type tracking. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00028">28</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a03f586055960c71650967f27a935a7aa" name="a03f586055960c71650967f27a935a7aa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a03f586055960c71650967f27a935a7aa">&#9670;&#160;</a></span>ArenaAllocator()</h2>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00058">58</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a9fd19cc8c33131bb2d18b96ed44c53d8" name="a9fd19cc8c33131bb2d18b96ed44c53d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9fd19cc8c33131bb2d18b96ed44c53d8">&#9670;&#160;</a></span>ConstIterator</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;bool StoreTypeInfo = false&gt; </div>
+template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::ConstIterator =  <a class="el" href="classArenaAllocator_1_1IteratorImpl.html">IteratorImpl</a>&lt;EntryConstness::yes&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00275">275</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a05df3b1fa52f76e4f04cf0be0561d013" name="a05df3b1fa52f76e4f04cf0be0561d013"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a05df3b1fa52f76e4f04cf0be0561d013">&#9670;&#160;</a></span>Iterator</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::Iterator =  <a class="el" href="classArenaAllocator_1_1IteratorImpl.html">IteratorImpl</a>&lt;EntryConstness::no&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00274">274</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a30331f7e068005dc0b7a6f02f6c9f967" name="a30331f7e068005dc0b7a6f02f6c9f967"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30331f7e068005dc0b7a6f02f6c9f967">&#9670;&#160;</a></span>ArenaAllocator()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; StoreTypeInfo &gt;<a class="el" href="classArenaAllocator.html">::ArenaAllocator</a> </td>
+          <td class="memname"><a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;<a class="el" href="classArenaAllocator.html">::ArenaAllocator</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -195,23 +255,23 @@ template&lt;bool StoreTypeInfo = false&gt; </div>
 
 <p>Construct an empty arena allocator. </p>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00292">292</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00433">433</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a47cb64733b1fe149f26418e6a3f74c0d" name="a47cb64733b1fe149f26418e6a3f74c0d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a47cb64733b1fe149f26418e6a3f74c0d">&#9670;&#160;</a></span>~ArenaAllocator()</h2>
+<a id="ae9aeae9e28ef1fbf9252e15fb65fd45a" name="ae9aeae9e28ef1fbf9252e15fb65fd45a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9aeae9e28ef1fbf9252e15fb65fd45a">&#9670;&#160;</a></span>~ArenaAllocator()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;bool StoreTypeInfo = false&gt; </div>
+template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; StoreTypeInfo &gt;::~<a class="el" href="classArenaAllocator.html">ArenaAllocator</a> </td>
+          <td class="memname"><a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::~<a class="el" href="classArenaAllocator.html">ArenaAllocator</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -226,20 +286,20 @@ template&lt;bool StoreTypeInfo = false&gt; </div>
 
 <p>Destructor that clears all allocations. </p>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00480">480</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00736">736</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="arena__allocator_8hpp_source.html#l00461">ArenaAllocator&lt; StoreTypeInfo &gt;::clear()</a>.</p>
+<p class="reference">References <a class="el" href="arena__allocator_8hpp_source.html#l00714">ArenaAllocator&lt; S &gt;::clear()</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a8fba38f575026393397a2c2afad1d1e4" name="a8fba38f575026393397a2c2afad1d1e4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8fba38f575026393397a2c2afad1d1e4">&#9670;&#160;</a></span>allocate()</h2>
+<a id="a1011c02ffa8636083de4c09ee97fb5a6" name="a1011c02ffa8636083de4c09ee97fb5a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1011c02ffa8636083de4c09ee97fb5a6">&#9670;&#160;</a></span>allocate()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;bool StoreTypeInfo = false&gt; </div>
+template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 <div class="memtemplate">
 template&lt;typename T , typename... Args&gt; </div>
 <table class="mlabels">
@@ -247,7 +307,7 @@ template&lt;typename T , typename... Args&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">T * <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; StoreTypeInfo &gt;::allocate </td>
+          <td class="memname">T * <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::allocate </td>
           <td>(</td>
           <td class="paramtype">Args &amp;&amp;...&#160;</td>
           <td class="paramname"><em>args</em></td><td>)</td>
@@ -279,23 +339,88 @@ template&lt;typename T , typename... Args&gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to the newly constructed object</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>The returned pointer is valid until the next reallocation </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00310">310</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00457">457</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a9fef8a3cce893e2aa695e9415c3a36ef" name="a9fef8a3cce893e2aa695e9415c3a36ef"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9fef8a3cce893e2aa695e9415c3a36ef">&#9670;&#160;</a></span>begin()</h2>
+<a id="abbd696e0be51530d77fbb7e82c1511f7" name="abbd696e0be51530d77fbb7e82c1511f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abbd696e0be51530d77fbb7e82c1511f7">&#9670;&#160;</a></span>allocateWithNoOffset()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;bool StoreTypeInfo = false&gt; </div>
+template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
+<div class="memtemplate">
+template&lt;typename T , typename... Args&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classArenaAllocator_1_1Iterator.html">Iterator</a> <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; StoreTypeInfo &gt;::begin </td>
+          <td class="memname">T * <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::allocateWithNoOffset </td>
+          <td>(</td>
+          <td class="paramtype">Args &amp;&amp;...&#160;</td>
+          <td class="paramname"><em>args</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>check with std::is_constructible if there is a constructor with an offset </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00492">492</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a4e658d55f3c49fd3d80a8bb3f2737ace" name="a4e658d55f3c49fd3d80a8bb3f2737ace"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e658d55f3c49fd3d80a8bb3f2737ace">&#9670;&#160;</a></span>begin() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classArenaAllocator_1_1IteratorImpl.html">Iterator</a> <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::begin </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get an iterator to the first alive allocation. </p>
+<dl class="section return"><dt>Returns</dt><dd>Iterator positioned at the first alive allocation </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00655">655</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+
+</div>
+</div>
+<a id="aa16f80254bb394cdd74f467f5fed2359" name="aa16f80254bb394cdd74f467f5fed2359"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa16f80254bb394cdd74f467f5fed2359">&#9670;&#160;</a></span>begin() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classArenaAllocator_1_1IteratorImpl.html">ConstIterator</a> <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::begin </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -309,25 +434,54 @@ template&lt;bool StoreTypeInfo = false&gt; </div>
 </div><div class="memdoc">
 
 <p>Get an iterator to the first alive allocation. </p>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classArenaAllocator_1_1Iterator.html" title="Forward iterator for traversing alive allocations in the arena.">Iterator</a> positioned at the first alive allocation </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Iterator positioned at the first alive allocation </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00424">424</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00673">673</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a13235fae6baad750945769638050e9f5" name="a13235fae6baad750945769638050e9f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a13235fae6baad750945769638050e9f5">&#9670;&#160;</a></span>clear()</h2>
+<a id="af99248743d4eceb4cfe8f42af7815f3b" name="af99248743d4eceb4cfe8f42af7815f3b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af99248743d4eceb4cfe8f42af7815f3b">&#9670;&#160;</a></span>byteSize()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;bool StoreTypeInfo = false&gt; </div>
+template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; StoreTypeInfo &gt;::clear </td>
+          <td class="memname">size_t <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::byteSize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00438">438</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a71de053135358c8224f3df7ff5a9942f" name="a71de053135358c8224f3df7ff5a9942f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71de053135358c8224f3df7ff5a9942f">&#9670;&#160;</a></span>clear()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::clear </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -343,19 +497,19 @@ template&lt;bool StoreTypeInfo = false&gt; </div>
 <p>Clear the arena and destroy all alive objects. </p>
 <p>Calls destructors for all alive objects and resets the allocator to empty state. The buffer is cleared but not deallocated (capacity is reset). </p>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00461">461</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00714">714</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="arena__allocator_8hpp_source.html#l00480">ArenaAllocator&lt; StoreTypeInfo &gt;::~ArenaAllocator()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="arena__allocator_8hpp_source.html#l00736">ArenaAllocator&lt; S &gt;::~ArenaAllocator()</a>.</p>
 
 </div>
 </div>
-<a id="a1d61f755b2080238e638e20bd68481ad" name="a1d61f755b2080238e638e20bd68481ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1d61f755b2080238e638e20bd68481ad">&#9670;&#160;</a></span>deallocate()</h2>
+<a id="a232da1c84901395cda90c088bc7543d0" name="a232da1c84901395cda90c088bc7543d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a232da1c84901395cda90c088bc7543d0">&#9670;&#160;</a></span>deallocate()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;bool StoreTypeInfo = false&gt; </div>
+template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 <div class="memtemplate">
 template&lt;typename T &gt; </div>
 <table class="mlabels">
@@ -363,7 +517,7 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; StoreTypeInfo &gt;::deallocate </td>
+          <td class="memname">void <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::deallocate </td>
           <td>(</td>
           <td class="paramtype">T *&#160;</td>
           <td class="paramname"><em>ptr</em></td><td>)</td>
@@ -377,7 +531,7 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Deallocate an object previously allocated via <a class="el" href="classArenaAllocator.html#a8fba38f575026393397a2c2afad1d1e4" title="Allocate memory for an object of type T and construct it.">allocate()</a>. </p>
+<p>Deallocate an object previously allocated via <a class="el" href="classArenaAllocator.html#a1011c02ffa8636083de4c09ee97fb5a6" title="Allocate memory for an object of type T and construct it.">allocate()</a>. </p>
 <p>Calls the object's destructor and marks the allocation as dead. The space remains in the buffer until the next reallocation.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -387,29 +541,61 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">ptr</td><td>Pointer to object returned by <a class="el" href="classArenaAllocator.html#a8fba38f575026393397a2c2afad1d1e4" title="Allocate memory for an object of type T and construct it.">allocate()</a></td></tr>
+    <tr><td class="paramname">ptr</td><td>Pointer to object returned by <a class="el" href="classArenaAllocator.html#a1011c02ffa8636083de4c09ee97fb5a6" title="Allocate memory for an object of type T and construct it.">allocate()</a></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>Must be called with a pointer returned by <a class="el" href="classArenaAllocator.html#a8fba38f575026393397a2c2afad1d1e4" title="Allocate memory for an object of type T and construct it.">allocate()</a> on this allocator </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Must be called with a pointer returned by <a class="el" href="classArenaAllocator.html#a1011c02ffa8636083de4c09ee97fb5a6" title="Allocate memory for an object of type T and construct it.">allocate()</a> on this allocator </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00364">364</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00590">590</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a03857f0f2eab12f10eb4e37cdf899116" name="a03857f0f2eab12f10eb4e37cdf899116"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a03857f0f2eab12f10eb4e37cdf899116">&#9670;&#160;</a></span>end()</h2>
+<a id="a289b77c251f1e4f5426de628eb80430e" name="a289b77c251f1e4f5426de628eb80430e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a289b77c251f1e4f5426de628eb80430e">&#9670;&#160;</a></span>end() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;bool StoreTypeInfo = false&gt; </div>
+template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classArenaAllocator_1_1Iterator.html">Iterator</a> <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; StoreTypeInfo &gt;::end </td>
+          <td class="memname"><a class="el" href="classArenaAllocator_1_1IteratorImpl.html">Iterator</a> <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::end </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get an iterator past the last allocation. </p>
+<dl class="section return"><dt>Returns</dt><dd>Iterator positioned at current_offset (end sentinel) </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00664">664</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ab216d91db57c34866be1196f49bc3dd6" name="ab216d91db57c34866be1196f49bc3dd6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab216d91db57c34866be1196f49bc3dd6">&#9670;&#160;</a></span>end() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classArenaAllocator_1_1IteratorImpl.html">ConstIterator</a> <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::end </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -423,25 +609,54 @@ template&lt;bool StoreTypeInfo = false&gt; </div>
 </div><div class="memdoc">
 
 <p>Get an iterator past the last allocation. </p>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classArenaAllocator_1_1Iterator.html" title="Forward iterator for traversing alive allocations in the arena.">Iterator</a> positioned at current_offset (end sentinel) </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Iterator positioned at current_offset (end sentinel) </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00432">432</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00682">682</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a52269825efd0bb7d64694dcb03c92879" name="a52269825efd0bb7d64694dcb03c92879"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a52269825efd0bb7d64694dcb03c92879">&#9670;&#160;</a></span>get_capacity()</h2>
+<a id="a221ec30886adf80609635d0af2e9f47b" name="a221ec30886adf80609635d0af2e9f47b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a221ec30886adf80609635d0af2e9f47b">&#9670;&#160;</a></span>forceReallocate()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;bool StoreTypeInfo = false&gt; </div>
+template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::size_t <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; StoreTypeInfo &gt;::get_capacity </td>
+          <td class="memname">void <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::forceReallocate </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00518">518</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a0c2ee803d7e32389dcb4023995f3a07c" name="a0c2ee803d7e32389dcb4023995f3a07c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c2ee803d7e32389dcb4023995f3a07c">&#9670;&#160;</a></span>get_capacity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::get_capacity </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -457,17 +672,17 @@ template&lt;bool StoreTypeInfo = false&gt; </div>
 <p>Get the current buffer capacity in bytes. </p>
 <dl class="section return"><dt>Returns</dt><dd>Total capacity of the underlying buffer </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00451">451</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00703">703</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a353a7febbb6e2580e6926969d87d00b7" name="a353a7febbb6e2580e6926969d87d00b7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a353a7febbb6e2580e6926969d87d00b7">&#9670;&#160;</a></span>get_type_info()</h2>
+<a id="a0f056716b600807495dd51c53d3b0ec2" name="a0f056716b600807495dd51c53d3b0ec2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f056716b600807495dd51c53d3b0ec2">&#9670;&#160;</a></span>get_type_info()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;bool StoreTypeInfo = false&gt; </div>
+template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 <div class="memtemplate">
 template&lt;typename T &gt; <br />
 requires StoreTypeInfo</div>
@@ -476,7 +691,7 @@ requires StoreTypeInfo</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::type_info * <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; StoreTypeInfo &gt;::get_type_info </td>
+          <td class="memname">const std::type_info * <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::get_type_info </td>
           <td>(</td>
           <td class="paramtype">T *&#160;</td>
           <td class="paramname"><em>ptr</em></td><td>)</td>
@@ -499,30 +714,30 @@ requires StoreTypeInfo</div>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">ptr</td><td>Pointer to object returned by <a class="el" href="classArenaAllocator.html#a8fba38f575026393397a2c2afad1d1e4" title="Allocate memory for an object of type T and construct it.">allocate()</a> </td></tr>
+    <tr><td class="paramname">ptr</td><td>Pointer to object returned by <a class="el" href="classArenaAllocator.html#a1011c02ffa8636083de4c09ee97fb5a6" title="Allocate memory for an object of type T and construct it.">allocate()</a> </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to std::type_info for the allocated object, or nullptr if not found</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>This method is only available if StoreTypeInfo template parameter is true </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00399">399</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00630">630</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ae8883df0666c73f58daaf868fe1ce7eb" name="ae8883df0666c73f58daaf868fe1ce7eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae8883df0666c73f58daaf868fe1ce7eb">&#9670;&#160;</a></span>get_used_bytes()</h2>
+<a id="aaac8564f05bdbe0fe389aa9490541cc7" name="aaac8564f05bdbe0fe389aa9490541cc7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaac8564f05bdbe0fe389aa9490541cc7">&#9670;&#160;</a></span>get_used_bytes()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;bool StoreTypeInfo = false&gt; </div>
+template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::size_t <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; StoreTypeInfo &gt;::get_used_bytes </td>
+          <td class="memname">std::size_t <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::get_used_bytes </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -539,12 +754,12 @@ template&lt;bool StoreTypeInfo = false&gt; </div>
 <p>Includes space used by alive and dead allocations, plus headers and padding.</p>
 <dl class="section return"><dt>Returns</dt><dd>Number of bytes currently used in the buffer </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00443">443</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00694">694</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li><a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a></li>
+<li>lib/<a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

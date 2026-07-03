@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['allocate_0',['allocate',['../classArenaAllocator.html#a8fba38f575026393397a2c2afad1d1e4',1,'ArenaAllocator']]],
-  ['arenaallocator_1',['arenaallocator',['../classArenaAllocator.html',1,'ArenaAllocator&lt; StoreTypeInfo &gt;'],['../classArenaAllocator.html#a03f586055960c71650967f27a935a7aa',1,'ArenaAllocator::ArenaAllocator()']]]
+  ['allocate_0',['allocate',['../classArenaAllocator.html#a1011c02ffa8636083de4c09ee97fb5a6',1,'ArenaAllocator']]],
+  ['allocatewithnooffset_1',['allocateWithNoOffset',['../classArenaAllocator.html#abbd696e0be51530d77fbb7e82c1511f7',1,'ArenaAllocator']]],
+  ['arenaallocator_2',['arenaallocator',['../classArenaAllocator.html',1,'ArenaAllocator&lt; S &gt;'],['../classArenaAllocator.html#a30331f7e068005dc0b7a6f02f6c9f967',1,'ArenaAllocator::ArenaAllocator()']]]
 ];

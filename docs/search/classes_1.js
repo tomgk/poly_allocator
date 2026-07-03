@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['iterator_0',['Iterator',['../classArenaAllocator_1_1Iterator.html',1,'ArenaAllocator']]]
+  ['copywithoffsetconstruct_0',['CopyWithOffsetConstruct',['../classCopyWithOffsetConstruct.html',1,'']]]
 ];
