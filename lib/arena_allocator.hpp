@@ -488,6 +488,14 @@ public:
         return allocate0<T>(construct, alignof(T), sizeof(T), copy, destruct);
     }
 
+    /**
+     * @brief allocateWithNoOffset
+     *
+     * \warning only safe to use if the object doesn't contain any pointer to an object inside this allocator
+     *
+     * @param args
+     * @return
+     */
     template <typename T, typename... Args>
     T* allocateWithNoOffset(Args&&... args)
     {
