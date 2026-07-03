@@ -10,7 +10,7 @@ WARNINGS               = YES
 WARN_IF_UNDOCUMENTED   = YES
 WARN_NO_PARAMDOC       = NO
 
-INPUT                  = arena_allocator.hpp
+INPUT                  = lib
 INPUT_ENCODING         = UTF-8
 
 FILE_PATTERNS          = *.hpp *.h
