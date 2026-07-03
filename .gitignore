@@ -1,2 +1,4 @@
 .qtcreator/CMakeLists.txt.user
 /build
+#shouldn't be commited on master but in docs
+/docs
