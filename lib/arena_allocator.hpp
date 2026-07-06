@@ -26,6 +26,9 @@ enum class EntryConstness : bool
     no, yes
 };
 
+/**
+ * \internal
+ */
 class CopyWithOffsetConstruct
 {
 };

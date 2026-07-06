@@ -16,6 +16,8 @@ INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.hpp *.h
 RECURSIVE              = NO
 
+EXCLUDE_SYMBOLS        = CopyWithOffsetConstruct
+
 EXCLUDE_PATTERNS       = 
 EXCLUDE_SYMLINKS       = NO
 
