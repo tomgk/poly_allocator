@@ -38,6 +38,17 @@ T* updateByOffset(T* org, std::ptrdiff_t offset)
     return reinterpret_cast<T*>(reinterpret_cast<std::byte*>(org)+offset);
 }
 
+///\todo better name and maybe better requirements
+template<typename T>
+concept PlainObject = std::is_trivial_v<T> && std::is_standard_layout_v<T>;
+
+template<typename T>
+concept CopyWithOffsetConstructable =
+    std::is_constructible_v<T, CopyWithOffsetConstruct, const T&, std::ptrdiff_t>;
+
+template<typename T>
+concept ArenaAllocatorConstructable = PlainObject<T> || CopyWithOffsetConstructable<T>;
+
 /**
  * @brief A growth-based arena allocator that stores objects in contiguous memory.
  * 
@@ -460,7 +471,7 @@ public:
      * 
      * @note The returned pointer is valid until the next reallocation
      */
-    template <typename T, typename... Args>
+    template <ArenaAllocatorConstructable T, typename... Args>
     T* allocate(Args&&... args)
     {
         auto construct = [&](void *ptr){
@@ -472,16 +483,18 @@ public:
 #ifdef ARENA_ALLOCATOR_LOG
             std::cout << "Copy " << typeid(T).name() << " " << src << " to " << dst << std::endl;
 #endif
-            if constexpr(std::is_trivial_v<T> && std::is_standard_layout_v<T>)
+            if constexpr(PlainObject<T>)
             {
                 std::cout << "no-offset copy" << std::endl;
                 new (dst)T(std::move(*reinterpret_cast<T*>(src)));
             }
-            else
+            else if constexpr(CopyWithOffsetConstructable<T>)
             {
                 std::cout << "offset copy" << std::endl;
                 new (dst)T(copyWithOffsetConstruct, std::move(*reinterpret_cast<T*>(src)), offset);
             }
+            else
+                static_assert("Type is neither trivial with standard layout nor supports copy construct with offset");
         };
         DestructorFunction destruct = [](void* ptr)
         {
