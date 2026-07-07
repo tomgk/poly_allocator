@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['copywithoffsetconstruct_0',['CopyWithOffsetConstruct',['../classCopyWithOffsetConstruct.html',1,'']]]
+  ['entry_0',['Entry',['../classArenaAllocator_1_1Entry.html',1,'ArenaAllocator']]]
 ];
