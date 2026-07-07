@@ -41,7 +41,7 @@ T* getNewMemoryLocation(T* org, std::ptrdiff_t offset)
     return reinterpret_cast<T*>(reinterpret_cast<std::byte*>(org)+offset);
 }
 
-///\todo better name and maybe better requirements
+///\todo better name and actually check for members of pointer type which may point to a memory inside the arena allocator
 template<typename T>
 concept PlainObject = std::is_trivial_v<T> && std::is_standard_layout_v<T>;
 
