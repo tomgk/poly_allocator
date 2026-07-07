@@ -382,64 +382,79 @@ private:
         std::vector<std::byte> new_buffer;
         new_buffer.resize(new_capacity);
 
-        std::ptrdiff_t memoryRelocationOffset = &new_buffer.front() - &buffer.front();
+        //Calculate difference
+        std::ptrdiff_t memoryRelocationOffset = new_buffer.data() - buffer.data();
 
         std::size_t new_offset = 0;
+        std::size_t old_offset = 0;
 
-        // Move all alive objects to the new buffer
-        std::size_t offset = 0;
-        while (offset < current_offset)
+         // Move all alive objects to the new buffer
+        try
         {
-            AllocationHeader& old_header = get_header(offset);
-            std::size_t object_size = old_header.size;
-
-            if (old_header.is_alive)
+            while (old_offset < current_offset)
             {
-                // Align the new offset
-                std::size_t aligned_new_offset = align_offset(new_offset, alignof(AllocationHeader));
-                
-                // Ensure new_buffer has enough space
-                if (new_buffer.capacity() < aligned_new_offset + HEADER_SIZE + object_size)
-                    throw std::invalid_argument("wrong allocation");
-                //{
-                //    new_buffer.reserve(std::max(new_buffer.capacity() * 2,
-                //                              aligned_new_offset + HEADER_SIZE + object_size + 256));
-                //}
-                //new_buffer.resize(aligned_new_offset + HEADER_SIZE + object_size);
+                AllocationHeader& old_header = get_header(old_offset);
+                std::size_t object_size = old_header.size;
 
-                // Copy header
-                AllocationHeader& new_header = *reinterpret_cast<AllocationHeader*>(
-                    new_buffer.data() + aligned_new_offset);
-                new_header = old_header;
+                if (old_header.is_alive)
+                {
+                    // Align the new offset
+                    std::size_t aligned_new_offset = align_offset(new_offset, alignof(AllocationHeader));
 
-                void *dst = new_buffer.data() + aligned_new_offset + HEADER_SIZE;
-                void *src = get_object_pointer(offset);
+                    // Ensure new_buffer has enough space
+                    if (aligned_new_offset + HEADER_SIZE + object_size > new_capacity)
+                        throw std::invalid_argument("wrong allocation");
 
-                // Copy object data
-                ///\todo don't just memcpy
-                //std::memcpy(dst, src, object_size);
-                new_header.copy(src, dst, memoryRelocationOffset);
+                    // Copy header
+                    AllocationHeader& new_header = *reinterpret_cast<AllocationHeader*>(
+                        new_buffer.data() + aligned_new_offset);
+                    new_header = old_header;
 
-                new_offset = aligned_new_offset + HEADER_SIZE + object_size;
+                    void *dst = new_buffer.data() + aligned_new_offset + HEADER_SIZE;
+                    void *src = get_object_pointer(old_offset);
+
+                    // Copy object data
+                    ///\todo don't just memcpy
+                    //std::memcpy(dst, src, object_size);
+                    new_header.copy(src, dst, memoryRelocationOffset);
+
+                    new_offset = aligned_new_offset + HEADER_SIZE + object_size;
+                }
+
+                // Weiterschreiten im alten Buffer nach deinem originalen Schema
+                old_offset += HEADER_SIZE + object_size;
             }
-
-            // Move to next allocation
-            offset += HEADER_SIZE + object_size;
+        }
+        catch (...)
+        {
+            // In case of an error: Destroy all already constructed objects in the new buffer
+            // Im Fehlerfall: Alle bereits im NEUEN Buffer konstruierten Objekte sauber zerstören
+            std::size_t cleanup_offset = 0;
+            while (cleanup_offset < new_offset)
+            {
+                AllocationHeader& new_header = *reinterpret_cast<AllocationHeader*>(new_buffer.data() + cleanup_offset);
+                if (new_header.is_alive && new_header.destructor)
+                {
+                    new_header.destructor(new_buffer.data() + cleanup_offset + HEADER_SIZE);
+                }
+                cleanup_offset += HEADER_SIZE + new_header.size;
+            }
+            throw; // Exception weiterreichen, alter Zustand der Arena bleibt unverändert
         }
 
-        //TODO: merge with previous loop to have a well defined ArenaAllocator
-        //in case construct move or destructor(?) doesn't work
-        // Destroy all objects in the old buffer
-        offset = 0;
-        while (offset < current_offset)
+        // SCHRITT 2: Nachdem alles erfolgreich kopiert wurde, die Objekte im ALTEN Buffer zerstören
+        old_offset = 0;
+        while (old_offset < current_offset)
         {
-            AllocationHeader& header = get_header(offset);
+            AllocationHeader& header = get_header(old_offset);
             std::size_t object_size = header.size;
 
             if (header.is_alive && header.destructor)
-                header.destructor(get_object_pointer(offset));
+            {
+                header.destructor(get_object_pointer(old_offset));
+            }
 
-            offset += HEADER_SIZE + object_size;
+            old_offset += HEADER_SIZE + object_size;
         }
 
         // Replace old buffer with new one
