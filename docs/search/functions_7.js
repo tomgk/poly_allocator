@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['_7earenaallocator_0',['~ArenaAllocator',['../classArenaAllocator.html#ae9aeae9e28ef1fbf9252e15fb65fd45a',1,'ArenaAllocator']]]
+  ['reallocate_0',['reallocate',['../classArenaAllocator.html#aabacf64e24d318133add36bb61d8ee12',1,'ArenaAllocator']]]
 ];
