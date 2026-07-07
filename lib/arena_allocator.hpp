@@ -374,7 +374,9 @@ private:
         if(new_capacity > 1024 * 1024)
             throw std::runtime_error("reached 1 MB");
 
+#ifdef ARENA_ALLOCATOR_LOG
         std::cout << "reallocate: " << buffer.capacity() << " -> " << new_capacity << std::endl;
+#endif
 
         // Create new buffer
         std::vector<std::byte> new_buffer;
