@@ -11,7 +11,7 @@ Data::Data(int value):
 }
 
 Data::Data(CopyWithOffsetConstruct, const Data &d, std::ptrdiff_t offset):
-    m_self(this), m_next(updateByOffset(d.m_next, offset)), m_value(d.m_value)
+    m_self(this), m_next(getNewMemoryLocation(d.m_next, offset)), m_value(d.m_value)
 {
     if(DATA_LOG)
         std::cout << "CCopy " << (void*)this << " from " << (void*)&d << std::endl;

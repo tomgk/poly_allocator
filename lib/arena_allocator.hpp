@@ -36,7 +36,7 @@ class CopyWithOffsetConstruct
 inline constexpr CopyWithOffsetConstruct copyWithOffsetConstruct;
 
 template<typename T>
-T* updateByOffset(T* org, std::ptrdiff_t offset)
+T* getNewMemoryLocation(T* org, std::ptrdiff_t offset)
 {
     return reinterpret_cast<T*>(reinterpret_cast<std::byte*>(org)+offset);
 }
