@@ -109,7 +109,7 @@ TEST_F(ArenaAllocatorTest, AllocateArrayCopyIsolationTest)
     size_t count = 3;
 
     // Act: Allocate array where each element is initialized as a copy of the blueprint
-    Tracker* array = arena.allocateArray<Tracker>(count, blueprint);
+    Tracker* array = arena.allocateArray<Tracker>(count, blueprint).data();
 
     // Assert 1: Verify all elements were correctly initialized from the blueprint
     ASSERT_NE(array, nullptr);
@@ -152,7 +152,7 @@ TEST_F(ArenaAllocatorTest, AllocatePrimitiveArrayTest)
     size_t count = 5;
 
     // Act: Allocate a zero-initialized primitive array
-    int* zero_array = arena.allocateArray<int>(count, true);
+    int* zero_array = arena.allocateArray<int>(count, true).data();
 
     // Assert: Verify all elements are strictly 0
     ASSERT_NE(zero_array, nullptr);

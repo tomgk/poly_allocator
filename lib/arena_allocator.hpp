@@ -52,6 +52,44 @@ concept CopyWithOffsetConstructable =
 template<typename T>
 concept ArenaAllocatorConstructable = PlainObject<T> || CopyWithOffsetConstructable<T>;
 
+template <typename T>
+class ArenaArrayView
+{
+private:
+    T* m_data;
+    std::size_t m_size;
+
+public:
+    // Container type definitions for compatibility with STL algorithms
+    using value_type = T;
+    using pointer = T*;
+    using const_pointer = const T*;
+    using reference = T&;
+    using const_reference = const T&;
+    using iterator = T*;
+    using const_iterator = const T*;
+
+    ArenaArrayView(T* data, std::size_t size) : m_data(data), m_size(size) {}
+
+    // Observers and data access
+    T* data() noexcept { return m_data; }
+    const T* data() const noexcept { return m_data; }
+    std::size_t size() const noexcept { return m_size; }
+    bool empty() const noexcept { return m_size == 0; }
+
+    // Element access with bracket operator
+    T& operator[](std::size_t index) { return m_data[index]; }
+    const T& operator[](std::size_t index) const { return m_data[index]; }
+
+    // Iterator support
+    iterator begin() noexcept { return m_data; }
+    iterator end() noexcept { return m_data + m_size; }
+    const_iterator begin() const noexcept { return m_data; }
+    const_iterator end() const noexcept { return m_data + m_size; }
+    const_iterator cbegin() const noexcept { return m_data; }
+    const_iterator cend() const noexcept { return m_data + m_size; }
+};
+
 /**
  * @brief A growth-based arena allocator that stores objects in contiguous memory.
  * 
@@ -576,9 +614,9 @@ public:
      * @return Pointer to the first element of the newly created array
      */
     template <ArenaAllocatorConstructable T>
-    T* allocateArray(std::size_t count, bool zero_initialize = false) requires std::is_default_constructible_v<T>
+    ArenaArrayView<T> allocateArray(std::size_t count, bool zero_initialize = false) requires std::is_default_constructible_v<T>
     {
-        if (count == 0) return nullptr;
+        if (count == 0) return ArenaArrayView<T>(nullptr, 0);
 
         std::size_t objectSize = count * sizeof(T);
 
@@ -683,7 +721,8 @@ public:
             // Trivial types don't need their destructors called
         };
 
-        return allocate0<T>(construct, alignof(T), objectSize, copy, destruct);
+        T* raw_ptr = allocate0<T>(construct, alignof(T), objectSize, copy, destruct);
+        return ArenaArrayView<T>(raw_ptr, count);
     }
 
     /**
@@ -695,9 +734,9 @@ public:
      * @return Pointer to the first element of the newly created array
      */
     template <ArenaAllocatorConstructable T>
-    T* allocateArray(std::size_t count, const T& value) requires std::is_copy_constructible_v<T>
+    ArenaArrayView<T> allocateArray(std::size_t count, const T& value) requires std::is_copy_constructible_v<T>
     {
-        if (count == 0) return nullptr;
+        if (count == 0) return ArenaArrayView<T>(nullptr, 0);
 
         std::size_t objectSize = count * sizeof(T);
 
@@ -786,7 +825,8 @@ public:
             }
         };
 
-        return allocate0<T>(construct, alignof(T), objectSize, copy, destruct);
+        T* raw_ptr = allocate0<T>(construct, alignof(T), objectSize, copy, destruct);
+        return ArenaArrayView<T>(raw_ptr, count);
     }
     /**
      * @brief Returns the number of elements in the array
