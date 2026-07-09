@@ -667,6 +667,38 @@ public:
         return allocate0<T>(construct, alignof(T), objectSize, copy, destruct);
     }
 
+    /**
+     * @brief Returns the number of elements in the array
+     *
+     * \warning The array must have been allocated with this allocator or else it is undefined behaviour
+     * \todo add unit tests
+     *
+     * @tparam T element type
+     * @param ptr pointer to array (return from allocateArray)
+     * @return number of elements or 0 if nullptr gets passed
+     */
+    template <typename T>
+    std::size_t getArrayCount(const T* ptr) const
+    {
+        if (!ptr)
+            return 0;
+
+        //access header which is before array
+        const std::byte* header_ptr = reinterpret_cast<const std::byte*>(ptr) - HEADER_SIZE;
+        const AllocationHeader* header = reinterpret_cast<const AllocationHeader*>(header_ptr);
+
+        //optional runtime check to see if the function was called with the wrong type
+        if constexpr (StoreTypeInfo)
+        {
+            if (header->type_info && *header->type_info != typeid(T))
+            {
+                throw std::invalid_argument("ArenaAllocator: getArrayCount was called with wrong type");
+            }
+        }
+
+        return header->size / sizeof(T);
+    }
+
 private:
     template <typename T, typename C>
     T* allocate0(C construct, size_t align, size_t objectSize, CopyFunction copy, DestructorFunction destruct)
