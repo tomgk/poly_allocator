@@ -563,6 +563,110 @@ public:
         return allocate0<T>(construct, alignof(T), sizeof(T), copy, destruct);
     }
 
+    /**
+     * @brief Allokiert ein kontinuierliches Array vom Typ T mit 'count' Elementen.
+     *
+     * Konstruiert alle Elemente mit ihrem Standardkonstruktor (Default Constructor).
+     * Das gesamte Array teilt sich einen einzigen AllocationHeader.
+     *
+     * @tparam T Typ der Array-Elemente (Muss standardkonstruierbar sein)
+     * @param count Anzahl der Elemente im Array
+     * @return Zeiger auf das erste Element des neu erstellten Arrays
+     */
+    template <ArenaAllocatorConstructable T>
+    T* allocateArray(std::size_t count) requires std::is_default_constructible_v<T>
+    {
+        if (count == 0) return nullptr;
+
+        std::size_t objectSize = count * sizeof(T);
+
+        auto construct = [count](void* ptr) {
+            T* array_start = reinterpret_cast<T*>(ptr);
+            std::size_t constructed = 0;
+            try
+            {
+                for (; constructed < count; ++constructed)
+                {
+                    new (&array_start[constructed]) T();
+                }
+            }
+            catch (...)
+            {
+                for (std::size_t i = constructed; i > 0; --i)
+                {
+                    array_start[i - 1].~T();
+                }
+                throw;
+            }
+            return array_start;
+        };
+
+        // Kopierfunktion für das gesamte Array bei einer Reallokation
+        CopyFunction copy = [](void* src, void* dst, std::ptrdiff_t offset)
+        {
+            //The number of elements can be calculated using the size stored in the header
+            //In this context T is known, so sizeof(T) is known too
+#ifdef ARENA_ALLOCATOR_LOG
+            std::cout << "Copy Array of " << typeid(T).name() << " from " << src << " to " << dst << std::endl;
+#endif
+            T* src_array = reinterpret_cast<T*>(src);
+            T* dst_array = reinterpret_cast<T*>(dst);
+
+            //To find out the number of elements, go back to find the header which lays directly before
+            ///\todo is alignment taken care of?
+            std::byte* header_ptr = reinterpret_cast<std::byte*>(src) - sizeof(AllocationHeader);
+            AllocationHeader* header = reinterpret_cast<AllocationHeader*>(header_ptr);
+            std::size_t element_count = header->size / sizeof(T);
+
+            std::size_t copied = 0;
+            try
+            {
+                for (; copied < element_count; ++copied)
+                {
+                    if constexpr (PlainObject<T>)
+                    {
+                        new (&dst_array[copied]) T(std::move(src_array[copied]));
+                    }
+                    else if constexpr (CopyWithOffsetConstructable<T>)
+                    {
+                        new (&dst_array[copied]) T(copyWithOffsetConstruct, std::move(src_array[copied]), offset);
+                    }
+                    else
+                        static_assert(false, "neither PlainObject nor CopyWithOffsetConstructable");
+                }
+            }
+            catch (...)
+            {
+                for (std::size_t i = copied; i > 0; --i)
+                {
+                    dst_array[i - 1].~T();
+                }
+                throw;
+            }
+        };
+
+        DestructorFunction destruct = [](void* ptr)
+        {
+#ifdef ARENA_ALLOCATOR_LOG
+            std::cout << "Destruct Array of " << typeid(T).name() << " at " << ptr << std::endl;
+#endif
+            T* array_start = reinterpret_cast<T*>(ptr);
+
+            //Get array count using header
+            std::byte* header_ptr = reinterpret_cast<std::byte*>(ptr) - sizeof(AllocationHeader);
+            AllocationHeader* header = reinterpret_cast<AllocationHeader*>(header_ptr);
+            std::size_t element_count = header->size / sizeof(T);
+
+            //Destruct objects in reverse (C++ Standard)
+            for (std::size_t i = element_count; i > 0; --i)
+            {
+                array_start[i - 1].~T();
+            }
+        };
+
+        return allocate0<T>(construct, alignof(T), objectSize, copy, destruct);
+    }
+
 private:
     template <typename T, typename C>
     T* allocate0(C construct, size_t align, size_t objectSize, CopyFunction copy, DestructorFunction destruct)
