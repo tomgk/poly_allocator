@@ -99,8 +99,7 @@ struct Tracker
 
 TEST(ArenaAllocator_allocate, array)
 {
-    // Create an arena that does not track dynamic type info for maximum speed
-    ArenaAllocator<StoreTypeInfoType::no> arena;
+    ArenaAllocator<StoreTypeInfoType::yes> arena;
 
     std::cout << "--- 1. Allocating uninitialized primitive array ---\n";
     // Allocates space for 5 integers. Performance is blazing fast because
