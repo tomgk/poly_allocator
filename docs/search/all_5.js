@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['forcereallocate_0',['forceReallocate',['../classArenaAllocator.html#a221ec30886adf80609635d0af2e9f47b',1,'ArenaAllocator']]]
+  ['iteratorimpl_0',['iteratorimpl',['../classArenaAllocator_1_1IteratorImpl.html',1,'ArenaAllocator&lt; S &gt;::IteratorImpl&lt; C &gt;'],['../classIteratorImpl.html',1,'IteratorImpl&lt; C &gt;']]]
 ];

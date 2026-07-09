@@ -1,10 +1,11 @@
 var indexSectionsWithContent =
 {
-  0: "abcdefgiloprt~",
+  0: "acefgiloprt",
   1: "aei",
-  2: "abcdefgor~",
-  3: "lt",
-  4: "acp"
+  2: "afgor",
+  3: "a",
+  4: "lt",
+  5: "acp"
 };
 
 var indexSectionNames =
@@ -12,8 +13,9 @@ var indexSectionNames =
   0: "all",
   1: "classes",
   2: "functions",
-  3: "pages",
-  4: "concepts"
+  3: "related",
+  4: "pages",
+  5: "concepts"
 };
 
 var indexSectionLabels =
@@ -21,7 +23,8 @@ var indexSectionLabels =
   0: "All",
   1: "Classes",
   2: "Functions",
-  3: "Pages",
-  4: "Concepts"
+  3: "Friends",
+  4: "Pages",
+  5: "Concepts"
 };
 
