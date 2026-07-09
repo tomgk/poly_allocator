@@ -2,6 +2,7 @@
 #include "arena_allocator.hpp"
 
 #include <gtest/gtest.h>
+#include <numeric>
 #include "common.h"
 
 #include "data.h"
