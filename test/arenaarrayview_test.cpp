@@ -3,9 +3,6 @@
 
 #include <gtest/gtest.h>
 #include <numeric>
-#include "common.h"
-
-#include "data.h"
 
 class ArenaArrayViewTest : public ::testing::Test
 {
@@ -43,4 +40,135 @@ TEST_F(ArenaArrayViewTest, ContainerInterfaceVerificationTest)
 
     // Cleanup
     arena.deallocate(view.data());
+}
+
+// A custom type that fulfills the ArenaAllocatorConstructable requirement
+struct ElementTracker
+{
+    int val;
+    static inline int copies = 0;
+
+    ElementTracker() : val(0) {}
+    ElementTracker(int v) : val(v) {}
+
+    // Copy constructor tracking
+    ElementTracker(const ElementTracker& other) : val(other.val)
+    {
+        copies++;
+    }
+
+    // Required shift constructor for relocation support
+    ElementTracker(CopyWithOffsetConstruct, const ElementTracker& other, std::ptrdiff_t offset)
+        : val(other.val) {}
+
+    ~ElementTracker() {}
+};
+
+class ArenaArrayViewAdvancedTest : public ::testing::Test
+{
+protected:
+    ArenaAllocator<StoreTypeInfoType::no> arena;
+};
+
+// 1. Test: Verifies that ArenaArrayView works flawlessly with standard STL algorithms
+TEST_F(ArenaArrayViewAdvancedTest, STLAlgorithmsCompatibilityTest)
+{
+    std::size_t count = 6;
+    ArenaArrayView<int> view = arena.allocateArray<int>(count, true);
+
+    // Act: Fill with unsorted data using standard iterators
+    view[0] = 50; view[1] = 10; view[2] = 40;
+    view[3] = 20; view[4] = 60; view[5] = 30;
+
+    // Use std::sort directly on the view since it provides begin() and end()
+    std::sort(view.begin(), view.end());
+
+    // Assert: Check if sorting worked
+    EXPECT_EQ(view[0], 10);
+    EXPECT_EQ(view[1], 20);
+    EXPECT_EQ(view[5], 60);
+
+    // Use std::find to look for an element
+    auto it = std::find(view.begin(), view.end(), 40);
+    ASSERT_NE(it, view.end());
+    EXPECT_EQ(*it, 40);
+
+    // Use std::accumulate to sum up values
+    int sum = std::accumulate(view.begin(), view.end(), 0);
+    EXPECT_EQ(sum, 210);
+
+    arena.deallocate(view.data());
+}
+
+// 2. Test: Verifies read-only behavior through const ArenaArrayView
+TEST_F(ArenaArrayViewAdvancedTest, ConstViewAccessTest)
+{
+    std::size_t count = 3;
+    ArenaArrayView<int> mutable_view = arena.allocateArray<int>(count, true);
+    mutable_view[0] = 100;
+    mutable_view[1] = 200;
+    mutable_view[2] = 300;
+
+    // Create a read-only const reference to the view
+    const ArenaArrayView<int>& const_view = mutable_view;
+
+    // Assert: Read access works via const_iterator and const operator[]
+    EXPECT_EQ(const_view.size(), count);
+    EXPECT_EQ(const_view[1], 200);
+    EXPECT_EQ(*const_view.cbegin(), 100);
+
+    // The following lines would fail compilation if uncommented (uncomment to verify read-only safety):
+    // const_view[0] = 500;
+    // *const_view.begin() = 500;
+
+    arena.deallocate(mutable_view.data());
+}
+
+// 3. Test: Ensures that allocateArray with a value parameter deep-copies the object into every slot
+TEST_F(ArenaArrayViewAdvancedTest, ValueInitializationDeepCopyTest)
+{
+    ElementTracker::copies = 0; // Reset counter
+    ElementTracker blueprint(42);
+    std::size_t count = 4;
+
+    // Act: Create view where every slot is initialized with a copy of blueprint
+    ArenaArrayView<ElementTracker> view = arena.allocateArray<ElementTracker>(count, blueprint);
+
+    // Assert: The copy constructor must have been called exactly 'count' times
+    EXPECT_EQ(ElementTracker::copies, static_cast<int>(count));
+    EXPECT_EQ(arena.getArrayCount<ElementTracker>(view.data()), count);
+
+    for (size_t i = 0; i < count; ++i)
+    {
+        EXPECT_EQ(view[i].val, 42);
+    }
+
+    // Isolate verify: changing one doesn't affect others
+    view[1].val = 99;
+    EXPECT_EQ(view[0].val, 42);
+    EXPECT_EQ(view[1].val, 99);
+    EXPECT_EQ(blueprint.val, 42); // Blueprint on stack remains untouched
+
+    arena.deallocate(view.data());
+}
+
+// 4. Test: Verifies that the view pointer stays valid until a reallocation occurs
+TEST_F(ArenaArrayViewAdvancedTest, ViewValidityBeforeReallocationTest)
+{
+    std::size_t count = 2;
+    ArenaArrayView<int> view_1 = arena.allocateArray<int>(count, true);
+    view_1[0] = 7;
+    view_1[1] = 8;
+
+    // Allocate a second array without triggering a reallocation limit
+    ArenaArrayView<int> view_2 = arena.allocateArray<int>(count, true);
+    view_2[0] = 9;
+
+    // Assert: Allocating more elements in the same buffer capacity must not invalidate view_1
+    EXPECT_EQ(view_1[0], 7);
+    EXPECT_EQ(view_1[1], 8);
+    EXPECT_EQ(view_2[0], 9);
+
+    arena.deallocate(view_1.data());
+    arena.deallocate(view_2.data());
 }
