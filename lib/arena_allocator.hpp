@@ -380,6 +380,12 @@ private:
     }
 
 public:
+    ///forces a reallocating which will trigger moving objects
+    void forceReallocate()
+    {
+        reallocate(buffer.capacity()+1);
+    }
+
     /**
      * @brief Reallocate to a larger buffer and move all alive objects.
      * 
@@ -555,11 +561,6 @@ public:
         };
 
         return allocate0<T>(construct, alignof(T), sizeof(T), copy, destruct);
-    }
-
-    void forceReallocate()
-    {
-        reallocate(buffer.capacity()+1);
     }
 
 private:
