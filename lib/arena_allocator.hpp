@@ -63,6 +63,9 @@ concept ArenaAllocatorConstructable = PlainObject<T> || CopyWithOffsetConstructa
  * - Each allocation tracks whether it's still alive via a flag
  * - Optional runtime type information storage
  * - Forward iteration support over alive allocations
+ *
+ * In case an array allocation is requested and the size is zero the allocator
+ * might return nullptr and act like nullptr is an array of size zero
  * 
  * @tparam StoreTypeInfo If true, stores type information for each allocation. Default: false
  * 
