@@ -158,3 +158,18 @@ TEST(ArenaAllocator_allocate, array)
     arena.clear();
 }
 
+TEST(ArenaAllocator_allocate, array_copyN)
+{
+    ArenaAllocator<StoreTypeInfoType::yes> arena;
+
+    // 1. Primitive array filled with a specific default value (e.g., 42)
+    int* answer_array = arena.allocateArray<int>(10, 42);
+    // Every single one of the 10 elements is now guaranteed to be 42.
+
+    // 2. Custom object array pre-configured
+    Tracker blueprint; // Let's say this gets ID #1
+    blueprint.id = 999; // Override the ID manually for the blueprint
+
+    Tracker* filled_trackers = arena.allocateArray<Tracker>(3, blueprint);
+    // All 3 elements inside filled_trackers are now copies and have the ID 999.
+}

@@ -687,6 +687,108 @@ public:
     }
 
     /**
+     * @brief Allocates a continuous array of type T where each element is a copy of the given value.
+     *
+     * @tparam T Type of the array elements (Must be copy-constructible)
+     * @param count Number of elements in the array
+     * @param value The object to copy into every element of the array
+     * @return Pointer to the first element of the newly created array
+     */
+    template <ArenaAllocatorConstructable T>
+    T* allocateArray(std::size_t count, const T& value) requires std::is_copy_constructible_v<T>
+    {
+        if (count == 0) return nullptr;
+
+        std::size_t objectSize = count * sizeof(T);
+
+        // Lambda for continuous construction by copying the provided value
+        auto construct = [count, &value](void* ptr) {
+            T* array_start = reinterpret_cast<T*>(ptr);
+            std::size_t constructed = 0;
+            try
+            {
+                for (; constructed < count; ++constructed)
+                {
+                    // Copy-construct the value into the arena memory
+                    new (&array_start[constructed]) T(value);
+                }
+            }
+            catch (...)
+            {
+                // Rollback: Destroy already constructed elements in reverse order if an exception occurs
+                for (std::size_t i = constructed; i > 0; --i)
+                {
+                    array_start[i - 1].~T();
+                }
+                throw;
+            }
+            return array_start;
+        };
+
+        // Copy function for the entire array during reallocation (reused from default version)
+        CopyFunction copy = [](void* src, void* dst, std::ptrdiff_t offset)
+        {
+#ifdef ARENA_ALLOCATOR_LOG
+            std::cout << "Copy Array of " << typeid(T).name() << " from " << src << " to " << dst << std::endl;
+#endif
+            T* src_array = reinterpret_cast<T*>(src);
+            T* dst_array = reinterpret_cast<T*>(dst);
+
+            std::byte* header_ptr = reinterpret_cast<std::byte*>(src) - sizeof(AllocationHeader);
+            AllocationHeader* header = reinterpret_cast<AllocationHeader*>(header_ptr);
+            std::size_t element_count = header->size / sizeof(T);
+
+            if constexpr (PlainObject<T>)
+            {
+                std::memcpy(dst, src, header->size);
+            }
+            else
+            {
+                std::size_t copied = 0;
+                try
+                {
+                    for (; copied < element_count; ++copied)
+                    {
+                        if constexpr (CopyWithOffsetConstructable<T>)
+                        {
+                            new (&dst_array[copied]) T(copyWithOffsetConstruct, std::move(src_array[copied]), offset);
+                        }
+                    }
+                }
+                catch (...)
+                {
+                    for (std::size_t i = copied; i > 0; --i)
+                    {
+                        dst_array[i - 1].~T();
+                    }
+                    throw;
+                }
+            }
+        };
+
+        // Destructor function for the entire array (reused from default version)
+        DestructorFunction destruct = [](void* ptr)
+        {
+#ifdef ARENA_ALLOCATOR_LOG
+            std::cout << "Destruct Array of " << typeid(T).name() << " at " << ptr << std::endl;
+#endif
+            if constexpr (!PlainObject<T>)
+            {
+                T* array_start = reinterpret_cast<T*>(ptr);
+                std::byte* header_ptr = reinterpret_cast<std::byte*>(ptr) - sizeof(AllocationHeader);
+                AllocationHeader* header = reinterpret_cast<AllocationHeader*>(header_ptr);
+                std::size_t element_count = header->size / sizeof(T);
+
+                for (std::size_t i = element_count; i > 0; --i)
+                {
+                    array_start[i - 1].~T();
+                }
+            }
+        };
+
+        return allocate0<T>(construct, alignof(T), objectSize, copy, destruct);
+    }
+    /**
      * @brief Returns the number of elements in the array
      *
      * \warning The array must have been allocated with this allocator or else it is undefined behaviour
