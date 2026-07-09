@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['operator_21_3d_0',['operator!=',['../classArenaAllocator_1_1IteratorImpl.html#abc469f1a1203434689cc27e70c3d69dd',1,'ArenaAllocator::IteratorImpl']]],
-  ['operator_2a_1',['operator*',['../classArenaAllocator_1_1IteratorImpl.html#a973f4268c17a9da9d47923a9662ed3ca',1,'ArenaAllocator::IteratorImpl']]],
-  ['operator_2b_2b_2',['operator++',['../classArenaAllocator_1_1IteratorImpl.html#ada5ca9667fa3cc59a21342692d0543c2',1,'ArenaAllocator::IteratorImpl::operator++()'],['../classArenaAllocator_1_1IteratorImpl.html#a8612db2a1e7993c3f8bb6cbb55f96221',1,'ArenaAllocator::IteratorImpl::operator++(int)']]],
-  ['operator_3d_3d_3',['operator==',['../classArenaAllocator_1_1IteratorImpl.html#a53e3210da83b684f97e3616cfd305b18',1,'ArenaAllocator::IteratorImpl']]]
+  ['get_5fcapacity_0',['get_capacity',['../classArenaAllocator.html#a0c2ee803d7e32389dcb4023995f3a07c',1,'ArenaAllocator']]],
+  ['get_5fheader_1',['get_header',['../classArenaAllocator_1_1IteratorImpl.html#a0672b3dfea5ddd1fdae99d71104968d3',1,'ArenaAllocator::IteratorImpl']]],
+  ['get_5fsize_2',['get_size',['../classArenaAllocator_1_1IteratorImpl.html#a52aee35bcdbd0f73290988b2b004b1ed',1,'ArenaAllocator::IteratorImpl']]],
+  ['get_5ftype_5finfo_3',['get_type_info',['../classArenaAllocator.html#a0f056716b600807495dd51c53d3b0ec2',1,'ArenaAllocator']]],
+  ['get_5fused_5fbytes_4',['get_used_bytes',['../classArenaAllocator.html#aaac8564f05bdbe0fe389aa9490541cc7',1,'ArenaAllocator']]]
 ];
