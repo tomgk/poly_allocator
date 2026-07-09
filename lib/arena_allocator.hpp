@@ -582,23 +582,40 @@ public:
 
         auto construct = [count](void* ptr) {
             T* array_start = reinterpret_cast<T*>(ptr);
-            std::size_t constructed = 0;
-            try
+
+            if constexpr (PlainObject<T>)
             {
-                for (; constructed < count; ++constructed)
-                {
-                    new (&array_start[constructed]) T();
-                }
+                // For primitive/trivial types, we can either do nothing (leave uninitialized like standard new T[N])
+                // or clear the memory instantly using highly optimized CPU instructions (memset).
+                // Let's leave it uninitialized for maximum performance:
+                return array_start;
+
+                // Alternative (if you want them to be 0-initialized):
+                // std::memset(ptr, 0, count * sizeof(T));
+                // return array_start;
             }
-            catch (...)
+            else
             {
-                for (std::size_t i = constructed; i > 0; --i)
+                // Normal loop only for custom objects with constructors
+                std::size_t constructed = 0;
+                try
                 {
-                    array_start[i - 1].~T();
+                    for (; constructed < count; ++constructed)
+                    {
+                        new (&array_start[constructed]) T();
+                    }
                 }
-                throw;
+                catch (...)
+                {
+                    for (std::size_t i = constructed; i > 0; --i)
+                    {
+                        array_start[i - 1].~T();
+                    }
+                    throw;
+                }
+                return array_start;
             }
-            return array_start;
+        };
         };
 
         // Kopierfunktion für das gesamte Array bei einer Reallokation
