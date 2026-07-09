@@ -147,7 +147,7 @@ Protected Attributes</h2></td></tr>
 <div class="textblock"><div class="compoundTemplParams">template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt;<br />
 template&lt;EntryConstness C&gt;<br />
 class ArenaAllocator&lt; S &gt;::Entry&lt; C &gt;</div>
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00109">109</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00112">112</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a053113d45d1450552066b7f15c67db1e" name="a053113d45d1450552066b7f15c67db1e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a053113d45d1450552066b7f15c67db1e">&#9670;&#160;</a></span>Alloc</h2>
@@ -163,7 +163,7 @@ template&lt;EntryConstness C&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;<a class="el" href="classEntry.html">::Entry</a>&lt; C &gt;::Alloc =  std::conditional_t&lt;Const, const <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>, <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&gt;</td>
+          <td class="memname">using <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::Entry&lt; C &gt;::Alloc =  std::conditional_t&lt;Const, const <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>, <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&gt;</td>
         </tr>
       </table>
   </td>
@@ -173,7 +173,7 @@ template&lt;EntryConstness C&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00113">113</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00116">116</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -190,12 +190,12 @@ template&lt;EntryConstness C&gt; </div>
 template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;<a class="el" href="classEntry.html">::Entry</a>&lt; C &gt;::ref_type =  std::conditional_t&lt;Const, const T, T&gt;</td>
+          <td class="memname">using <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::Entry&lt; C &gt;::ref_type =  std::conditional_t&lt;Const, const T, T&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00130">130</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00133">133</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -214,7 +214,7 @@ template&lt;EntryConstness C&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;<a class="el" href="classEntry.html">::Entry</a>&lt; C &gt;<a class="el" href="classEntry.html">::Entry</a> </td>
+          <td class="memname"><a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::Entry&lt; C &gt;::Entry </td>
           <td>(</td>
           <td class="paramtype">Alloc *&#160;</td>
           <td class="paramname"><em>arena</em>, </td>
@@ -238,7 +238,7 @@ template&lt;EntryConstness C&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00118">118</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00121">121</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -260,7 +260,7 @@ requires StoreTypeInfo</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">ref_type&lt; T &gt; &amp; <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;<a class="el" href="classEntry.html">::Entry</a>&lt; C &gt;::get </td>
+          <td class="memname">ref_type&lt; T &gt; &amp; <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::Entry&lt; C &gt;::get </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -273,7 +273,7 @@ requires StoreTypeInfo</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00133">133</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00136">136</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -294,7 +294,7 @@ requires StoreTypeInfo</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const T &amp; <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;<a class="el" href="classEntry.html">::Entry</a>&lt; C &gt;::get </td>
+          <td class="memname">const T &amp; <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::Entry&lt; C &gt;::get </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -307,7 +307,7 @@ requires StoreTypeInfo</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00142">142</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00145">145</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -325,7 +325,7 @@ template&lt;EntryConstness C&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const AllocationHeader &amp; <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;<a class="el" href="classEntry.html">::Entry</a>&lt; C &gt;::get_header </td>
+          <td class="memname">const AllocationHeader &amp; <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::Entry&lt; C &gt;::get_header </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -338,7 +338,7 @@ template&lt;EntryConstness C&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00124">124</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00127">127</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -357,7 +357,7 @@ template&lt;EntryConstness C&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Alloc* <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;<a class="el" href="classEntry.html">::Entry</a>&lt; C &gt;::arena</td>
+          <td class="memname">Alloc* <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::Entry&lt; C &gt;::arena</td>
         </tr>
       </table>
   </td>
@@ -367,7 +367,7 @@ template&lt;EntryConstness C&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00115">115</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00118">118</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -385,7 +385,7 @@ template&lt;EntryConstness C&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::size_t <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;<a class="el" href="classEntry.html">::Entry</a>&lt; C &gt;::offset</td>
+          <td class="memname">std::size_t <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::Entry&lt; C &gt;::offset</td>
         </tr>
       </table>
   </td>
@@ -395,7 +395,7 @@ template&lt;EntryConstness C&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00116">116</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00119">119</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>

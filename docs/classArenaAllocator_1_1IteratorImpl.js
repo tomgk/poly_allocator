@@ -6,6 +6,5 @@ var classArenaAllocator_1_1IteratorImpl =
     [ "operator*", "classArenaAllocator_1_1IteratorImpl.html#a973f4268c17a9da9d47923a9662ed3ca", null ],
     [ "operator++", "classArenaAllocator_1_1IteratorImpl.html#ada5ca9667fa3cc59a21342692d0543c2", null ],
     [ "operator++", "classArenaAllocator_1_1IteratorImpl.html#a8612db2a1e7993c3f8bb6cbb55f96221", null ],
-    [ "operator==", "classArenaAllocator_1_1IteratorImpl.html#a53e3210da83b684f97e3616cfd305b18", null ],
-    [ "ArenaAllocator", "classArenaAllocator_1_1IteratorImpl.html#a0ce7bb88150e706b36ae9e4a6ff4147c", null ]
+    [ "operator==", "classArenaAllocator_1_1IteratorImpl.html#a53e3210da83b684f97e3616cfd305b18", null ]
 ];
