@@ -406,14 +406,11 @@ public:
     bool contains(const void* ptr) const noexcept
     {
         if (!ptr || buffer.empty())
-        {
             return false;
-        }
 
         const std::byte* byte_ptr = reinterpret_cast<const std::byte*>(ptr);
 
-        // Check if the pointer falls between the start of the buffer and the current allocation offset
-        return (byte_ptr >= buffer.data() && byte_ptr < buffer.data() + current_offset);
+        return byte_ptr >= buffer.data() && byte_ptr < buffer.data() + current_offset;
     }
 
     /**
@@ -434,9 +431,7 @@ public:
             std::size_t total_block_size = HEADER_SIZE + header.size;
 
             if (!header.is_alive)
-            {
                 dead_bytes += total_block_size;
-            }
 
             offset += total_block_size;
         }
