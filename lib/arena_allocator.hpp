@@ -505,6 +505,29 @@ public:
         current_offset = new_offset;
     }
 
+    /**
+     * @brief Reserves at least the specified minimum capacity in the arena buffer.
+     *
+     * If the requested capacity is greater than the current capacity, the buffer
+     * is expanded and all alive objects are relocated. Otherwise, the capacity
+     * remains unchanged.
+     *
+     * @param new_capacity The minimum total capacity in bytes to reserve
+     */
+    void reserve(std::size_t new_capacity)
+    {
+        if (new_capacity <= buffer.capacity())
+        {
+            return;
+        }
+
+        // Calculate how many additional bytes are needed starting from current_offset
+        // to reach the requested absolute new_capacity boundary.
+        std::size_t required_extra_size = new_capacity - current_offset;
+
+        // Trigger the internal, exception-safe reallocation logic
+        reallocate(required_extra_size);
+    }
 public:
     /**
      * @brief Construct an empty arena allocator.

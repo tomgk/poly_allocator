@@ -172,3 +172,52 @@ TEST_F(ArenaArrayViewAdvancedTest, ViewValidityBeforeReallocationTest)
     arena.deallocate(view_1.data());
     arena.deallocate(view_2.data());
 }
+
+class ArenaAllocatorReserveTest : public ::testing::Test
+{
+protected:
+    ArenaAllocator<StoreTypeInfoType::no> arena;
+};
+
+// Verifies that reserving capacity works and prevents further internal reallocations
+TEST_F(ArenaAllocatorReserveTest, ReserveCapacityVerificationTest)
+{
+    std::size_t initial_capacity = arena.get_capacity();
+    std::size_t target_capacity = initial_capacity * 4;
+
+    // Act 1: Reserve a much larger capacity upfront
+    arena.reserve(target_capacity);
+
+    // Assert 1: The capacity must now be at least the requested size
+    EXPECT_GE(arena.get_capacity(), target_capacity);
+
+    // Act 2: Perform multiple allocations that fit within the reserved space
+    int* first_item = arena.allocate<int>(42);
+    int* second_item = arena.allocate<int>(84);
+    ArenaArrayView<int> view = arena.allocateArray<int>(10, true);
+
+    // Assert 2: Verify that capacity stayed stable and didn't expand unexpectedly
+    EXPECT_GE(arena.get_capacity(), target_capacity);
+
+    // Check values to ensure everything was written correctly in the reserved space
+    EXPECT_EQ(*first_item, 42);
+    EXPECT_EQ(*second_item, 84);
+    EXPECT_EQ(view.size(), 10);
+
+    // Cleanup
+    arena.deallocate(first_item);
+    arena.deallocate(second_item);
+    arena.deallocate(view.data());
+}
+
+// Verifies that requesting a smaller size than the current capacity does nothing
+TEST_F(ArenaAllocatorReserveTest, ReserveSmallerThanCurrentHasNoEffectTest)
+{
+    std::size_t current_cap = arena.get_capacity();
+
+    // Act: Request a smaller capacity than already allocated
+    arena.reserve(current_cap / 2);
+
+    // Assert: The capacity must remain completely unchanged
+    EXPECT_EQ(arena.get_capacity(), current_cap);
+}
