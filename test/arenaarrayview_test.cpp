@@ -221,3 +221,55 @@ TEST_F(ArenaAllocatorReserveTest, ReserveSmallerThanCurrentHasNoEffectTest)
     // Assert: The capacity must remain completely unchanged
     EXPECT_EQ(arena.get_capacity(), current_cap);
 }
+
+class ArenaUtilityMethodsTest : public ::testing::Test
+{
+protected:
+    ArenaAllocator<StoreTypeInfoType::no> arena;
+};
+
+// Verifies that contains() accurately identifies pointers inside and outside the arena
+TEST_F(ArenaUtilityMethodsTest, ContainsPointerVerificationTest)
+{
+    // Act: Allocate an item inside the arena, and create one on the stack
+    int* arena_item = arena.allocate<int>(123);
+    int stack_item = 456;
+
+    // Assert: The arena must own its allocated item, but not the stack item or nullptr
+    EXPECT_TRUE(arena.contains(arena_item));
+    EXPECT_FALSE(arena.contains(&stack_item));
+    EXPECT_FALSE(arena.contains(nullptr));
+
+    // Cleanup
+    arena.deallocate(arena_item);
+}
+
+// Verifies that get_dead_bytes() tracking accurately counts memory from deallocated objects
+TEST_F(ArenaUtilityMethodsTest, DeadBytesTrackingTest)
+{
+    // Initially, there should be zero dead bytes
+    EXPECT_EQ(arena.get_dead_bytes(), 0);
+
+    // Act 1: Allocate two temporary objects
+    int* item_1 = arena.allocate<int>(10);
+    int* item_2 = arena.allocate<int>(20);
+
+    // Still 0 dead bytes because both allocations are alive
+    EXPECT_EQ(arena.get_dead_bytes(), 0);
+
+    // Act 2: Deallocate the first item
+    arena.deallocate(item_1);
+
+    // Assert: Dead bytes must now equal the size of item_1 plus its header size
+    std::size_t expected_dead_space = sizeof(int) + ArenaAllocator<StoreTypeInfoType::no>::HEADER_SIZE;
+    EXPECT_EQ(arena.get_dead_bytes(), expected_dead_space);
+
+    // Act 3: Deallocate the second item
+    arena.deallocate(item_2);
+
+    // Act 4: Force a reallocation to trigger compaction and clear out dead bytes
+    arena.forceReallocate();
+
+    // Assert: After compaction, all dead objects are completely removed
+    EXPECT_EQ(arena.get_dead_bytes(), 0);
+}

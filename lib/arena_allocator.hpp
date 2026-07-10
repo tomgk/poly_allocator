@@ -146,6 +146,7 @@ private:
         }
     };
 public:
+
     template<EntryConstness C>
     class Entry
     {
@@ -338,8 +339,9 @@ public:
 
 private:
     static constexpr std::size_t INITIAL_CAPACITY = 256;    ///< Initial buffer capacity
+public:
     static constexpr std::size_t HEADER_SIZE = sizeof(AllocationHeader);
-
+private:
     std::vector<std::byte> buffer;      ///< Raw byte buffer storing all allocations
     std::size_t current_offset = 0;     ///< Byte offset to end of last allocation
 
@@ -394,6 +396,53 @@ private:
         return buffer.data() + offset + HEADER_SIZE;
     }
 
+public:
+    /**
+     * @brief Checks if a given pointer resides within the currently used memory bounds of this arena.
+     *
+     * @param ptr The pointer to verify
+     * @return true if the pointer points to an object inside this arena's active buffer, false otherwise
+     */
+    bool contains(const void* ptr) const noexcept
+    {
+        if (!ptr || buffer.empty())
+        {
+            return false;
+        }
+
+        const std::byte* byte_ptr = reinterpret_cast<const std::byte*>(ptr);
+
+        // Check if the pointer falls between the start of the buffer and the current allocation offset
+        return (byte_ptr >= buffer.data() && byte_ptr < buffer.data() + current_offset);
+    }
+
+    /**
+     * @brief Calculates the total amount of memory currently wasted by deactivated (dead) allocations.
+     *
+     * Includes the header sizes and alignment paddings of all objects that have been deallocated.
+     *
+     * @return The total number of dead bytes within the used buffer range
+     */
+    std::size_t get_dead_bytes() const noexcept
+    {
+        std::size_t dead_bytes = 0;
+        std::size_t offset = 0;
+
+        while (offset < current_offset)
+        {
+            const AllocationHeader& header = get_header(offset);
+            std::size_t total_block_size = HEADER_SIZE + header.size;
+
+            if (!header.is_alive)
+            {
+                dead_bytes += total_block_size;
+            }
+
+            offset += total_block_size;
+        }
+
+        return dead_bytes;
+    }
 private:
     /**
      * @brief Zerstört alle lebendigen Objekte in einem spezifizierten Speicherbereich.
