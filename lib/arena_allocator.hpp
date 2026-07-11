@@ -414,11 +414,9 @@ public:
     }
 
     /**
-     * @brief Calculates the total amount of memory currently wasted by deactivated (dead) allocations.
+     * @brief Calculates the total memory wasted by dead allocations.
      *
-     * Includes the header sizes and alignment paddings of all objects that have been deallocated.
-     *
-     * @return The total number of dead bytes within the used buffer range
+     * @return Total number of dead bytes within the buffer range
      */
     std::size_t get_dead_bytes() const noexcept
     {
