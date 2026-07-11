@@ -398,10 +398,10 @@ private:
 
 public:
     /**
-     * @brief Checks if a given pointer resides within the currently used memory bounds of this arena.
+     * @brief Checks if a given pointer resides within the currently active buffer bounds of this arena.
      *
      * @param ptr The pointer to verify
-     * @return true if the pointer points to an object inside this arena's active buffer, false otherwise
+     * @return true if the pointer belongs to this arena, false otherwise
      */
     bool contains(const void* ptr) const noexcept
     {
@@ -409,7 +409,6 @@ public:
             return false;
 
         const std::byte* byte_ptr = reinterpret_cast<const std::byte*>(ptr);
-
         return byte_ptr >= buffer.data() && byte_ptr < buffer.data() + current_offset;
     }
 
@@ -433,7 +432,6 @@ public:
 
             offset += total_block_size;
         }
-
         return dead_bytes;
     }
 private:
