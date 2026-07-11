@@ -620,7 +620,7 @@ public:
                 new (dst)T(copyWithOffsetConstruct, std::move(*reinterpret_cast<T*>(src)), offset);
             }
             else
-                static_assert("Type is neither trivial with standard layout nor supports copy construct with offset");
+                static_assert(true, "Type is neither trivial with standard layout nor supports copy construct with offset");
         };
         DestructorFunction destruct = [](void* ptr)
         {
