@@ -545,6 +545,69 @@ public:
         current_offset = new_offset;
     }
 
+    ///\todo make it actually work
+    /**
+     * @brief Compacts the arena in-place without allocating a new buffer vector.
+     */
+    void compact()
+    {
+        //check if there is even unused space
+        if (get_dead_bytes() == 0)
+            return;
+
+        std::size_t read_offset = 0;
+        std::size_t write_offset = 0;
+        std::byte* base = buffer.data();
+
+        while (read_offset < current_offset)
+        {
+            AllocationHeader& old_header = *reinterpret_cast<AllocationHeader*>(base + read_offset);
+            std::size_t object_size = old_header.size;
+
+            if (old_header.is_alive)
+            {
+                std::size_t aligned_write_offset = align_offset(write_offset, alignof(AllocationHeader));
+
+                // If the object actually needs to move forward
+                if (aligned_write_offset < read_offset)
+                {
+                    void* src = base + read_offset + HEADER_SIZE;
+                    void* dst = base + aligned_write_offset + HEADER_SIZE;
+                    std::ptrdiff_t offset_shift = reinterpret_cast<std::byte*>(dst) - reinterpret_cast<std::byte*>(src);
+
+                    // Reconstruct header at the new position first
+                    AllocationHeader temp_header = old_header;
+                    AllocationHeader& new_header = *reinterpret_cast<AllocationHeader*>(base + aligned_write_offset);
+                    new_header = temp_header;
+
+                    // Move/Copy the object data to the new front position
+                    new_header.copy(src, dst, offset_shift);
+
+                    // Destroy the old object at its old position
+                    if (temp_header.destructor)
+                        temp_header.destructor(src);
+                }
+                else
+                {
+                    // Object is already as far forward as possible, just update the write boundary
+                    aligned_write_offset = read_offset;
+                }
+
+                write_offset = aligned_write_offset + HEADER_SIZE + object_size;
+            }
+            else
+            {
+                // If the object is dead, we destroy it right now if not already done
+                void* src = base + read_offset + HEADER_SIZE;
+                if (old_header.destructor)
+                    old_header.destructor(src);
+            }
+
+            read_offset += HEADER_SIZE + object_size;
+        }
+
+        current_offset = write_offset;
+    }
     /**
      * @brief Reserves at least the specified minimum capacity in the arena buffer.
      *
