@@ -751,6 +751,8 @@ public:
                         {
                             new (&dst_array[copied]) T(copyWithOffsetConstruct, std::move(src_array[copied]), offset);
                         }
+                        else
+                            new (&dst_array[copied]) T(std::move(src_array[copied]), offset);
                     }
                 }
                 catch (...)
@@ -857,6 +859,8 @@ public:
                         {
                             new (&dst_array[copied]) T(copyWithOffsetConstruct, std::move(src_array[copied]), offset);
                         }
+                        else
+                            new (&dst_array[copied]) T(std::move(src_array[copied]), offset);
                     }
                 }
                 catch (...)
