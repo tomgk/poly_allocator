@@ -11,6 +11,7 @@ var classArenaAllocator =
     [ "begin", "classArenaAllocator.html#a4e658d55f3c49fd3d80a8bb3f2737ace", null ],
     [ "begin", "classArenaAllocator.html#aa16f80254bb394cdd74f467f5fed2359", null ],
     [ "clear", "classArenaAllocator.html#a71de053135358c8224f3df7ff5a9942f", null ],
+    [ "compact", "classArenaAllocator.html#a0859f787e08c37179e646512b16efa9c", null ],
     [ "contains", "classArenaAllocator.html#a22ecbcb7049423c8010d481092b4a8dc", null ],
     [ "deallocate", "classArenaAllocator.html#a232da1c84901395cda90c088bc7543d0", null ],
     [ "end", "classArenaAllocator.html#a289b77c251f1e4f5426de628eb80430e", null ],
