@@ -1025,52 +1025,50 @@ private:
     template <typename T, typename C>
     T* allocate0(C construct, size_t align, size_t objectSize, CopyFunction copy, DestructorFunction destruct)
     {
-        // Calculate required space: header + alignment padding + object
+        // 1. Calculate space required for this specific allocation block
         std::size_t header_offset = current_offset;
         std::size_t object_offset = align_offset(header_offset + HEADER_SIZE, align);
         std::size_t required_size = object_offset - header_offset + objectSize;
 
-        // Check if reallocation is needed
+        // 2. Single reallocation check: Is there enough capacity in the arena buffer?
         if (current_offset + required_size > buffer.capacity())
         {
+            // Reallocate increases capacity and relocates all existing alive objects
             reallocate(required_size);
-            // Recalculate offsets after reallocation
+
+            // Recalculate offsets after the buffer relocation
             header_offset = current_offset;
             object_offset = align_offset(header_offset + HEADER_SIZE, align);
         }
 
-        // Ensure buffer is large enough
-        if (buffer.size() < object_offset + objectSize)
+        // 3. Adjust vector size (using resize instead of another reallocate)
+        // This ensures that buffer.data() provides valid memory up to the end of the new object.
+        std::size_t end_offset = object_offset + objectSize;
+        if (buffer.size() < end_offset)
         {
-            //throw std::runtime_error("buffer too small");
-            //buffer.resize(object_offset + objectSize);
-            ///\todo don't call reallocate twice
-            reallocate(object_offset + objectSize);
+            buffer.resize(end_offset);
         }
 
-        // Place header
-        AllocationHeader& header = *reinterpret_cast<AllocationHeader*>(
-            buffer.data() + header_offset);
+        // 4. Write header and construct the object
+        AllocationHeader& header = *reinterpret_cast<AllocationHeader*>(buffer.data() + header_offset);
         header.size = objectSize;
         header.is_alive = true;
         header.copy = copy;
         header.destructor = destruct;
-        
-        // Store type information if enabled
+
         if constexpr (StoreTypeInfo)
         {
             header.type_info = &typeid(T);
         }
 
-        // Construct object in place with forwarded arguments
         T* obj = construct(buffer.data() + object_offset);
 
 #ifdef ARENA_ALLOCATOR_LOG
-        std::cout << "Construct " << typeid(T).name() << (void*)obj << std::endl;
+        std::cout << "Construct " << typeid(T).name() << " " << (void*)obj << std::endl;
 #endif
 
-        // Update offset
-        current_offset = object_offset + objectSize;
+        // Advance offset for the next allocation
+        current_offset = end_offset;
 
         return obj;
     }
