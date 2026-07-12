@@ -759,6 +759,44 @@ public:
     }
 
     /**
+     * @brief Allocates raw, uninitialized memory of a specific size and alignment.
+     *
+     * This function bypasses construction and destruction tracking. It is ideal
+     * for custom low-level storage or buffer allocations within the arena.
+     *
+     * @param size The number of bytes to allocate.
+     * @param alignment The required alignment for the allocated memory boundary.
+     * @return void* Pointer to the newly allocated uninitialized memory block.
+     */
+    void* allocateRaw(std::size_t size, std::size_t alignment)
+    {
+        if (size == 0) return nullptr;
+
+        // 1. A trivial inline constructor lambda that does absolutely nothing
+        auto construct = [](void* ptr) {
+            return ptr;
+        };
+
+        // 2. A fast bitwise memory copy for reallocation
+        CopyFunction copy = [](void* src, void* dst, std::ptrdiff_t offset)
+        {
+            // To safely copy during reallocate, we extract the size from the header
+            std::byte* header_ptr = reinterpret_cast<std::byte*>(src) - sizeof(AllocationHeader);
+            AllocationHeader* header = reinterpret_cast<AllocationHeader*>(header_ptr);
+            std::memcpy(dst, src, header->size);
+        };
+
+        // 3. A no-op destructor (raw bytes don't need destruction)
+        DestructorFunction destruct = [](void* ptr)
+        {
+            // No operation needed for raw uninitialized bytes
+        };
+
+        // 4. Fall back to your optimized allocate0 method
+        return allocate0<std::byte>(construct, alignment, size, copy, destruct);
+    }
+
+    /**
      * @brief Allocates a continuous array of type T with 'count' elements.
      *
      * @tparam T Type of the array elements
