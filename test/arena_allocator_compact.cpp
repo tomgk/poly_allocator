@@ -1,4 +1,4 @@
-#define ARENA_ALLOCATOR_LOG
+//#define ARENA_ALLOCATOR_LOG
 #include "arena_allocator.hpp"
 
 #include <gtest/gtest.h>
