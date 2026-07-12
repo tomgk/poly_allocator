@@ -24,6 +24,7 @@ add_library(poly-allocator STATIC
   lib/arena_allocator.hpp
   lib/arena_allocator.cpp
   lib/callback.h lib/callback.cpp
+  lib/arena_allocator_basic.h lib/arena_allocator_basic.cpp
 )
 target_include_directories(poly-allocator PUBLIC lib)
 set_target_properties(poly-allocator PROPERTIES LINKER_LANGUAGE CXX)
