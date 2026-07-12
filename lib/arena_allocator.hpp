@@ -1025,31 +1025,30 @@ private:
     template <typename T, typename C>
     T* allocate0(C construct, size_t align, size_t objectSize, CopyFunction copy, DestructorFunction destruct)
     {
-        // 1. Calculate space required for this specific allocation block
         std::size_t header_offset = current_offset;
         std::size_t object_offset = align_offset(header_offset + HEADER_SIZE, align);
         std::size_t required_size = object_offset - header_offset + objectSize;
 
-        // 2. Single reallocation check: Is there enough capacity in the arena buffer?
-        if (current_offset + required_size > buffer.capacity())
-        {
-            // Reallocate increases capacity and relocates all existing alive objects
-            reallocate(required_size);
-
-            // Recalculate offsets after the buffer relocation
-            header_offset = current_offset;
-            object_offset = align_offset(header_offset + HEADER_SIZE, align);
-        }
-
-        // 3. Adjust vector size (using resize instead of another reallocate)
-        // This ensures that buffer.data() provides valid memory up to the end of the new object.
         std::size_t end_offset = object_offset + objectSize;
-        if (buffer.size() < end_offset)
+
+        // 1. If the new object does not fit into the current size, we must act
+        if (end_offset > buffer.size())
         {
+            // 2. If it even exceeds the capacity, we MUST relocate the whole arena
+            if (end_offset > buffer.capacity())
+            {
+                reallocate(required_size);
+                header_offset = current_offset;
+                object_offset = align_offset(header_offset + HEADER_SIZE, align);
+                end_offset = object_offset + objectSize;
+            }
+
+            // 3. In both cases (after reallocate OR if we just had unused capacity left),
+            // we now safely grow the vector's size to match the new object's end boundary.
             buffer.resize(end_offset);
         }
 
-        // 4. Write header and construct the object
+        // 4. Construction safely happens within the officially resized vector bounds
         AllocationHeader& header = *reinterpret_cast<AllocationHeader*>(buffer.data() + header_offset);
         header.size = objectSize;
         header.is_alive = true;
@@ -1067,9 +1066,7 @@ private:
         std::cout << "Construct " << typeid(T).name() << " " << (void*)obj << std::endl;
 #endif
 
-        // Advance offset for the next allocation
         current_offset = end_offset;
-
         return obj;
     }
 
