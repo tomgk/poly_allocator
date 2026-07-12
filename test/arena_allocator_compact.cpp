@@ -11,7 +11,7 @@ protected:
 };
 
 // Verifies that compact() eliminates dead space and shrinks the used byte offset
-TEST_F(ArenaCompactTest, DISABLED_CompactionEliminatesDeadSpaceTest)
+TEST_F(ArenaCompactTest, CompactionEliminatesDeadSpaceTest)
 {
     // Act 1: Allocate three separate items to create a sequence in memory
     int* item_1 = arena.allocate<int>(10);

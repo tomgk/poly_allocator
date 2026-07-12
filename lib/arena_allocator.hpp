@@ -665,24 +665,52 @@ public:
             return new (ptr) T(std::forward<Args>(args)...);
         };
 
-        CopyFunction copy = [](void* src, void *dst, std::ptrdiff_t offset)
+        CopyFunction copy = [](void* src, void* dst, std::ptrdiff_t offset)
         {
-#ifdef ARENA_ALLOCATOR_LOG
-            std::cout << "Copy " << typeid(T).name() << " " << src << " to " << dst << std::endl;
-#endif
-            if constexpr(PlainObject<T>)
+            T* src_array = reinterpret_cast<T*>(src);
+            T* dst_array = reinterpret_cast<T*>(dst);
+
+            // Wichtig: Ohne exakten Alignment-Fix ist diese Zeile gefährlich,
+            // aber wir korrigieren zumindest die Kopierlogik:
+            std::byte* header_ptr = reinterpret_cast<std::byte*>(src) - sizeof(AllocationHeader);
+            AllocationHeader* header = reinterpret_cast<AllocationHeader*>(header_ptr);
+            std::size_t element_count = header->size / sizeof(T);
+
+            if constexpr (PlainObject<T>)
             {
-                std::cout << "no-offset copy" << std::endl;
-                new (dst)T(std::move(*reinterpret_cast<T*>(src)));
-            }
-            else if constexpr(CopyWithOffsetConstructable<T>)
-            {
-                std::cout << "offset copy" << std::endl;
-                new (dst)T(copyWithOffsetConstruct, std::move(*reinterpret_cast<T*>(src)), offset);
+                std::memcpy(dst, src, header->size);
             }
             else
-                static_assert(true, "Type is neither trivial with standard layout nor supports copy construct with offset");
+            {
+                std::size_t copied = 0;
+                try
+                {
+                    for (; copied < element_count; ++copied)
+                    {
+                        if constexpr (CopyWithOffsetConstructable<T>)
+                        {
+                            new (&dst_array[copied]) T(copyWithOffsetConstruct, std::move(src_array[copied]), offset);
+                        }
+                        else
+                        {
+                            // FIX: Falls der Typ kein Custom-Offset unterstützt,
+                            // nutzen wir ein normales Placement-New mit std::move
+                            new (&dst_array[copied]) T(std::move(src_array[copied]));
+                        }
+                    }
+                }
+                catch (...)
+                {
+                    // Rollback bei Konstruktor-Ausnahme
+                    for (std::size_t i = copied; i > 0; --i)
+                    {
+                        dst_array[i - 1].~T();
+                    }
+                    throw;
+                }
+            }
         };
+
         DestructorFunction destruct = [](void* ptr)
         {
 #ifdef ARENA_ALLOCATOR_LOG
@@ -786,19 +814,17 @@ public:
         // Copy function for the entire array during reallocation
         CopyFunction copy = [](void* src, void* dst, std::ptrdiff_t offset)
         {
-#ifdef ARENA_ALLOCATOR_LOG
-            std::cout << "Copy Array of " << typeid(T).name() << " from " << src << " to " << dst << std::endl;
-#endif
             T* src_array = reinterpret_cast<T*>(src);
             T* dst_array = reinterpret_cast<T*>(dst);
 
+            // Wichtig: Ohne exakten Alignment-Fix ist diese Zeile gefährlich,
+            // aber wir korrigieren zumindest die Kopierlogik:
             std::byte* header_ptr = reinterpret_cast<std::byte*>(src) - sizeof(AllocationHeader);
             AllocationHeader* header = reinterpret_cast<AllocationHeader*>(header_ptr);
             std::size_t element_count = header->size / sizeof(T);
 
             if constexpr (PlainObject<T>)
             {
-                // Blazing fast bitwise copy for primitive arrays during reallocation
                 std::memcpy(dst, src, header->size);
             }
             else
@@ -813,11 +839,16 @@ public:
                             new (&dst_array[copied]) T(copyWithOffsetConstruct, std::move(src_array[copied]), offset);
                         }
                         else
-                            new (&dst_array[copied]) T(std::move(src_array[copied]), offset);
+                        {
+                            // FIX: Falls der Typ kein Custom-Offset unterstützt,
+                            // nutzen wir ein normales Placement-New mit std::move
+                            new (&dst_array[copied]) T(std::move(src_array[copied]));
+                        }
                     }
                 }
                 catch (...)
                 {
+                    // Rollback bei Konstruktor-Ausnahme
                     for (std::size_t i = copied; i > 0; --i)
                     {
                         dst_array[i - 1].~T();
@@ -983,7 +1014,7 @@ public:
         {
             if (header->type_info && *header->type_info != typeid(T))
             {
-                throw std::invalid_argument("ArenaAllocator: getArrayCount was called with wrong type");
+                throw std::invalid_argument("ArenaAllocator: ArrayCount was called with wrong type");
             }
         }
 
@@ -1059,32 +1090,18 @@ public:
     template <typename T>
     void deallocate(T* ptr)
     {
-        if (!ptr)
-            throw std::runtime_error("nullptr");
+        if (!ptr) return;
 
-        // Find the object and mark it as dead, but don't move anything
-        std::size_t offset = 0;
-        while (offset < current_offset)
+        // Direktzugriff auf den Header in O(1) statt linearer Suchschleife
+        std::byte* header_ptr = reinterpret_cast<std::byte*>(ptr) - HEADER_SIZE;
+        AllocationHeader& header = *reinterpret_cast<AllocationHeader*>(header_ptr);
+
+        // Aufruf des Destruktors, falls das Objekt noch lebt
+        if (header.is_alive && header.destructor)
         {
-            AllocationHeader& header = get_header(offset);
-            std::size_t object_size = header.size;
-            std::byte* object_ptr = get_object_pointer(offset);
-
-            if (object_ptr == reinterpret_cast<std::byte*>(ptr))
-            {
-                // Call destructor and mark as dead
-                if (header.is_alive && header.destructor)
-                {
-                    header.destructor(object_ptr);
-                }
-                header.is_alive = false;
-                return;
-            }
-
-            offset += HEADER_SIZE + object_size;
+            header.destructor(ptr);
         }
-
-        assert(false && "Object not found in arena");
+        header.is_alive = false;
     }
 
     /**
