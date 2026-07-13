@@ -21,6 +21,7 @@ var classArenaAllocator =
     [ "forceReallocate", "classArenaAllocator.html#a221ec30886adf80609635d0af2e9f47b", null ],
     [ "get_capacity", "classArenaAllocator.html#a0c2ee803d7e32389dcb4023995f3a07c", null ],
     [ "get_dead_bytes", "classArenaAllocator.html#a1a5cc34ddf5d3fe7286fdae8e1976d39", null ],
+    [ "get_fragmentation_ratio", "classArenaAllocator.html#ac5e1a14a4daa01f42044c7af4f1d00bf", null ],
     [ "get_type_info", "classArenaAllocator.html#a0f056716b600807495dd51c53d3b0ec2", null ],
     [ "get_used_bytes", "classArenaAllocator.html#aaac8564f05bdbe0fe389aa9490541cc7", null ],
     [ "getArrayCount", "classArenaAllocator.html#a8578f17c8f462220a3062dda8169317c", null ],
