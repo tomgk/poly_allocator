@@ -750,549 +750,472 @@ $(document).ready(function(){initNavTree('arena__allocator_8hpp_source.html','')
 <div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> (ptr) T(std::forward&lt;Args&gt;(args)...);</div>
 <div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span>        };</div>
 <div class="line"><a id="l00616" name="l00616"></a><span class="lineno">  616</span> </div>
-<div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span>        CopyFunction copy = [](<span class="keywordtype">void</span>* src, <span class="keywordtype">void</span> *dst, std::ptrdiff_t offset)</div>
-<div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>        {</div>
-<div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span><span class="preprocessor">#ifdef ARENA_ALLOCATOR_LOG</span></div>
-<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>            std::cout &lt;&lt; <span class="stringliteral">&quot;Copy &quot;</span> &lt;&lt; <span class="keyword">typeid</span>(T).name() &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; src &lt;&lt; <span class="stringliteral">&quot; to &quot;</span> &lt;&lt; dst &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span>            <span class="keyword">new</span> (dst)T(std::move(*<span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(src)));</div>
-<div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span>        };</div>
-<div class="line"><a id="l00624" name="l00624"></a><span class="lineno">  624</span>        DestructorFunction destruct = [](<span class="keywordtype">void</span>* ptr)</div>
-<div class="line"><a id="l00625" name="l00625"></a><span class="lineno">  625</span>        {</div>
-<div class="line"><a id="l00626" name="l00626"></a><span class="lineno">  626</span><span class="preprocessor">#ifdef ARENA_ALLOCATOR_LOG</span></div>
-<div class="line"><a id="l00627" name="l00627"></a><span class="lineno">  627</span>            std::cout &lt;&lt; <span class="stringliteral">&quot;Destruct &quot;</span> &lt;&lt; <span class="keyword">typeid</span>(T).name() &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; ptr &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00628" name="l00628"></a><span class="lineno">  628</span><span class="preprocessor">#endif</span><span class="comment"></span></div>
-<div class="line"><a id="l00629" name="l00629"></a><span class="lineno">  629</span><span class="comment">            ///\todo check with std::is_constructible if there is a constructor with an offset</span></div>
-<div class="line"><a id="l00630" name="l00630"></a><span class="lineno">  630</span><span class="comment"></span>            <span class="keyword">auto</span> str = <span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(ptr);</div>
-<div class="line"><a id="l00631" name="l00631"></a><span class="lineno">  631</span>            str-&gt;~T();</div>
-<div class="line"><a id="l00632" name="l00632"></a><span class="lineno">  632</span>        };</div>
-<div class="line"><a id="l00633" name="l00633"></a><span class="lineno">  633</span> </div>
-<div class="line"><a id="l00634" name="l00634"></a><span class="lineno">  634</span>        <span class="keywordflow">return</span> allocate0&lt;T&gt;(construct, <span class="keyword">alignof</span>(T), <span class="keyword">sizeof</span>(T), copy, destruct);</div>
-<div class="line"><a id="l00635" name="l00635"></a><span class="lineno">  635</span>    }</div>
+<div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span>        CopyFunction copy = callback::Callback_CopyObjectWithNoObject&lt;T&gt;;</div>
+<div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>        DestructorFunction destruct = callback::Callback_DestructObject&lt;T&gt;;</div>
+<div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span> </div>
+<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>        <span class="keywordflow">return</span> allocate0&lt;T&gt;(construct, <span class="keyword">alignof</span>(T), <span class="keyword">sizeof</span>(T), copy, destruct);</div>
+<div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span>    }</div>
 </div>
-<div class="line"><a id="l00636" name="l00636"></a><span class="lineno">  636</span><span class="comment"></span> </div>
-<div class="line"><a id="l00637" name="l00637"></a><span class="lineno">  637</span><span class="comment">    /**</span></div>
-<div class="line"><a id="l00638" name="l00638"></a><span class="lineno">  638</span><span class="comment">     * @brief Allocates raw, uninitialized memory of a specific size and alignment.</span></div>
-<div class="line"><a id="l00639" name="l00639"></a><span class="lineno">  639</span><span class="comment">     *</span></div>
-<div class="line"><a id="l00640" name="l00640"></a><span class="lineno">  640</span><span class="comment">     * This function bypasses construction and destruction tracking. It is ideal</span></div>
-<div class="line"><a id="l00641" name="l00641"></a><span class="lineno">  641</span><span class="comment">     * for custom low-level storage or buffer allocations within the arena.</span></div>
-<div class="line"><a id="l00642" name="l00642"></a><span class="lineno">  642</span><span class="comment">     *</span></div>
-<div class="line"><a id="l00643" name="l00643"></a><span class="lineno">  643</span><span class="comment">     * @param size The number of bytes to allocate.</span></div>
-<div class="line"><a id="l00644" name="l00644"></a><span class="lineno">  644</span><span class="comment">     * @param alignment The required alignment for the allocated memory boundary.</span></div>
-<div class="line"><a id="l00645" name="l00645"></a><span class="lineno">  645</span><span class="comment">     * @return void* Pointer to the newly allocated uninitialized memory block.</span></div>
-<div class="line"><a id="l00646" name="l00646"></a><span class="lineno">  646</span><span class="comment">     */</span></div>
-<div class="foldopen" id="foldopen00647" data-start="{" data-end="}">
-<div class="line"><a id="l00647" name="l00647"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#aca7250a5e890971bb78b46a2444a95a3">  647</a></span>    <span class="keywordtype">void</span>* <a class="code hl_function" href="classArenaAllocator.html#aca7250a5e890971bb78b46a2444a95a3">allocateRaw</a>(std::size_t size, std::size_t alignment)</div>
-<div class="line"><a id="l00648" name="l00648"></a><span class="lineno">  648</span>    {</div>
-<div class="line"><a id="l00649" name="l00649"></a><span class="lineno">  649</span>        <span class="keywordflow">if</span> (size == 0) <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span><span class="comment"></span> </div>
+<div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00624" name="l00624"></a><span class="lineno">  624</span><span class="comment">     * @brief Allocates raw, uninitialized memory of a specific size and alignment.</span></div>
+<div class="line"><a id="l00625" name="l00625"></a><span class="lineno">  625</span><span class="comment">     *</span></div>
+<div class="line"><a id="l00626" name="l00626"></a><span class="lineno">  626</span><span class="comment">     * This function bypasses construction and destruction tracking. It is ideal</span></div>
+<div class="line"><a id="l00627" name="l00627"></a><span class="lineno">  627</span><span class="comment">     * for custom low-level storage or buffer allocations within the arena.</span></div>
+<div class="line"><a id="l00628" name="l00628"></a><span class="lineno">  628</span><span class="comment">     *</span></div>
+<div class="line"><a id="l00629" name="l00629"></a><span class="lineno">  629</span><span class="comment">     * @param size The number of bytes to allocate.</span></div>
+<div class="line"><a id="l00630" name="l00630"></a><span class="lineno">  630</span><span class="comment">     * @param alignment The required alignment for the allocated memory boundary.</span></div>
+<div class="line"><a id="l00631" name="l00631"></a><span class="lineno">  631</span><span class="comment">     * @return void* Pointer to the newly allocated uninitialized memory block.</span></div>
+<div class="line"><a id="l00632" name="l00632"></a><span class="lineno">  632</span><span class="comment">     */</span></div>
+<div class="foldopen" id="foldopen00633" data-start="{" data-end="}">
+<div class="line"><a id="l00633" name="l00633"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#aca7250a5e890971bb78b46a2444a95a3">  633</a></span>    <span class="keywordtype">void</span>* <a class="code hl_function" href="classArenaAllocator.html#aca7250a5e890971bb78b46a2444a95a3">allocateRaw</a>(std::size_t size, std::size_t alignment)</div>
+<div class="line"><a id="l00634" name="l00634"></a><span class="lineno">  634</span>    {</div>
+<div class="line"><a id="l00635" name="l00635"></a><span class="lineno">  635</span>        <span class="keywordflow">if</span> (size == 0) <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00636" name="l00636"></a><span class="lineno">  636</span> </div>
+<div class="line"><a id="l00637" name="l00637"></a><span class="lineno">  637</span>        <span class="keyword">auto</span> construct = [](<span class="keywordtype">void</span>* ptr)</div>
+<div class="line"><a id="l00638" name="l00638"></a><span class="lineno">  638</span>        {</div>
+<div class="line"><a id="l00639" name="l00639"></a><span class="lineno">  639</span>            <span class="keywordflow">return</span> ptr;</div>
+<div class="line"><a id="l00640" name="l00640"></a><span class="lineno">  640</span>        };</div>
+<div class="line"><a id="l00641" name="l00641"></a><span class="lineno">  641</span> </div>
+<div class="line"><a id="l00642" name="l00642"></a><span class="lineno">  642</span>        CopyFunction copy = [](<span class="keywordtype">void</span>* src, <span class="keywordtype">void</span>* dst, std::ptrdiff_t offset)</div>
+<div class="line"><a id="l00643" name="l00643"></a><span class="lineno">  643</span>        {</div>
+<div class="line"><a id="l00644" name="l00644"></a><span class="lineno">  644</span>            <span class="comment">// To safely copy during reallocate, we extract the size from the header</span></div>
+<div class="line"><a id="l00645" name="l00645"></a><span class="lineno">  645</span>            std::byte* header_ptr = <span class="keyword">reinterpret_cast&lt;</span>std::byte*<span class="keyword">&gt;</span>(src) - <span class="keyword">sizeof</span>(AllocationHeader);</div>
+<div class="line"><a id="l00646" name="l00646"></a><span class="lineno">  646</span>            AllocationHeader* header = <span class="keyword">reinterpret_cast&lt;</span>AllocationHeader*<span class="keyword">&gt;</span>(header_ptr);</div>
+<div class="line"><a id="l00647" name="l00647"></a><span class="lineno">  647</span>            std::memcpy(dst, src, header-&gt;size);</div>
+<div class="line"><a id="l00648" name="l00648"></a><span class="lineno">  648</span>        };</div>
+<div class="line"><a id="l00649" name="l00649"></a><span class="lineno">  649</span>        DestructorFunction destruct = [](<span class="keywordtype">void</span>* ptr){};</div>
 <div class="line"><a id="l00650" name="l00650"></a><span class="lineno">  650</span> </div>
-<div class="line"><a id="l00651" name="l00651"></a><span class="lineno">  651</span>        <span class="comment">// 1. A trivial inline constructor lambda that does absolutely nothing</span></div>
-<div class="line"><a id="l00652" name="l00652"></a><span class="lineno">  652</span>        <span class="keyword">auto</span> construct = [](<span class="keywordtype">void</span>* ptr) {</div>
-<div class="line"><a id="l00653" name="l00653"></a><span class="lineno">  653</span>            <span class="keywordflow">return</span> ptr;</div>
-<div class="line"><a id="l00654" name="l00654"></a><span class="lineno">  654</span>        };</div>
-<div class="line"><a id="l00655" name="l00655"></a><span class="lineno">  655</span> </div>
-<div class="line"><a id="l00656" name="l00656"></a><span class="lineno">  656</span>        <span class="comment">// 2. A fast bitwise memory copy for reallocation</span></div>
-<div class="line"><a id="l00657" name="l00657"></a><span class="lineno">  657</span>        CopyFunction copy = [](<span class="keywordtype">void</span>* src, <span class="keywordtype">void</span>* dst, std::ptrdiff_t offset)</div>
-<div class="line"><a id="l00658" name="l00658"></a><span class="lineno">  658</span>        {</div>
-<div class="line"><a id="l00659" name="l00659"></a><span class="lineno">  659</span>            <span class="comment">// To safely copy during reallocate, we extract the size from the header</span></div>
-<div class="line"><a id="l00660" name="l00660"></a><span class="lineno">  660</span>            std::byte* header_ptr = <span class="keyword">reinterpret_cast&lt;</span>std::byte*<span class="keyword">&gt;</span>(src) - <span class="keyword">sizeof</span>(AllocationHeader);</div>
-<div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span>            AllocationHeader* header = <span class="keyword">reinterpret_cast&lt;</span>AllocationHeader*<span class="keyword">&gt;</span>(header_ptr);</div>
-<div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span>            std::memcpy(dst, src, header-&gt;size);</div>
-<div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span>        };</div>
-<div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span> </div>
-<div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span>        <span class="comment">// 3. A no-op destructor (raw bytes don&#39;t need destruction)</span></div>
-<div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span>        DestructorFunction destruct = [](<span class="keywordtype">void</span>* ptr)</div>
-<div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span>        {</div>
-<div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>            <span class="comment">// No operation needed for raw uninitialized bytes</span></div>
-<div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span>        };</div>
-<div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span> </div>
-<div class="line"><a id="l00671" name="l00671"></a><span class="lineno">  671</span>        <span class="comment">// 4. Fall back to your optimized allocate0 method</span></div>
-<div class="line"><a id="l00672" name="l00672"></a><span class="lineno">  672</span>        <span class="keywordflow">return</span> allocate0&lt;std::byte&gt;(construct, alignment, size, copy, destruct);</div>
-<div class="line"><a id="l00673" name="l00673"></a><span class="lineno">  673</span>    }</div>
+<div class="line"><a id="l00651" name="l00651"></a><span class="lineno">  651</span>        <span class="keywordflow">return</span> allocate0&lt;std::byte&gt;(construct, alignment, size, copy, destruct);</div>
+<div class="line"><a id="l00652" name="l00652"></a><span class="lineno">  652</span>    }</div>
 </div>
-<div class="line"><a id="l00674" name="l00674"></a><span class="lineno">  674</span><span class="comment"></span> </div>
-<div class="line"><a id="l00675" name="l00675"></a><span class="lineno">  675</span><span class="comment">    /**</span></div>
-<div class="line"><a id="l00676" name="l00676"></a><span class="lineno">  676</span><span class="comment">     * @brief Allocates a continuous array of type T with &#39;count&#39; elements.</span></div>
-<div class="line"><a id="l00677" name="l00677"></a><span class="lineno">  677</span><span class="comment">     *</span></div>
-<div class="line"><a id="l00678" name="l00678"></a><span class="lineno">  678</span><span class="comment">     * @tparam T Type of the array elements</span></div>
-<div class="line"><a id="l00679" name="l00679"></a><span class="lineno">  679</span><span class="comment">     * @param count Number of elements in the array</span></div>
-<div class="line"><a id="l00680" name="l00680"></a><span class="lineno">  680</span><span class="comment">     * @param zero_initialize If true and T is a primitive/trivial type, the memory will be filled with zeros.</span></div>
-<div class="line"><a id="l00681" name="l00681"></a><span class="lineno">  681</span><span class="comment">     *                        For custom objects, they are always default-constructed.</span></div>
-<div class="line"><a id="l00682" name="l00682"></a><span class="lineno">  682</span><span class="comment">     * @return Pointer to the first element of the newly created array</span></div>
-<div class="line"><a id="l00683" name="l00683"></a><span class="lineno">  683</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00684" name="l00684"></a><span class="lineno">  684</span>    <span class="keyword">template</span> &lt;ArenaAllocatorConstructable T&gt;</div>
-<div class="foldopen" id="foldopen00685" data-start="{" data-end="}">
-<div class="line"><a id="l00685" name="l00685"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#a15c440cb45186178255b392f836a0b1a">  685</a></span>    <a class="code hl_class" href="classArenaArrayView.html">ArenaArrayView&lt;T&gt;</a> <a class="code hl_function" href="classArenaAllocator.html#a15c440cb45186178255b392f836a0b1a">allocateArray</a>(std::size_t count, <span class="keywordtype">bool</span> zero_initialize = <span class="keyword">false</span>) <span class="keyword">requires</span> std::is_default_constructible_v&lt;T&gt;</div>
-<div class="line"><a id="l00686" name="l00686"></a><span class="lineno">  686</span>    {</div>
-<div class="line"><a id="l00687" name="l00687"></a><span class="lineno">  687</span>        <span class="keywordflow">if</span> (count == 0) <span class="keywordflow">return</span> <a class="code hl_class" href="classArenaArrayView.html">ArenaArrayView&lt;T&gt;</a>(<span class="keyword">nullptr</span>, 0);</div>
-<div class="line"><a id="l00688" name="l00688"></a><span class="lineno">  688</span> </div>
-<div class="line"><a id="l00689" name="l00689"></a><span class="lineno">  689</span>        std::size_t objectSize = count * <span class="keyword">sizeof</span>(T);</div>
-<div class="line"><a id="l00690" name="l00690"></a><span class="lineno">  690</span> </div>
-<div class="line"><a id="l00691" name="l00691"></a><span class="lineno">  691</span>        <span class="comment">// Lambda for continuous construction of all array elements</span></div>
-<div class="line"><a id="l00692" name="l00692"></a><span class="lineno">  692</span>        <span class="keyword">auto</span> construct = [count, zero_initialize](<span class="keywordtype">void</span>* ptr) {</div>
-<div class="line"><a id="l00693" name="l00693"></a><span class="lineno">  693</span>            T* array_start = <span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(ptr);</div>
-<div class="line"><a id="l00694" name="l00694"></a><span class="lineno">  694</span> </div>
-<div class="line"><a id="l00695" name="l00695"></a><span class="lineno">  695</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_concept" href="conceptPlainObject.html">PlainObject&lt;T&gt;</a>)</div>
-<div class="line"><a id="l00696" name="l00696"></a><span class="lineno">  696</span>            {</div>
-<div class="line"><a id="l00697" name="l00697"></a><span class="lineno">  697</span>                <span class="keywordflow">if</span> (zero_initialize)</div>
-<div class="line"><a id="l00698" name="l00698"></a><span class="lineno">  698</span>                {</div>
-<div class="line"><a id="l00699" name="l00699"></a><span class="lineno">  699</span>                    <span class="comment">// Highly optimized zero-initialization for primitive types</span></div>
-<div class="line"><a id="l00700" name="l00700"></a><span class="lineno">  700</span>                    std::memset(ptr, 0, count * <span class="keyword">sizeof</span>(T));</div>
-<div class="line"><a id="l00701" name="l00701"></a><span class="lineno">  701</span>                }</div>
-<div class="line"><a id="l00702" name="l00702"></a><span class="lineno">  702</span>                <span class="keywordflow">return</span> array_start;</div>
-<div class="line"><a id="l00703" name="l00703"></a><span class="lineno">  703</span>            }</div>
-<div class="line"><a id="l00704" name="l00704"></a><span class="lineno">  704</span>            <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00705" name="l00705"></a><span class="lineno">  705</span>            {</div>
-<div class="line"><a id="l00706" name="l00706"></a><span class="lineno">  706</span>                <span class="comment">// Normal loop only for custom objects with constructors</span></div>
-<div class="line"><a id="l00707" name="l00707"></a><span class="lineno">  707</span>                std::size_t constructed = 0;</div>
-<div class="line"><a id="l00708" name="l00708"></a><span class="lineno">  708</span>                <span class="keywordflow">try</span></div>
-<div class="line"><a id="l00709" name="l00709"></a><span class="lineno">  709</span>                {</div>
-<div class="line"><a id="l00710" name="l00710"></a><span class="lineno">  710</span>                    <span class="keywordflow">for</span> (; constructed &lt; count; ++constructed)</div>
-<div class="line"><a id="l00711" name="l00711"></a><span class="lineno">  711</span>                    {</div>
-<div class="line"><a id="l00712" name="l00712"></a><span class="lineno">  712</span>                        <span class="keyword">new</span> (&amp;array_start[constructed]) T();</div>
-<div class="line"><a id="l00713" name="l00713"></a><span class="lineno">  713</span>                    }</div>
-<div class="line"><a id="l00714" name="l00714"></a><span class="lineno">  714</span>                }</div>
-<div class="line"><a id="l00715" name="l00715"></a><span class="lineno">  715</span>                <span class="keywordflow">catch</span> (...)</div>
-<div class="line"><a id="l00716" name="l00716"></a><span class="lineno">  716</span>                {</div>
-<div class="line"><a id="l00717" name="l00717"></a><span class="lineno">  717</span>                    <span class="comment">// Rollback in case a constructor throws</span></div>
-<div class="line"><a id="l00718" name="l00718"></a><span class="lineno">  718</span>                    <span class="keywordflow">for</span> (std::size_t i = constructed; i &gt; 0; --i)</div>
-<div class="line"><a id="l00719" name="l00719"></a><span class="lineno">  719</span>                    {</div>
-<div class="line"><a id="l00720" name="l00720"></a><span class="lineno">  720</span>                        array_start[i - 1].~T();</div>
-<div class="line"><a id="l00721" name="l00721"></a><span class="lineno">  721</span>                    }</div>
-<div class="line"><a id="l00722" name="l00722"></a><span class="lineno">  722</span>                    <span class="keywordflow">throw</span>;</div>
-<div class="line"><a id="l00723" name="l00723"></a><span class="lineno">  723</span>                }</div>
-<div class="line"><a id="l00724" name="l00724"></a><span class="lineno">  724</span>                <span class="keywordflow">return</span> array_start;</div>
-<div class="line"><a id="l00725" name="l00725"></a><span class="lineno">  725</span>            }</div>
-<div class="line"><a id="l00726" name="l00726"></a><span class="lineno">  726</span>        };</div>
-<div class="line"><a id="l00727" name="l00727"></a><span class="lineno">  727</span> </div>
-<div class="line"><a id="l00728" name="l00728"></a><span class="lineno">  728</span>        <span class="comment">// Copy function for the entire array during reallocation</span></div>
-<div class="line"><a id="l00729" name="l00729"></a><span class="lineno">  729</span>        CopyFunction copy = [](<span class="keywordtype">void</span>* src, <span class="keywordtype">void</span>* dst, std::ptrdiff_t offset)</div>
-<div class="line"><a id="l00730" name="l00730"></a><span class="lineno">  730</span>        {</div>
-<div class="line"><a id="l00731" name="l00731"></a><span class="lineno">  731</span>            T* src_array = <span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(src);</div>
-<div class="line"><a id="l00732" name="l00732"></a><span class="lineno">  732</span>            T* dst_array = <span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(dst);</div>
-<div class="line"><a id="l00733" name="l00733"></a><span class="lineno">  733</span> </div>
-<div class="line"><a id="l00734" name="l00734"></a><span class="lineno">  734</span>            <span class="comment">// Wichtig: Ohne exakten Alignment-Fix ist diese Zeile gefährlich,</span></div>
-<div class="line"><a id="l00735" name="l00735"></a><span class="lineno">  735</span>            <span class="comment">// aber wir korrigieren zumindest die Kopierlogik:</span></div>
-<div class="line"><a id="l00736" name="l00736"></a><span class="lineno">  736</span>            std::byte* header_ptr = <span class="keyword">reinterpret_cast&lt;</span>std::byte*<span class="keyword">&gt;</span>(src) - <span class="keyword">sizeof</span>(AllocationHeader);</div>
-<div class="line"><a id="l00737" name="l00737"></a><span class="lineno">  737</span>            AllocationHeader* header = <span class="keyword">reinterpret_cast&lt;</span>AllocationHeader*<span class="keyword">&gt;</span>(header_ptr);</div>
-<div class="line"><a id="l00738" name="l00738"></a><span class="lineno">  738</span>            std::size_t element_count = header-&gt;size / <span class="keyword">sizeof</span>(T);</div>
-<div class="line"><a id="l00739" name="l00739"></a><span class="lineno">  739</span> </div>
-<div class="line"><a id="l00740" name="l00740"></a><span class="lineno">  740</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_concept" href="conceptPlainObject.html">PlainObject&lt;T&gt;</a>)</div>
-<div class="line"><a id="l00741" name="l00741"></a><span class="lineno">  741</span>            {</div>
-<div class="line"><a id="l00742" name="l00742"></a><span class="lineno">  742</span>                std::memcpy(dst, src, header-&gt;size);</div>
-<div class="line"><a id="l00743" name="l00743"></a><span class="lineno">  743</span>            }</div>
-<div class="line"><a id="l00744" name="l00744"></a><span class="lineno">  744</span>            <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00745" name="l00745"></a><span class="lineno">  745</span>            {</div>
-<div class="line"><a id="l00746" name="l00746"></a><span class="lineno">  746</span>                std::size_t copied = 0;</div>
-<div class="line"><a id="l00747" name="l00747"></a><span class="lineno">  747</span>                <span class="keywordflow">try</span></div>
+<div class="line"><a id="l00653" name="l00653"></a><span class="lineno">  653</span> </div>
+<div class="line"><a id="l00654" name="l00654"></a><span class="lineno">  654</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00655" name="l00655"></a><span class="lineno">  655</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00656" name="l00656"></a><span class="lineno">  656</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> Callback_CopyArray(<span class="keywordtype">void</span>* src, <span class="keywordtype">void</span>* dst, std::ptrdiff_t offset)</div>
+<div class="line"><a id="l00657" name="l00657"></a><span class="lineno">  657</span>    {</div>
+<div class="line"><a id="l00658" name="l00658"></a><span class="lineno">  658</span>        T* src_array = <span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(src);</div>
+<div class="line"><a id="l00659" name="l00659"></a><span class="lineno">  659</span>        T* dst_array = <span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(dst);</div>
+<div class="line"><a id="l00660" name="l00660"></a><span class="lineno">  660</span> </div>
+<div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span>        <span class="comment">// Wichtig: Ohne exakten Alignment-Fix ist diese Zeile gefährlich,</span></div>
+<div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span>        <span class="comment">// aber wir korrigieren zumindest die Kopierlogik:</span></div>
+<div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span>        std::byte* header_ptr = <span class="keyword">reinterpret_cast&lt;</span>std::byte*<span class="keyword">&gt;</span>(src) - <span class="keyword">sizeof</span>(AllocationHeader);</div>
+<div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span>        AllocationHeader* header = <span class="keyword">reinterpret_cast&lt;</span>AllocationHeader*<span class="keyword">&gt;</span>(header_ptr);</div>
+<div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span>        std::size_t element_count = header-&gt;size / <span class="keyword">sizeof</span>(T);</div>
+<div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span> </div>
+<div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_concept" href="conceptPlainObject.html">PlainObject&lt;T&gt;</a>)</div>
+<div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>        {</div>
+<div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span>            std::memcpy(dst, src, header-&gt;size);</div>
+<div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span>        }</div>
+<div class="line"><a id="l00671" name="l00671"></a><span class="lineno">  671</span>        <span class="keywordflow">else</span></div>
+<div class="line"><a id="l00672" name="l00672"></a><span class="lineno">  672</span>        {</div>
+<div class="line"><a id="l00673" name="l00673"></a><span class="lineno">  673</span>            std::size_t copied = 0;</div>
+<div class="line"><a id="l00674" name="l00674"></a><span class="lineno">  674</span>            <span class="keywordflow">try</span></div>
+<div class="line"><a id="l00675" name="l00675"></a><span class="lineno">  675</span>            {</div>
+<div class="line"><a id="l00676" name="l00676"></a><span class="lineno">  676</span>                <span class="keywordflow">for</span> (; copied &lt; element_count; ++copied)</div>
+<div class="line"><a id="l00677" name="l00677"></a><span class="lineno">  677</span>                {</div>
+<div class="line"><a id="l00678" name="l00678"></a><span class="lineno">  678</span>                    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_concept" href="conceptCopyWithOffsetConstructable.html">CopyWithOffsetConstructable&lt;T&gt;</a>)</div>
+<div class="line"><a id="l00679" name="l00679"></a><span class="lineno">  679</span>                    {</div>
+<div class="line"><a id="l00680" name="l00680"></a><span class="lineno">  680</span>                        <span class="keyword">new</span> (&amp;dst_array[copied]) T(copyWithOffsetConstruct, std::move(src_array[copied]), offset);</div>
+<div class="line"><a id="l00681" name="l00681"></a><span class="lineno">  681</span>                    }</div>
+<div class="line"><a id="l00682" name="l00682"></a><span class="lineno">  682</span>                    <span class="keywordflow">else</span></div>
+<div class="line"><a id="l00683" name="l00683"></a><span class="lineno">  683</span>                    {</div>
+<div class="line"><a id="l00684" name="l00684"></a><span class="lineno">  684</span>                        <span class="comment">// FIX: Falls der Typ kein Custom-Offset unterstützt,</span></div>
+<div class="line"><a id="l00685" name="l00685"></a><span class="lineno">  685</span>                        <span class="comment">// nutzen wir ein normales Placement-New mit std::move</span></div>
+<div class="line"><a id="l00686" name="l00686"></a><span class="lineno">  686</span>                        <span class="keyword">new</span> (&amp;dst_array[copied]) T(std::move(src_array[copied]));</div>
+<div class="line"><a id="l00687" name="l00687"></a><span class="lineno">  687</span>                    }</div>
+<div class="line"><a id="l00688" name="l00688"></a><span class="lineno">  688</span>                }</div>
+<div class="line"><a id="l00689" name="l00689"></a><span class="lineno">  689</span>            }</div>
+<div class="line"><a id="l00690" name="l00690"></a><span class="lineno">  690</span>            <span class="keywordflow">catch</span> (...)</div>
+<div class="line"><a id="l00691" name="l00691"></a><span class="lineno">  691</span>            {</div>
+<div class="line"><a id="l00692" name="l00692"></a><span class="lineno">  692</span>                <span class="comment">// Rollback bei Konstruktor-Ausnahme</span></div>
+<div class="line"><a id="l00693" name="l00693"></a><span class="lineno">  693</span>                <span class="keywordflow">for</span> (std::size_t i = copied; i &gt; 0; --i)</div>
+<div class="line"><a id="l00694" name="l00694"></a><span class="lineno">  694</span>                {</div>
+<div class="line"><a id="l00695" name="l00695"></a><span class="lineno">  695</span>                    dst_array[i - 1].~T();</div>
+<div class="line"><a id="l00696" name="l00696"></a><span class="lineno">  696</span>                }</div>
+<div class="line"><a id="l00697" name="l00697"></a><span class="lineno">  697</span>                <span class="keywordflow">throw</span>;</div>
+<div class="line"><a id="l00698" name="l00698"></a><span class="lineno">  698</span>            }</div>
+<div class="line"><a id="l00699" name="l00699"></a><span class="lineno">  699</span>        }</div>
+<div class="line"><a id="l00700" name="l00700"></a><span class="lineno">  700</span>    }</div>
+<div class="line"><a id="l00701" name="l00701"></a><span class="lineno">  701</span> </div>
+<div class="line"><a id="l00702" name="l00702"></a><span class="lineno">  702</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00703" name="l00703"></a><span class="lineno">  703</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> Callback_DestructArray(<span class="keywordtype">void</span>* ptr)</div>
+<div class="line"><a id="l00704" name="l00704"></a><span class="lineno">  704</span>    {</div>
+<div class="line"><a id="l00705" name="l00705"></a><span class="lineno">  705</span><span class="preprocessor">#ifdef ARENA_ALLOCATOR_LOG</span></div>
+<div class="line"><a id="l00706" name="l00706"></a><span class="lineno">  706</span>        std::cout &lt;&lt; <span class="stringliteral">&quot;Destruct Array of &quot;</span> &lt;&lt; <span class="keyword">typeid</span>(T).name() &lt;&lt; <span class="stringliteral">&quot; at &quot;</span> &lt;&lt; ptr &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00707" name="l00707"></a><span class="lineno">  707</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00708" name="l00708"></a><span class="lineno">  708</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!<a class="code hl_concept" href="conceptPlainObject.html">PlainObject&lt;T&gt;</a>)</div>
+<div class="line"><a id="l00709" name="l00709"></a><span class="lineno">  709</span>        {</div>
+<div class="line"><a id="l00710" name="l00710"></a><span class="lineno">  710</span>            T* array_start = <span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(ptr);</div>
+<div class="line"><a id="l00711" name="l00711"></a><span class="lineno">  711</span>            std::byte* header_ptr = <span class="keyword">reinterpret_cast&lt;</span>std::byte*<span class="keyword">&gt;</span>(ptr) - <span class="keyword">sizeof</span>(AllocationHeader);</div>
+<div class="line"><a id="l00712" name="l00712"></a><span class="lineno">  712</span>            AllocationHeader* header = <span class="keyword">reinterpret_cast&lt;</span>AllocationHeader*<span class="keyword">&gt;</span>(header_ptr);</div>
+<div class="line"><a id="l00713" name="l00713"></a><span class="lineno">  713</span>            std::size_t element_count = header-&gt;size / <span class="keyword">sizeof</span>(T);</div>
+<div class="line"><a id="l00714" name="l00714"></a><span class="lineno">  714</span> </div>
+<div class="line"><a id="l00715" name="l00715"></a><span class="lineno">  715</span>            <span class="comment">// Destroy custom elements in reverse order</span></div>
+<div class="line"><a id="l00716" name="l00716"></a><span class="lineno">  716</span>            <span class="keywordflow">for</span> (std::size_t i = element_count; i &gt; 0; --i)</div>
+<div class="line"><a id="l00717" name="l00717"></a><span class="lineno">  717</span>            {</div>
+<div class="line"><a id="l00718" name="l00718"></a><span class="lineno">  718</span>                array_start[i - 1].~T();</div>
+<div class="line"><a id="l00719" name="l00719"></a><span class="lineno">  719</span>            }</div>
+<div class="line"><a id="l00720" name="l00720"></a><span class="lineno">  720</span>        }</div>
+<div class="line"><a id="l00721" name="l00721"></a><span class="lineno">  721</span>        <span class="comment">// Trivial types don&#39;t need their destructors called</span></div>
+<div class="line"><a id="l00722" name="l00722"></a><span class="lineno">  722</span>    }</div>
+<div class="line"><a id="l00723" name="l00723"></a><span class="lineno">  723</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00724" name="l00724"></a><span class="lineno">  724</span><span class="comment"></span> </div>
+<div class="line"><a id="l00725" name="l00725"></a><span class="lineno">  725</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00726" name="l00726"></a><span class="lineno">  726</span><span class="comment">     * @brief Allocates a continuous array of type T with &#39;count&#39; elements.</span></div>
+<div class="line"><a id="l00727" name="l00727"></a><span class="lineno">  727</span><span class="comment">     *</span></div>
+<div class="line"><a id="l00728" name="l00728"></a><span class="lineno">  728</span><span class="comment">     * @tparam T Type of the array elements</span></div>
+<div class="line"><a id="l00729" name="l00729"></a><span class="lineno">  729</span><span class="comment">     * @param count Number of elements in the array</span></div>
+<div class="line"><a id="l00730" name="l00730"></a><span class="lineno">  730</span><span class="comment">     * @param zero_initialize If true and T is a primitive/trivial type, the memory will be filled with zeros.</span></div>
+<div class="line"><a id="l00731" name="l00731"></a><span class="lineno">  731</span><span class="comment">     *                        For custom objects, they are always default-constructed.</span></div>
+<div class="line"><a id="l00732" name="l00732"></a><span class="lineno">  732</span><span class="comment">     * @return Pointer to the first element of the newly created array</span></div>
+<div class="line"><a id="l00733" name="l00733"></a><span class="lineno">  733</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00734" name="l00734"></a><span class="lineno">  734</span>    <span class="keyword">template</span> &lt;ArenaAllocatorConstructable T&gt;</div>
+<div class="foldopen" id="foldopen00735" data-start="{" data-end="}">
+<div class="line"><a id="l00735" name="l00735"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#a15c440cb45186178255b392f836a0b1a">  735</a></span>    <a class="code hl_class" href="classArenaArrayView.html">ArenaArrayView&lt;T&gt;</a> <a class="code hl_function" href="classArenaAllocator.html#a15c440cb45186178255b392f836a0b1a">allocateArray</a>(std::size_t count, <span class="keywordtype">bool</span> zero_initialize = <span class="keyword">false</span>) <span class="keyword">requires</span> std::is_default_constructible_v&lt;T&gt;</div>
+<div class="line"><a id="l00736" name="l00736"></a><span class="lineno">  736</span>    {</div>
+<div class="line"><a id="l00737" name="l00737"></a><span class="lineno">  737</span>        <span class="keywordflow">if</span> (count == 0) <span class="keywordflow">return</span> <a class="code hl_class" href="classArenaArrayView.html">ArenaArrayView&lt;T&gt;</a>(<span class="keyword">nullptr</span>, 0);</div>
+<div class="line"><a id="l00738" name="l00738"></a><span class="lineno">  738</span> </div>
+<div class="line"><a id="l00739" name="l00739"></a><span class="lineno">  739</span>        std::size_t objectSize = count * <span class="keyword">sizeof</span>(T);</div>
+<div class="line"><a id="l00740" name="l00740"></a><span class="lineno">  740</span> </div>
+<div class="line"><a id="l00741" name="l00741"></a><span class="lineno">  741</span>        <span class="comment">// Lambda for continuous construction of all array elements</span></div>
+<div class="line"><a id="l00742" name="l00742"></a><span class="lineno">  742</span>        <span class="keyword">auto</span> construct = [count, zero_initialize](<span class="keywordtype">void</span>* ptr) {</div>
+<div class="line"><a id="l00743" name="l00743"></a><span class="lineno">  743</span>            T* array_start = <span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(ptr);</div>
+<div class="line"><a id="l00744" name="l00744"></a><span class="lineno">  744</span> </div>
+<div class="line"><a id="l00745" name="l00745"></a><span class="lineno">  745</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_concept" href="conceptPlainObject.html">PlainObject&lt;T&gt;</a>)</div>
+<div class="line"><a id="l00746" name="l00746"></a><span class="lineno">  746</span>            {</div>
+<div class="line"><a id="l00747" name="l00747"></a><span class="lineno">  747</span>                <span class="keywordflow">if</span> (zero_initialize)</div>
 <div class="line"><a id="l00748" name="l00748"></a><span class="lineno">  748</span>                {</div>
-<div class="line"><a id="l00749" name="l00749"></a><span class="lineno">  749</span>                    <span class="keywordflow">for</span> (; copied &lt; element_count; ++copied)</div>
-<div class="line"><a id="l00750" name="l00750"></a><span class="lineno">  750</span>                    {</div>
-<div class="line"><a id="l00751" name="l00751"></a><span class="lineno">  751</span>                        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_concept" href="conceptCopyWithOffsetConstructable.html">CopyWithOffsetConstructable&lt;T&gt;</a>)</div>
-<div class="line"><a id="l00752" name="l00752"></a><span class="lineno">  752</span>                        {</div>
-<div class="line"><a id="l00753" name="l00753"></a><span class="lineno">  753</span>                            <span class="keyword">new</span> (&amp;dst_array[copied]) T(copyWithOffsetConstruct, std::move(src_array[copied]), offset);</div>
-<div class="line"><a id="l00754" name="l00754"></a><span class="lineno">  754</span>                        }</div>
-<div class="line"><a id="l00755" name="l00755"></a><span class="lineno">  755</span>                        <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00756" name="l00756"></a><span class="lineno">  756</span>                        {</div>
-<div class="line"><a id="l00757" name="l00757"></a><span class="lineno">  757</span>                            <span class="comment">// FIX: Falls der Typ kein Custom-Offset unterstützt,</span></div>
-<div class="line"><a id="l00758" name="l00758"></a><span class="lineno">  758</span>                            <span class="comment">// nutzen wir ein normales Placement-New mit std::move</span></div>
-<div class="line"><a id="l00759" name="l00759"></a><span class="lineno">  759</span>                            <span class="keyword">new</span> (&amp;dst_array[copied]) T(std::move(src_array[copied]));</div>
-<div class="line"><a id="l00760" name="l00760"></a><span class="lineno">  760</span>                        }</div>
-<div class="line"><a id="l00761" name="l00761"></a><span class="lineno">  761</span>                    }</div>
-<div class="line"><a id="l00762" name="l00762"></a><span class="lineno">  762</span>                }</div>
-<div class="line"><a id="l00763" name="l00763"></a><span class="lineno">  763</span>                <span class="keywordflow">catch</span> (...)</div>
-<div class="line"><a id="l00764" name="l00764"></a><span class="lineno">  764</span>                {</div>
-<div class="line"><a id="l00765" name="l00765"></a><span class="lineno">  765</span>                    <span class="comment">// Rollback bei Konstruktor-Ausnahme</span></div>
-<div class="line"><a id="l00766" name="l00766"></a><span class="lineno">  766</span>                    <span class="keywordflow">for</span> (std::size_t i = copied; i &gt; 0; --i)</div>
-<div class="line"><a id="l00767" name="l00767"></a><span class="lineno">  767</span>                    {</div>
-<div class="line"><a id="l00768" name="l00768"></a><span class="lineno">  768</span>                        dst_array[i - 1].~T();</div>
-<div class="line"><a id="l00769" name="l00769"></a><span class="lineno">  769</span>                    }</div>
-<div class="line"><a id="l00770" name="l00770"></a><span class="lineno">  770</span>                    <span class="keywordflow">throw</span>;</div>
-<div class="line"><a id="l00771" name="l00771"></a><span class="lineno">  771</span>                }</div>
-<div class="line"><a id="l00772" name="l00772"></a><span class="lineno">  772</span>            }</div>
-<div class="line"><a id="l00773" name="l00773"></a><span class="lineno">  773</span>        };</div>
-<div class="line"><a id="l00774" name="l00774"></a><span class="lineno">  774</span> </div>
-<div class="line"><a id="l00775" name="l00775"></a><span class="lineno">  775</span>        <span class="comment">// Destructor function for the entire array</span></div>
-<div class="line"><a id="l00776" name="l00776"></a><span class="lineno">  776</span>        DestructorFunction destruct = [](<span class="keywordtype">void</span>* ptr)</div>
-<div class="line"><a id="l00777" name="l00777"></a><span class="lineno">  777</span>        {</div>
-<div class="line"><a id="l00778" name="l00778"></a><span class="lineno">  778</span><span class="preprocessor">#ifdef ARENA_ALLOCATOR_LOG</span></div>
-<div class="line"><a id="l00779" name="l00779"></a><span class="lineno">  779</span>            std::cout &lt;&lt; <span class="stringliteral">&quot;Destruct Array of &quot;</span> &lt;&lt; <span class="keyword">typeid</span>(T).name() &lt;&lt; <span class="stringliteral">&quot; at &quot;</span> &lt;&lt; ptr &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00780" name="l00780"></a><span class="lineno">  780</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00781" name="l00781"></a><span class="lineno">  781</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!<a class="code hl_concept" href="conceptPlainObject.html">PlainObject&lt;T&gt;</a>)</div>
-<div class="line"><a id="l00782" name="l00782"></a><span class="lineno">  782</span>            {</div>
-<div class="line"><a id="l00783" name="l00783"></a><span class="lineno">  783</span>                T* array_start = <span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(ptr);</div>
-<div class="line"><a id="l00784" name="l00784"></a><span class="lineno">  784</span>                std::byte* header_ptr = <span class="keyword">reinterpret_cast&lt;</span>std::byte*<span class="keyword">&gt;</span>(ptr) - <span class="keyword">sizeof</span>(AllocationHeader);</div>
-<div class="line"><a id="l00785" name="l00785"></a><span class="lineno">  785</span>                AllocationHeader* header = <span class="keyword">reinterpret_cast&lt;</span>AllocationHeader*<span class="keyword">&gt;</span>(header_ptr);</div>
-<div class="line"><a id="l00786" name="l00786"></a><span class="lineno">  786</span>                std::size_t element_count = header-&gt;size / <span class="keyword">sizeof</span>(T);</div>
-<div class="line"><a id="l00787" name="l00787"></a><span class="lineno">  787</span> </div>
-<div class="line"><a id="l00788" name="l00788"></a><span class="lineno">  788</span>                <span class="comment">// Destroy custom elements in reverse order</span></div>
-<div class="line"><a id="l00789" name="l00789"></a><span class="lineno">  789</span>                <span class="keywordflow">for</span> (std::size_t i = element_count; i &gt; 0; --i)</div>
-<div class="line"><a id="l00790" name="l00790"></a><span class="lineno">  790</span>                {</div>
-<div class="line"><a id="l00791" name="l00791"></a><span class="lineno">  791</span>                    array_start[i - 1].~T();</div>
-<div class="line"><a id="l00792" name="l00792"></a><span class="lineno">  792</span>                }</div>
-<div class="line"><a id="l00793" name="l00793"></a><span class="lineno">  793</span>            }</div>
-<div class="line"><a id="l00794" name="l00794"></a><span class="lineno">  794</span>            <span class="comment">// Trivial types don&#39;t need their destructors called</span></div>
-<div class="line"><a id="l00795" name="l00795"></a><span class="lineno">  795</span>        };</div>
-<div class="line"><a id="l00796" name="l00796"></a><span class="lineno">  796</span> </div>
-<div class="line"><a id="l00797" name="l00797"></a><span class="lineno">  797</span>        T* raw_ptr = allocate0&lt;T&gt;(construct, <span class="keyword">alignof</span>(T), objectSize, copy, destruct);</div>
-<div class="line"><a id="l00798" name="l00798"></a><span class="lineno">  798</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classArenaArrayView.html">ArenaArrayView&lt;T&gt;</a>(raw_ptr, count);</div>
-<div class="line"><a id="l00799" name="l00799"></a><span class="lineno">  799</span>    }</div>
+<div class="line"><a id="l00749" name="l00749"></a><span class="lineno">  749</span>                    <span class="comment">// Highly optimized zero-initialization for primitive types</span></div>
+<div class="line"><a id="l00750" name="l00750"></a><span class="lineno">  750</span>                    std::memset(ptr, 0, count * <span class="keyword">sizeof</span>(T));</div>
+<div class="line"><a id="l00751" name="l00751"></a><span class="lineno">  751</span>                }</div>
+<div class="line"><a id="l00752" name="l00752"></a><span class="lineno">  752</span>                <span class="keywordflow">return</span> array_start;</div>
+<div class="line"><a id="l00753" name="l00753"></a><span class="lineno">  753</span>            }</div>
+<div class="line"><a id="l00754" name="l00754"></a><span class="lineno">  754</span>            <span class="keywordflow">else</span></div>
+<div class="line"><a id="l00755" name="l00755"></a><span class="lineno">  755</span>            {</div>
+<div class="line"><a id="l00756" name="l00756"></a><span class="lineno">  756</span>                <span class="comment">// Normal loop only for custom objects with constructors</span></div>
+<div class="line"><a id="l00757" name="l00757"></a><span class="lineno">  757</span>                std::size_t constructed = 0;</div>
+<div class="line"><a id="l00758" name="l00758"></a><span class="lineno">  758</span>                <span class="keywordflow">try</span></div>
+<div class="line"><a id="l00759" name="l00759"></a><span class="lineno">  759</span>                {</div>
+<div class="line"><a id="l00760" name="l00760"></a><span class="lineno">  760</span>                    <span class="keywordflow">for</span> (; constructed &lt; count; ++constructed)</div>
+<div class="line"><a id="l00761" name="l00761"></a><span class="lineno">  761</span>                    {</div>
+<div class="line"><a id="l00762" name="l00762"></a><span class="lineno">  762</span>                        <span class="keyword">new</span> (&amp;array_start[constructed]) T();</div>
+<div class="line"><a id="l00763" name="l00763"></a><span class="lineno">  763</span>                    }</div>
+<div class="line"><a id="l00764" name="l00764"></a><span class="lineno">  764</span>                }</div>
+<div class="line"><a id="l00765" name="l00765"></a><span class="lineno">  765</span>                <span class="keywordflow">catch</span> (...)</div>
+<div class="line"><a id="l00766" name="l00766"></a><span class="lineno">  766</span>                {</div>
+<div class="line"><a id="l00767" name="l00767"></a><span class="lineno">  767</span>                    <span class="comment">// Rollback in case a constructor throws</span></div>
+<div class="line"><a id="l00768" name="l00768"></a><span class="lineno">  768</span>                    <span class="keywordflow">for</span> (std::size_t i = constructed; i &gt; 0; --i)</div>
+<div class="line"><a id="l00769" name="l00769"></a><span class="lineno">  769</span>                    {</div>
+<div class="line"><a id="l00770" name="l00770"></a><span class="lineno">  770</span>                        array_start[i - 1].~T();</div>
+<div class="line"><a id="l00771" name="l00771"></a><span class="lineno">  771</span>                    }</div>
+<div class="line"><a id="l00772" name="l00772"></a><span class="lineno">  772</span>                    <span class="keywordflow">throw</span>;</div>
+<div class="line"><a id="l00773" name="l00773"></a><span class="lineno">  773</span>                }</div>
+<div class="line"><a id="l00774" name="l00774"></a><span class="lineno">  774</span>                <span class="keywordflow">return</span> array_start;</div>
+<div class="line"><a id="l00775" name="l00775"></a><span class="lineno">  775</span>            }</div>
+<div class="line"><a id="l00776" name="l00776"></a><span class="lineno">  776</span>        };</div>
+<div class="line"><a id="l00777" name="l00777"></a><span class="lineno">  777</span> </div>
+<div class="line"><a id="l00778" name="l00778"></a><span class="lineno">  778</span>        CopyFunction copy = Callback_CopyArray&lt;T&gt;;</div>
+<div class="line"><a id="l00779" name="l00779"></a><span class="lineno">  779</span>        DestructorFunction destruct = Callback_DestructArray&lt;T&gt;;</div>
+<div class="line"><a id="l00780" name="l00780"></a><span class="lineno">  780</span> </div>
+<div class="line"><a id="l00781" name="l00781"></a><span class="lineno">  781</span>        T* raw_ptr = allocate0&lt;T&gt;(construct, <span class="keyword">alignof</span>(T), objectSize, copy, destruct);</div>
+<div class="line"><a id="l00782" name="l00782"></a><span class="lineno">  782</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classArenaArrayView.html">ArenaArrayView&lt;T&gt;</a>(raw_ptr, count);</div>
+<div class="line"><a id="l00783" name="l00783"></a><span class="lineno">  783</span>    }</div>
 </div>
-<div class="line"><a id="l00800" name="l00800"></a><span class="lineno">  800</span><span class="comment"></span> </div>
-<div class="line"><a id="l00801" name="l00801"></a><span class="lineno">  801</span><span class="comment">    /**</span></div>
-<div class="line"><a id="l00802" name="l00802"></a><span class="lineno">  802</span><span class="comment">     * @brief Allocates a continuous array of type T where each element is a copy of the given value.</span></div>
-<div class="line"><a id="l00803" name="l00803"></a><span class="lineno">  803</span><span class="comment">     *</span></div>
-<div class="line"><a id="l00804" name="l00804"></a><span class="lineno">  804</span><span class="comment">     * @tparam T Type of the array elements (Must be copy-constructible)</span></div>
-<div class="line"><a id="l00805" name="l00805"></a><span class="lineno">  805</span><span class="comment">     * @param count Number of elements in the array</span></div>
-<div class="line"><a id="l00806" name="l00806"></a><span class="lineno">  806</span><span class="comment">     * @param value The object to copy into every element of the array</span></div>
-<div class="line"><a id="l00807" name="l00807"></a><span class="lineno">  807</span><span class="comment">     * @return Pointer to the first element of the newly created array</span></div>
-<div class="line"><a id="l00808" name="l00808"></a><span class="lineno">  808</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00809" name="l00809"></a><span class="lineno">  809</span>    <span class="keyword">template</span> &lt;ArenaAllocatorConstructable T&gt;</div>
-<div class="foldopen" id="foldopen00810" data-start="{" data-end="}">
-<div class="line"><a id="l00810" name="l00810"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#a98e7b7baf0da2b73981f20c3ef370238">  810</a></span>    <a class="code hl_class" href="classArenaArrayView.html">ArenaArrayView&lt;T&gt;</a> <a class="code hl_function" href="classArenaAllocator.html#a98e7b7baf0da2b73981f20c3ef370238">allocateArray</a>(std::size_t count, <span class="keyword">const</span> T&amp; value) <span class="keyword">requires</span> std::is_copy_constructible_v&lt;T&gt;</div>
-<div class="line"><a id="l00811" name="l00811"></a><span class="lineno">  811</span>    {</div>
-<div class="line"><a id="l00812" name="l00812"></a><span class="lineno">  812</span>        <span class="keywordflow">if</span> (count == 0) <span class="keywordflow">return</span> <a class="code hl_class" href="classArenaArrayView.html">ArenaArrayView&lt;T&gt;</a>(<span class="keyword">nullptr</span>, 0);</div>
-<div class="line"><a id="l00813" name="l00813"></a><span class="lineno">  813</span> </div>
-<div class="line"><a id="l00814" name="l00814"></a><span class="lineno">  814</span>        std::size_t objectSize = count * <span class="keyword">sizeof</span>(T);</div>
-<div class="line"><a id="l00815" name="l00815"></a><span class="lineno">  815</span> </div>
-<div class="line"><a id="l00816" name="l00816"></a><span class="lineno">  816</span>        <span class="comment">// Lambda for continuous construction by copying the provided value</span></div>
-<div class="line"><a id="l00817" name="l00817"></a><span class="lineno">  817</span>        <span class="keyword">auto</span> construct = [count, &amp;value](<span class="keywordtype">void</span>* ptr) {</div>
-<div class="line"><a id="l00818" name="l00818"></a><span class="lineno">  818</span>            T* array_start = <span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(ptr);</div>
-<div class="line"><a id="l00819" name="l00819"></a><span class="lineno">  819</span>            std::size_t constructed = 0;</div>
-<div class="line"><a id="l00820" name="l00820"></a><span class="lineno">  820</span>            <span class="keywordflow">try</span></div>
-<div class="line"><a id="l00821" name="l00821"></a><span class="lineno">  821</span>            {</div>
-<div class="line"><a id="l00822" name="l00822"></a><span class="lineno">  822</span>                <span class="keywordflow">for</span> (; constructed &lt; count; ++constructed)</div>
-<div class="line"><a id="l00823" name="l00823"></a><span class="lineno">  823</span>                {</div>
-<div class="line"><a id="l00824" name="l00824"></a><span class="lineno">  824</span>                    <span class="comment">// Copy-construct the value into the arena memory</span></div>
-<div class="line"><a id="l00825" name="l00825"></a><span class="lineno">  825</span>                    <span class="keyword">new</span> (&amp;array_start[constructed]) T(value);</div>
-<div class="line"><a id="l00826" name="l00826"></a><span class="lineno">  826</span>                }</div>
-<div class="line"><a id="l00827" name="l00827"></a><span class="lineno">  827</span>            }</div>
-<div class="line"><a id="l00828" name="l00828"></a><span class="lineno">  828</span>            <span class="keywordflow">catch</span> (...)</div>
-<div class="line"><a id="l00829" name="l00829"></a><span class="lineno">  829</span>            {</div>
-<div class="line"><a id="l00830" name="l00830"></a><span class="lineno">  830</span>                <span class="comment">// Rollback: Destroy already constructed elements in reverse order if an exception occurs</span></div>
-<div class="line"><a id="l00831" name="l00831"></a><span class="lineno">  831</span>                <span class="keywordflow">for</span> (std::size_t i = constructed; i &gt; 0; --i)</div>
-<div class="line"><a id="l00832" name="l00832"></a><span class="lineno">  832</span>                {</div>
-<div class="line"><a id="l00833" name="l00833"></a><span class="lineno">  833</span>                    array_start[i - 1].~T();</div>
-<div class="line"><a id="l00834" name="l00834"></a><span class="lineno">  834</span>                }</div>
-<div class="line"><a id="l00835" name="l00835"></a><span class="lineno">  835</span>                <span class="keywordflow">throw</span>;</div>
-<div class="line"><a id="l00836" name="l00836"></a><span class="lineno">  836</span>            }</div>
-<div class="line"><a id="l00837" name="l00837"></a><span class="lineno">  837</span>            <span class="keywordflow">return</span> array_start;</div>
-<div class="line"><a id="l00838" name="l00838"></a><span class="lineno">  838</span>        };</div>
-<div class="line"><a id="l00839" name="l00839"></a><span class="lineno">  839</span> </div>
-<div class="line"><a id="l00840" name="l00840"></a><span class="lineno">  840</span>        <span class="comment">// Copy function for the entire array during reallocation (reused from default version)</span></div>
-<div class="line"><a id="l00841" name="l00841"></a><span class="lineno">  841</span>        CopyFunction copy = [](<span class="keywordtype">void</span>* src, <span class="keywordtype">void</span>* dst, std::ptrdiff_t offset)</div>
-<div class="line"><a id="l00842" name="l00842"></a><span class="lineno">  842</span>        {</div>
-<div class="line"><a id="l00843" name="l00843"></a><span class="lineno">  843</span><span class="preprocessor">#ifdef ARENA_ALLOCATOR_LOG</span></div>
-<div class="line"><a id="l00844" name="l00844"></a><span class="lineno">  844</span>            std::cout &lt;&lt; <span class="stringliteral">&quot;Copy Array of &quot;</span> &lt;&lt; <span class="keyword">typeid</span>(T).name() &lt;&lt; <span class="stringliteral">&quot; from &quot;</span> &lt;&lt; src &lt;&lt; <span class="stringliteral">&quot; to &quot;</span> &lt;&lt; dst &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00845" name="l00845"></a><span class="lineno">  845</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00846" name="l00846"></a><span class="lineno">  846</span>            T* src_array = <span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(src);</div>
-<div class="line"><a id="l00847" name="l00847"></a><span class="lineno">  847</span>            T* dst_array = <span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(dst);</div>
+<div class="line"><a id="l00784" name="l00784"></a><span class="lineno">  784</span><span class="comment"></span> </div>
+<div class="line"><a id="l00785" name="l00785"></a><span class="lineno">  785</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00786" name="l00786"></a><span class="lineno">  786</span><span class="comment">     * @brief Allocates a continuous array of type T where each element is a copy of the given value.</span></div>
+<div class="line"><a id="l00787" name="l00787"></a><span class="lineno">  787</span><span class="comment">     *</span></div>
+<div class="line"><a id="l00788" name="l00788"></a><span class="lineno">  788</span><span class="comment">     * @tparam T Type of the array elements (Must be copy-constructible)</span></div>
+<div class="line"><a id="l00789" name="l00789"></a><span class="lineno">  789</span><span class="comment">     * @param count Number of elements in the array</span></div>
+<div class="line"><a id="l00790" name="l00790"></a><span class="lineno">  790</span><span class="comment">     * @param value The object to copy into every element of the array</span></div>
+<div class="line"><a id="l00791" name="l00791"></a><span class="lineno">  791</span><span class="comment">     * @return Pointer to the first element of the newly created array</span></div>
+<div class="line"><a id="l00792" name="l00792"></a><span class="lineno">  792</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00793" name="l00793"></a><span class="lineno">  793</span>    <span class="keyword">template</span> &lt;ArenaAllocatorConstructable T&gt;</div>
+<div class="foldopen" id="foldopen00794" data-start="{" data-end="}">
+<div class="line"><a id="l00794" name="l00794"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#a98e7b7baf0da2b73981f20c3ef370238">  794</a></span>    <a class="code hl_class" href="classArenaArrayView.html">ArenaArrayView&lt;T&gt;</a> <a class="code hl_function" href="classArenaAllocator.html#a98e7b7baf0da2b73981f20c3ef370238">allocateArray</a>(std::size_t count, <span class="keyword">const</span> T&amp; value) <span class="keyword">requires</span> std::is_copy_constructible_v&lt;T&gt;</div>
+<div class="line"><a id="l00795" name="l00795"></a><span class="lineno">  795</span>    {</div>
+<div class="line"><a id="l00796" name="l00796"></a><span class="lineno">  796</span>        <span class="keywordflow">if</span> (count == 0) <span class="keywordflow">return</span> <a class="code hl_class" href="classArenaArrayView.html">ArenaArrayView&lt;T&gt;</a>(<span class="keyword">nullptr</span>, 0);</div>
+<div class="line"><a id="l00797" name="l00797"></a><span class="lineno">  797</span> </div>
+<div class="line"><a id="l00798" name="l00798"></a><span class="lineno">  798</span>        std::size_t objectSize = count * <span class="keyword">sizeof</span>(T);</div>
+<div class="line"><a id="l00799" name="l00799"></a><span class="lineno">  799</span> </div>
+<div class="line"><a id="l00800" name="l00800"></a><span class="lineno">  800</span>        <span class="comment">// Lambda for continuous construction by copying the provided value</span></div>
+<div class="line"><a id="l00801" name="l00801"></a><span class="lineno">  801</span>        <span class="keyword">auto</span> construct = [count, &amp;value](<span class="keywordtype">void</span>* ptr) {</div>
+<div class="line"><a id="l00802" name="l00802"></a><span class="lineno">  802</span>            T* array_start = <span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(ptr);</div>
+<div class="line"><a id="l00803" name="l00803"></a><span class="lineno">  803</span>            std::size_t constructed = 0;</div>
+<div class="line"><a id="l00804" name="l00804"></a><span class="lineno">  804</span>            <span class="keywordflow">try</span></div>
+<div class="line"><a id="l00805" name="l00805"></a><span class="lineno">  805</span>            {</div>
+<div class="line"><a id="l00806" name="l00806"></a><span class="lineno">  806</span>                <span class="keywordflow">for</span> (; constructed &lt; count; ++constructed)</div>
+<div class="line"><a id="l00807" name="l00807"></a><span class="lineno">  807</span>                {</div>
+<div class="line"><a id="l00808" name="l00808"></a><span class="lineno">  808</span>                    <span class="comment">// Copy-construct the value into the arena memory</span></div>
+<div class="line"><a id="l00809" name="l00809"></a><span class="lineno">  809</span>                    <span class="keyword">new</span> (&amp;array_start[constructed]) T(value);</div>
+<div class="line"><a id="l00810" name="l00810"></a><span class="lineno">  810</span>                }</div>
+<div class="line"><a id="l00811" name="l00811"></a><span class="lineno">  811</span>            }</div>
+<div class="line"><a id="l00812" name="l00812"></a><span class="lineno">  812</span>            <span class="keywordflow">catch</span> (...)</div>
+<div class="line"><a id="l00813" name="l00813"></a><span class="lineno">  813</span>            {</div>
+<div class="line"><a id="l00814" name="l00814"></a><span class="lineno">  814</span>                <span class="comment">// Rollback: Destroy already constructed elements in reverse order if an exception occurs</span></div>
+<div class="line"><a id="l00815" name="l00815"></a><span class="lineno">  815</span>                <span class="keywordflow">for</span> (std::size_t i = constructed; i &gt; 0; --i)</div>
+<div class="line"><a id="l00816" name="l00816"></a><span class="lineno">  816</span>                {</div>
+<div class="line"><a id="l00817" name="l00817"></a><span class="lineno">  817</span>                    array_start[i - 1].~T();</div>
+<div class="line"><a id="l00818" name="l00818"></a><span class="lineno">  818</span>                }</div>
+<div class="line"><a id="l00819" name="l00819"></a><span class="lineno">  819</span>                <span class="keywordflow">throw</span>;</div>
+<div class="line"><a id="l00820" name="l00820"></a><span class="lineno">  820</span>            }</div>
+<div class="line"><a id="l00821" name="l00821"></a><span class="lineno">  821</span>            <span class="keywordflow">return</span> array_start;</div>
+<div class="line"><a id="l00822" name="l00822"></a><span class="lineno">  822</span>        };</div>
+<div class="line"><a id="l00823" name="l00823"></a><span class="lineno">  823</span>        CopyFunction copy = Callback_CopyArray&lt;T&gt;;</div>
+<div class="line"><a id="l00824" name="l00824"></a><span class="lineno">  824</span>        DestructorFunction destruct = Callback_Destruct&lt;T&gt;;</div>
+<div class="line"><a id="l00825" name="l00825"></a><span class="lineno">  825</span> </div>
+<div class="line"><a id="l00826" name="l00826"></a><span class="lineno">  826</span>        T* raw_ptr = allocate0&lt;T&gt;(construct, <span class="keyword">alignof</span>(T), objectSize, copy, destruct);</div>
+<div class="line"><a id="l00827" name="l00827"></a><span class="lineno">  827</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classArenaArrayView.html">ArenaArrayView&lt;T&gt;</a>(raw_ptr, count);</div>
+<div class="line"><a id="l00828" name="l00828"></a><span class="lineno">  828</span>    }<span class="comment"></span></div>
+</div>
+<div class="line"><a id="l00829" name="l00829"></a><span class="lineno">  829</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00830" name="l00830"></a><span class="lineno">  830</span><span class="comment">     * @brief Returns the number of elements in the array</span></div>
+<div class="line"><a id="l00831" name="l00831"></a><span class="lineno">  831</span><span class="comment">     *</span></div>
+<div class="line"><a id="l00832" name="l00832"></a><span class="lineno">  832</span><span class="comment">     * \warning The array must have been allocated with this allocator or else it is undefined behaviour</span></div>
+<div class="line"><a id="l00833" name="l00833"></a><span class="lineno">  833</span><span class="comment">     * \todo add unit tests</span></div>
+<div class="line"><a id="l00834" name="l00834"></a><span class="lineno">  834</span><span class="comment">     *</span></div>
+<div class="line"><a id="l00835" name="l00835"></a><span class="lineno">  835</span><span class="comment">     * @tparam T element type</span></div>
+<div class="line"><a id="l00836" name="l00836"></a><span class="lineno">  836</span><span class="comment">     * @param ptr pointer to array (return from allocateArray)</span></div>
+<div class="line"><a id="l00837" name="l00837"></a><span class="lineno">  837</span><span class="comment">     * @return number of elements or 0 if nullptr gets passed</span></div>
+<div class="line"><a id="l00838" name="l00838"></a><span class="lineno">  838</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00839" name="l00839"></a><span class="lineno">  839</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00840" data-start="{" data-end="}">
+<div class="line"><a id="l00840" name="l00840"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#a8578f17c8f462220a3062dda8169317c">  840</a></span>    std::size_t <a class="code hl_function" href="classArenaAllocator.html#a8578f17c8f462220a3062dda8169317c">getArrayCount</a>(<span class="keyword">const</span> T* ptr)<span class="keyword"> const</span></div>
+<div class="line"><a id="l00841" name="l00841"></a><span class="lineno">  841</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00842" name="l00842"></a><span class="lineno">  842</span>        <span class="keywordflow">if</span> (!ptr)</div>
+<div class="line"><a id="l00843" name="l00843"></a><span class="lineno">  843</span>            <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00844" name="l00844"></a><span class="lineno">  844</span> </div>
+<div class="line"><a id="l00845" name="l00845"></a><span class="lineno">  845</span>        <span class="comment">//access header which is before array</span></div>
+<div class="line"><a id="l00846" name="l00846"></a><span class="lineno">  846</span>        <span class="keyword">const</span> std::byte* header_ptr = <span class="keyword">reinterpret_cast&lt;</span><span class="keyword">const </span>std::byte*<span class="keyword">&gt;</span>(ptr) - HEADER_SIZE;</div>
+<div class="line"><a id="l00847" name="l00847"></a><span class="lineno">  847</span>        <span class="keyword">const</span> AllocationHeader* header = <span class="keyword">reinterpret_cast&lt;</span><span class="keyword">const </span>AllocationHeader*<span class="keyword">&gt;</span>(header_ptr);</div>
 <div class="line"><a id="l00848" name="l00848"></a><span class="lineno">  848</span> </div>
-<div class="line"><a id="l00849" name="l00849"></a><span class="lineno">  849</span>            std::byte* header_ptr = <span class="keyword">reinterpret_cast&lt;</span>std::byte*<span class="keyword">&gt;</span>(src) - <span class="keyword">sizeof</span>(AllocationHeader);</div>
-<div class="line"><a id="l00850" name="l00850"></a><span class="lineno">  850</span>            AllocationHeader* header = <span class="keyword">reinterpret_cast&lt;</span>AllocationHeader*<span class="keyword">&gt;</span>(header_ptr);</div>
-<div class="line"><a id="l00851" name="l00851"></a><span class="lineno">  851</span>            std::size_t element_count = header-&gt;size / <span class="keyword">sizeof</span>(T);</div>
-<div class="line"><a id="l00852" name="l00852"></a><span class="lineno">  852</span> </div>
-<div class="line"><a id="l00853" name="l00853"></a><span class="lineno">  853</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_concept" href="conceptPlainObject.html">PlainObject&lt;T&gt;</a>)</div>
-<div class="line"><a id="l00854" name="l00854"></a><span class="lineno">  854</span>            {</div>
-<div class="line"><a id="l00855" name="l00855"></a><span class="lineno">  855</span>                std::memcpy(dst, src, header-&gt;size);</div>
-<div class="line"><a id="l00856" name="l00856"></a><span class="lineno">  856</span>            }</div>
-<div class="line"><a id="l00857" name="l00857"></a><span class="lineno">  857</span>            <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00858" name="l00858"></a><span class="lineno">  858</span>            {</div>
-<div class="line"><a id="l00859" name="l00859"></a><span class="lineno">  859</span>                std::size_t copied = 0;</div>
-<div class="line"><a id="l00860" name="l00860"></a><span class="lineno">  860</span>                <span class="keywordflow">try</span></div>
-<div class="line"><a id="l00861" name="l00861"></a><span class="lineno">  861</span>                {</div>
-<div class="line"><a id="l00862" name="l00862"></a><span class="lineno">  862</span>                    <span class="keywordflow">for</span> (; copied &lt; element_count; ++copied)</div>
-<div class="line"><a id="l00863" name="l00863"></a><span class="lineno">  863</span>                    {</div>
-<div class="line"><a id="l00864" name="l00864"></a><span class="lineno">  864</span>                        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_concept" href="conceptCopyWithOffsetConstructable.html">CopyWithOffsetConstructable&lt;T&gt;</a>)</div>
-<div class="line"><a id="l00865" name="l00865"></a><span class="lineno">  865</span>                        {</div>
-<div class="line"><a id="l00866" name="l00866"></a><span class="lineno">  866</span>                            <span class="keyword">new</span> (&amp;dst_array[copied]) T(copyWithOffsetConstruct, std::move(src_array[copied]), offset);</div>
-<div class="line"><a id="l00867" name="l00867"></a><span class="lineno">  867</span>                        }</div>
-<div class="line"><a id="l00868" name="l00868"></a><span class="lineno">  868</span>                        <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00869" name="l00869"></a><span class="lineno">  869</span>                            <span class="keyword">new</span> (&amp;dst_array[copied]) T(std::move(src_array[copied]), offset);</div>
-<div class="line"><a id="l00870" name="l00870"></a><span class="lineno">  870</span>                    }</div>
-<div class="line"><a id="l00871" name="l00871"></a><span class="lineno">  871</span>                }</div>
-<div class="line"><a id="l00872" name="l00872"></a><span class="lineno">  872</span>                <span class="keywordflow">catch</span> (...)</div>
-<div class="line"><a id="l00873" name="l00873"></a><span class="lineno">  873</span>                {</div>
-<div class="line"><a id="l00874" name="l00874"></a><span class="lineno">  874</span>                    <span class="keywordflow">for</span> (std::size_t i = copied; i &gt; 0; --i)</div>
-<div class="line"><a id="l00875" name="l00875"></a><span class="lineno">  875</span>                    {</div>
-<div class="line"><a id="l00876" name="l00876"></a><span class="lineno">  876</span>                        dst_array[i - 1].~T();</div>
-<div class="line"><a id="l00877" name="l00877"></a><span class="lineno">  877</span>                    }</div>
-<div class="line"><a id="l00878" name="l00878"></a><span class="lineno">  878</span>                    <span class="keywordflow">throw</span>;</div>
-<div class="line"><a id="l00879" name="l00879"></a><span class="lineno">  879</span>                }</div>
-<div class="line"><a id="l00880" name="l00880"></a><span class="lineno">  880</span>            }</div>
-<div class="line"><a id="l00881" name="l00881"></a><span class="lineno">  881</span>        };</div>
+<div class="line"><a id="l00849" name="l00849"></a><span class="lineno">  849</span>        <span class="comment">//optional runtime check to see if the function was called with the wrong type</span></div>
+<div class="line"><a id="l00850" name="l00850"></a><span class="lineno">  850</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (StoreTypeInfo)</div>
+<div class="line"><a id="l00851" name="l00851"></a><span class="lineno">  851</span>        {</div>
+<div class="line"><a id="l00852" name="l00852"></a><span class="lineno">  852</span>            <span class="keywordflow">if</span> (header-&gt;type_info &amp;&amp; *header-&gt;type_info != <span class="keyword">typeid</span>(T))</div>
+<div class="line"><a id="l00853" name="l00853"></a><span class="lineno">  853</span>            {</div>
+<div class="line"><a id="l00854" name="l00854"></a><span class="lineno">  854</span>                <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;ArenaAllocator: ArrayCount was called with wrong type&quot;</span>);</div>
+<div class="line"><a id="l00855" name="l00855"></a><span class="lineno">  855</span>            }</div>
+<div class="line"><a id="l00856" name="l00856"></a><span class="lineno">  856</span>        }</div>
+<div class="line"><a id="l00857" name="l00857"></a><span class="lineno">  857</span> </div>
+<div class="line"><a id="l00858" name="l00858"></a><span class="lineno">  858</span>        <span class="keywordflow">return</span> header-&gt;size / <span class="keyword">sizeof</span>(T);</div>
+<div class="line"><a id="l00859" name="l00859"></a><span class="lineno">  859</span>    }</div>
+</div>
+<div class="line"><a id="l00860" name="l00860"></a><span class="lineno">  860</span> </div>
+<div class="line"><a id="l00861" name="l00861"></a><span class="lineno">  861</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00862" name="l00862"></a><span class="lineno">  862</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> C&gt;</div>
+<div class="line"><a id="l00863" name="l00863"></a><span class="lineno">  863</span>    T* allocate0(C construct, <span class="keywordtype">size_t</span> align, <span class="keywordtype">size_t</span> objectSize, CopyFunction copy, DestructorFunction destruct)</div>
+<div class="line"><a id="l00864" name="l00864"></a><span class="lineno">  864</span>    {</div>
+<div class="line"><a id="l00865" name="l00865"></a><span class="lineno">  865</span>        std::size_t header_offset = current_offset;</div>
+<div class="line"><a id="l00866" name="l00866"></a><span class="lineno">  866</span>        std::size_t object_offset = align_offset(header_offset + HEADER_SIZE, align);</div>
+<div class="line"><a id="l00867" name="l00867"></a><span class="lineno">  867</span>        std::size_t required_size = object_offset - header_offset + objectSize;</div>
+<div class="line"><a id="l00868" name="l00868"></a><span class="lineno">  868</span> </div>
+<div class="line"><a id="l00869" name="l00869"></a><span class="lineno">  869</span>        std::size_t end_offset = object_offset + objectSize;</div>
+<div class="line"><a id="l00870" name="l00870"></a><span class="lineno">  870</span> </div>
+<div class="line"><a id="l00871" name="l00871"></a><span class="lineno">  871</span>        <span class="comment">// 1. If the new object does not fit into the current size, we must act</span></div>
+<div class="line"><a id="l00872" name="l00872"></a><span class="lineno">  872</span>        <span class="keywordflow">if</span> (end_offset &gt; buffer.size())</div>
+<div class="line"><a id="l00873" name="l00873"></a><span class="lineno">  873</span>        {</div>
+<div class="line"><a id="l00874" name="l00874"></a><span class="lineno">  874</span>            <span class="comment">// 2. If it even exceeds the capacity, we MUST relocate the whole arena</span></div>
+<div class="line"><a id="l00875" name="l00875"></a><span class="lineno">  875</span>            <span class="keywordflow">if</span> (end_offset &gt; buffer.capacity())</div>
+<div class="line"><a id="l00876" name="l00876"></a><span class="lineno">  876</span>            {</div>
+<div class="line"><a id="l00877" name="l00877"></a><span class="lineno">  877</span>                <a class="code hl_function" href="classArenaAllocator.html#aabacf64e24d318133add36bb61d8ee12">reallocate</a>(required_size);</div>
+<div class="line"><a id="l00878" name="l00878"></a><span class="lineno">  878</span>                header_offset = current_offset;</div>
+<div class="line"><a id="l00879" name="l00879"></a><span class="lineno">  879</span>                object_offset = align_offset(header_offset + HEADER_SIZE, align);</div>
+<div class="line"><a id="l00880" name="l00880"></a><span class="lineno">  880</span>                end_offset = object_offset + objectSize;</div>
+<div class="line"><a id="l00881" name="l00881"></a><span class="lineno">  881</span>            }</div>
 <div class="line"><a id="l00882" name="l00882"></a><span class="lineno">  882</span> </div>
-<div class="line"><a id="l00883" name="l00883"></a><span class="lineno">  883</span>        <span class="comment">// Destructor function for the entire array (reused from default version)</span></div>
-<div class="line"><a id="l00884" name="l00884"></a><span class="lineno">  884</span>        DestructorFunction destruct = [](<span class="keywordtype">void</span>* ptr)</div>
-<div class="line"><a id="l00885" name="l00885"></a><span class="lineno">  885</span>        {</div>
-<div class="line"><a id="l00886" name="l00886"></a><span class="lineno">  886</span><span class="preprocessor">#ifdef ARENA_ALLOCATOR_LOG</span></div>
-<div class="line"><a id="l00887" name="l00887"></a><span class="lineno">  887</span>            std::cout &lt;&lt; <span class="stringliteral">&quot;Destruct Array of &quot;</span> &lt;&lt; <span class="keyword">typeid</span>(T).name() &lt;&lt; <span class="stringliteral">&quot; at &quot;</span> &lt;&lt; ptr &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00888" name="l00888"></a><span class="lineno">  888</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00889" name="l00889"></a><span class="lineno">  889</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!<a class="code hl_concept" href="conceptPlainObject.html">PlainObject&lt;T&gt;</a>)</div>
-<div class="line"><a id="l00890" name="l00890"></a><span class="lineno">  890</span>            {</div>
-<div class="line"><a id="l00891" name="l00891"></a><span class="lineno">  891</span>                T* array_start = <span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(ptr);</div>
-<div class="line"><a id="l00892" name="l00892"></a><span class="lineno">  892</span>                std::byte* header_ptr = <span class="keyword">reinterpret_cast&lt;</span>std::byte*<span class="keyword">&gt;</span>(ptr) - <span class="keyword">sizeof</span>(AllocationHeader);</div>
-<div class="line"><a id="l00893" name="l00893"></a><span class="lineno">  893</span>                AllocationHeader* header = <span class="keyword">reinterpret_cast&lt;</span>AllocationHeader*<span class="keyword">&gt;</span>(header_ptr);</div>
-<div class="line"><a id="l00894" name="l00894"></a><span class="lineno">  894</span>                std::size_t element_count = header-&gt;size / <span class="keyword">sizeof</span>(T);</div>
-<div class="line"><a id="l00895" name="l00895"></a><span class="lineno">  895</span> </div>
-<div class="line"><a id="l00896" name="l00896"></a><span class="lineno">  896</span>                <span class="keywordflow">for</span> (std::size_t i = element_count; i &gt; 0; --i)</div>
-<div class="line"><a id="l00897" name="l00897"></a><span class="lineno">  897</span>                {</div>
-<div class="line"><a id="l00898" name="l00898"></a><span class="lineno">  898</span>                    array_start[i - 1].~T();</div>
-<div class="line"><a id="l00899" name="l00899"></a><span class="lineno">  899</span>                }</div>
-<div class="line"><a id="l00900" name="l00900"></a><span class="lineno">  900</span>            }</div>
-<div class="line"><a id="l00901" name="l00901"></a><span class="lineno">  901</span>        };</div>
-<div class="line"><a id="l00902" name="l00902"></a><span class="lineno">  902</span> </div>
-<div class="line"><a id="l00903" name="l00903"></a><span class="lineno">  903</span>        T* raw_ptr = allocate0&lt;T&gt;(construct, <span class="keyword">alignof</span>(T), objectSize, copy, destruct);</div>
-<div class="line"><a id="l00904" name="l00904"></a><span class="lineno">  904</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classArenaArrayView.html">ArenaArrayView&lt;T&gt;</a>(raw_ptr, count);</div>
-<div class="line"><a id="l00905" name="l00905"></a><span class="lineno">  905</span>    }<span class="comment"></span></div>
+<div class="line"><a id="l00883" name="l00883"></a><span class="lineno">  883</span>            <span class="comment">// 3. In both cases (after reallocate OR if we just had unused capacity left),</span></div>
+<div class="line"><a id="l00884" name="l00884"></a><span class="lineno">  884</span>            <span class="comment">// we now safely grow the vector&#39;s size to match the new object&#39;s end boundary.</span></div>
+<div class="line"><a id="l00885" name="l00885"></a><span class="lineno">  885</span>            buffer.resize(end_offset);</div>
+<div class="line"><a id="l00886" name="l00886"></a><span class="lineno">  886</span>        }</div>
+<div class="line"><a id="l00887" name="l00887"></a><span class="lineno">  887</span> </div>
+<div class="line"><a id="l00888" name="l00888"></a><span class="lineno">  888</span>        <span class="comment">// 4. Construction safely happens within the officially resized vector bounds</span></div>
+<div class="line"><a id="l00889" name="l00889"></a><span class="lineno">  889</span>        AllocationHeader&amp; header = *<span class="keyword">reinterpret_cast&lt;</span>AllocationHeader*<span class="keyword">&gt;</span>(buffer.data() + header_offset);</div>
+<div class="line"><a id="l00890" name="l00890"></a><span class="lineno">  890</span>        header.size = objectSize;</div>
+<div class="line"><a id="l00891" name="l00891"></a><span class="lineno">  891</span>        header.is_alive = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00892" name="l00892"></a><span class="lineno">  892</span>        header.copy = copy;</div>
+<div class="line"><a id="l00893" name="l00893"></a><span class="lineno">  893</span>        header.destructor = destruct;</div>
+<div class="line"><a id="l00894" name="l00894"></a><span class="lineno">  894</span> </div>
+<div class="line"><a id="l00895" name="l00895"></a><span class="lineno">  895</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (StoreTypeInfo)</div>
+<div class="line"><a id="l00896" name="l00896"></a><span class="lineno">  896</span>        {</div>
+<div class="line"><a id="l00897" name="l00897"></a><span class="lineno">  897</span>            header.type_info = &amp;<span class="keyword">typeid</span>(T);</div>
+<div class="line"><a id="l00898" name="l00898"></a><span class="lineno">  898</span>        }</div>
+<div class="line"><a id="l00899" name="l00899"></a><span class="lineno">  899</span> </div>
+<div class="line"><a id="l00900" name="l00900"></a><span class="lineno">  900</span>        T* obj = construct(buffer.data() + object_offset);</div>
+<div class="line"><a id="l00901" name="l00901"></a><span class="lineno">  901</span> </div>
+<div class="line"><a id="l00902" name="l00902"></a><span class="lineno">  902</span><span class="preprocessor">#ifdef ARENA_ALLOCATOR_LOG</span></div>
+<div class="line"><a id="l00903" name="l00903"></a><span class="lineno">  903</span>        std::cout &lt;&lt; <span class="stringliteral">&quot;Construct &quot;</span> &lt;&lt; <span class="keyword">typeid</span>(T).name() &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; (<span class="keywordtype">void</span>*)obj &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00904" name="l00904"></a><span class="lineno">  904</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00905" name="l00905"></a><span class="lineno">  905</span> </div>
+<div class="line"><a id="l00906" name="l00906"></a><span class="lineno">  906</span>        current_offset = end_offset;</div>
+<div class="line"><a id="l00907" name="l00907"></a><span class="lineno">  907</span>        <span class="keywordflow">return</span> obj;</div>
+<div class="line"><a id="l00908" name="l00908"></a><span class="lineno">  908</span>    }</div>
+<div class="line"><a id="l00909" name="l00909"></a><span class="lineno">  909</span> </div>
+<div class="line"><a id="l00910" name="l00910"></a><span class="lineno">  910</span><span class="keyword">public</span>:<span class="comment"></span></div>
+<div class="line"><a id="l00911" name="l00911"></a><span class="lineno">  911</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00912" name="l00912"></a><span class="lineno">  912</span><span class="comment">     * @brief Deallocate an object previously allocated via allocate().</span></div>
+<div class="line"><a id="l00913" name="l00913"></a><span class="lineno">  913</span><span class="comment">     * </span></div>
+<div class="line"><a id="l00914" name="l00914"></a><span class="lineno">  914</span><span class="comment">     * Calls the object&#39;s destructor and marks the allocation as dead.</span></div>
+<div class="line"><a id="l00915" name="l00915"></a><span class="lineno">  915</span><span class="comment">     * The space remains in the buffer until the next reallocation.</span></div>
+<div class="line"><a id="l00916" name="l00916"></a><span class="lineno">  916</span><span class="comment">     * </span></div>
+<div class="line"><a id="l00917" name="l00917"></a><span class="lineno">  917</span><span class="comment">     * @tparam T Type of object to deallocate</span></div>
+<div class="line"><a id="l00918" name="l00918"></a><span class="lineno">  918</span><span class="comment">     * @param ptr Pointer to object returned by allocate()</span></div>
+<div class="line"><a id="l00919" name="l00919"></a><span class="lineno">  919</span><span class="comment">     * </span></div>
+<div class="line"><a id="l00920" name="l00920"></a><span class="lineno">  920</span><span class="comment">     * @note Must be called with a pointer returned by allocate() on this allocator</span></div>
+<div class="line"><a id="l00921" name="l00921"></a><span class="lineno">  921</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00922" name="l00922"></a><span class="lineno">  922</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00923" data-start="{" data-end="}">
+<div class="line"><a id="l00923" name="l00923"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#a232da1c84901395cda90c088bc7543d0">  923</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classArenaAllocator.html#a232da1c84901395cda90c088bc7543d0">deallocate</a>(T* ptr)</div>
+<div class="line"><a id="l00924" name="l00924"></a><span class="lineno">  924</span>    {</div>
+<div class="line"><a id="l00925" name="l00925"></a><span class="lineno">  925</span>        <span class="keywordflow">if</span> (!ptr) <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00926" name="l00926"></a><span class="lineno">  926</span> </div>
+<div class="line"><a id="l00927" name="l00927"></a><span class="lineno">  927</span>        <span class="comment">// Direktzugriff auf den Header in O(1) statt linearer Suchschleife</span></div>
+<div class="line"><a id="l00928" name="l00928"></a><span class="lineno">  928</span>        std::byte* header_ptr = <span class="keyword">reinterpret_cast&lt;</span>std::byte*<span class="keyword">&gt;</span>(ptr) - HEADER_SIZE;</div>
+<div class="line"><a id="l00929" name="l00929"></a><span class="lineno">  929</span>        AllocationHeader&amp; header = *<span class="keyword">reinterpret_cast&lt;</span>AllocationHeader*<span class="keyword">&gt;</span>(header_ptr);</div>
+<div class="line"><a id="l00930" name="l00930"></a><span class="lineno">  930</span> </div>
+<div class="line"><a id="l00931" name="l00931"></a><span class="lineno">  931</span>        <span class="comment">// Aufruf des Destruktors, falls das Objekt noch lebt</span></div>
+<div class="line"><a id="l00932" name="l00932"></a><span class="lineno">  932</span>        <span class="keywordflow">if</span> (header.is_alive &amp;&amp; header.destructor)</div>
+<div class="line"><a id="l00933" name="l00933"></a><span class="lineno">  933</span>        {</div>
+<div class="line"><a id="l00934" name="l00934"></a><span class="lineno">  934</span>            header.destructor(ptr);</div>
+<div class="line"><a id="l00935" name="l00935"></a><span class="lineno">  935</span>        }</div>
+<div class="line"><a id="l00936" name="l00936"></a><span class="lineno">  936</span>        header.is_alive = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00937" name="l00937"></a><span class="lineno">  937</span>    }</div>
 </div>
-<div class="line"><a id="l00906" name="l00906"></a><span class="lineno">  906</span><span class="comment">    /**</span></div>
-<div class="line"><a id="l00907" name="l00907"></a><span class="lineno">  907</span><span class="comment">     * @brief Returns the number of elements in the array</span></div>
-<div class="line"><a id="l00908" name="l00908"></a><span class="lineno">  908</span><span class="comment">     *</span></div>
-<div class="line"><a id="l00909" name="l00909"></a><span class="lineno">  909</span><span class="comment">     * \warning The array must have been allocated with this allocator or else it is undefined behaviour</span></div>
-<div class="line"><a id="l00910" name="l00910"></a><span class="lineno">  910</span><span class="comment">     * \todo add unit tests</span></div>
-<div class="line"><a id="l00911" name="l00911"></a><span class="lineno">  911</span><span class="comment">     *</span></div>
-<div class="line"><a id="l00912" name="l00912"></a><span class="lineno">  912</span><span class="comment">     * @tparam T element type</span></div>
-<div class="line"><a id="l00913" name="l00913"></a><span class="lineno">  913</span><span class="comment">     * @param ptr pointer to array (return from allocateArray)</span></div>
-<div class="line"><a id="l00914" name="l00914"></a><span class="lineno">  914</span><span class="comment">     * @return number of elements or 0 if nullptr gets passed</span></div>
-<div class="line"><a id="l00915" name="l00915"></a><span class="lineno">  915</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00916" name="l00916"></a><span class="lineno">  916</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="foldopen" id="foldopen00917" data-start="{" data-end="}">
-<div class="line"><a id="l00917" name="l00917"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#a8578f17c8f462220a3062dda8169317c">  917</a></span>    std::size_t <a class="code hl_function" href="classArenaAllocator.html#a8578f17c8f462220a3062dda8169317c">getArrayCount</a>(<span class="keyword">const</span> T* ptr)<span class="keyword"> const</span></div>
-<div class="line"><a id="l00918" name="l00918"></a><span class="lineno">  918</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00919" name="l00919"></a><span class="lineno">  919</span>        <span class="keywordflow">if</span> (!ptr)</div>
-<div class="line"><a id="l00920" name="l00920"></a><span class="lineno">  920</span>            <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a id="l00921" name="l00921"></a><span class="lineno">  921</span> </div>
-<div class="line"><a id="l00922" name="l00922"></a><span class="lineno">  922</span>        <span class="comment">//access header which is before array</span></div>
-<div class="line"><a id="l00923" name="l00923"></a><span class="lineno">  923</span>        <span class="keyword">const</span> std::byte* header_ptr = <span class="keyword">reinterpret_cast&lt;</span><span class="keyword">const </span>std::byte*<span class="keyword">&gt;</span>(ptr) - HEADER_SIZE;</div>
-<div class="line"><a id="l00924" name="l00924"></a><span class="lineno">  924</span>        <span class="keyword">const</span> AllocationHeader* header = <span class="keyword">reinterpret_cast&lt;</span><span class="keyword">const </span>AllocationHeader*<span class="keyword">&gt;</span>(header_ptr);</div>
-<div class="line"><a id="l00925" name="l00925"></a><span class="lineno">  925</span> </div>
-<div class="line"><a id="l00926" name="l00926"></a><span class="lineno">  926</span>        <span class="comment">//optional runtime check to see if the function was called with the wrong type</span></div>
-<div class="line"><a id="l00927" name="l00927"></a><span class="lineno">  927</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (StoreTypeInfo)</div>
-<div class="line"><a id="l00928" name="l00928"></a><span class="lineno">  928</span>        {</div>
-<div class="line"><a id="l00929" name="l00929"></a><span class="lineno">  929</span>            <span class="keywordflow">if</span> (header-&gt;type_info &amp;&amp; *header-&gt;type_info != <span class="keyword">typeid</span>(T))</div>
-<div class="line"><a id="l00930" name="l00930"></a><span class="lineno">  930</span>            {</div>
-<div class="line"><a id="l00931" name="l00931"></a><span class="lineno">  931</span>                <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;ArenaAllocator: ArrayCount was called with wrong type&quot;</span>);</div>
-<div class="line"><a id="l00932" name="l00932"></a><span class="lineno">  932</span>            }</div>
-<div class="line"><a id="l00933" name="l00933"></a><span class="lineno">  933</span>        }</div>
-<div class="line"><a id="l00934" name="l00934"></a><span class="lineno">  934</span> </div>
-<div class="line"><a id="l00935" name="l00935"></a><span class="lineno">  935</span>        <span class="keywordflow">return</span> header-&gt;size / <span class="keyword">sizeof</span>(T);</div>
-<div class="line"><a id="l00936" name="l00936"></a><span class="lineno">  936</span>    }</div>
+<div class="line"><a id="l00938" name="l00938"></a><span class="lineno">  938</span><span class="comment"></span> </div>
+<div class="line"><a id="l00939" name="l00939"></a><span class="lineno">  939</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00940" name="l00940"></a><span class="lineno">  940</span><span class="comment">     * @brief Get runtime type information for an allocated object.</span></div>
+<div class="line"><a id="l00941" name="l00941"></a><span class="lineno">  941</span><span class="comment">     * </span></div>
+<div class="line"><a id="l00942" name="l00942"></a><span class="lineno">  942</span><span class="comment">     * @tparam T Type of object</span></div>
+<div class="line"><a id="l00943" name="l00943"></a><span class="lineno">  943</span><span class="comment">     * @param ptr Pointer to object returned by allocate()</span></div>
+<div class="line"><a id="l00944" name="l00944"></a><span class="lineno">  944</span><span class="comment">     * @return Pointer to std::type_info for the allocated object, or nullptr if not found</span></div>
+<div class="line"><a id="l00945" name="l00945"></a><span class="lineno">  945</span><span class="comment">     * </span></div>
+<div class="line"><a id="l00946" name="l00946"></a><span class="lineno">  946</span><span class="comment">     * @note This method is only available if StoreTypeInfo template parameter is true</span></div>
+<div class="line"><a id="l00947" name="l00947"></a><span class="lineno">  947</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00948" name="l00948"></a><span class="lineno">  948</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00949" data-start="{" data-end="}">
+<div class="line"><a id="l00949" name="l00949"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#a0f056716b600807495dd51c53d3b0ec2">  949</a></span>    <span class="keyword">const</span> std::type_info* <a class="code hl_function" href="classArenaAllocator.html#a0f056716b600807495dd51c53d3b0ec2">get_type_info</a>(T* ptr) <span class="keyword">const</span> </div>
+<div class="line"><a id="l00950" name="l00950"></a><span class="lineno">  950</span>        <span class="keyword">requires</span> StoreTypeInfo</div>
+<div class="line"><a id="l00951" name="l00951"></a><span class="lineno">  951</span>    {</div>
+<div class="line"><a id="l00952" name="l00952"></a><span class="lineno">  952</span>        <span class="keywordflow">if</span> (!ptr) <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00953" name="l00953"></a><span class="lineno">  953</span> </div>
+<div class="line"><a id="l00954" name="l00954"></a><span class="lineno">  954</span>        std::size_t offset = 0;</div>
+<div class="line"><a id="l00955" name="l00955"></a><span class="lineno">  955</span>        <span class="keywordflow">while</span> (offset &lt; current_offset)</div>
+<div class="line"><a id="l00956" name="l00956"></a><span class="lineno">  956</span>        {</div>
+<div class="line"><a id="l00957" name="l00957"></a><span class="lineno">  957</span>            <span class="keyword">const</span> AllocationHeader&amp; header = get_header(offset);</div>
+<div class="line"><a id="l00958" name="l00958"></a><span class="lineno">  958</span>            std::size_t object_size = header.size;</div>
+<div class="line"><a id="l00959" name="l00959"></a><span class="lineno">  959</span>            <span class="keyword">const</span> std::byte* object_ptr = get_object_pointer(offset);</div>
+<div class="line"><a id="l00960" name="l00960"></a><span class="lineno">  960</span> </div>
+<div class="line"><a id="l00961" name="l00961"></a><span class="lineno">  961</span>            <span class="keywordflow">if</span> (object_ptr == <span class="keyword">reinterpret_cast&lt;</span>std::byte*<span class="keyword">&gt;</span>(ptr))</div>
+<div class="line"><a id="l00962" name="l00962"></a><span class="lineno">  962</span>                <span class="keywordflow">return</span> header.type_info;</div>
+<div class="line"><a id="l00963" name="l00963"></a><span class="lineno">  963</span> </div>
+<div class="line"><a id="l00964" name="l00964"></a><span class="lineno">  964</span>            offset += HEADER_SIZE + object_size;</div>
+<div class="line"><a id="l00965" name="l00965"></a><span class="lineno">  965</span>        }</div>
+<div class="line"><a id="l00966" name="l00966"></a><span class="lineno">  966</span> </div>
+<div class="line"><a id="l00967" name="l00967"></a><span class="lineno">  967</span>        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00968" name="l00968"></a><span class="lineno">  968</span>    }</div>
 </div>
-<div class="line"><a id="l00937" name="l00937"></a><span class="lineno">  937</span> </div>
-<div class="line"><a id="l00938" name="l00938"></a><span class="lineno">  938</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00939" name="l00939"></a><span class="lineno">  939</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> C&gt;</div>
-<div class="line"><a id="l00940" name="l00940"></a><span class="lineno">  940</span>    T* allocate0(C construct, <span class="keywordtype">size_t</span> align, <span class="keywordtype">size_t</span> objectSize, CopyFunction copy, DestructorFunction destruct)</div>
-<div class="line"><a id="l00941" name="l00941"></a><span class="lineno">  941</span>    {</div>
-<div class="line"><a id="l00942" name="l00942"></a><span class="lineno">  942</span>        std::size_t header_offset = current_offset;</div>
-<div class="line"><a id="l00943" name="l00943"></a><span class="lineno">  943</span>        std::size_t object_offset = align_offset(header_offset + HEADER_SIZE, align);</div>
-<div class="line"><a id="l00944" name="l00944"></a><span class="lineno">  944</span>        std::size_t required_size = object_offset - header_offset + objectSize;</div>
-<div class="line"><a id="l00945" name="l00945"></a><span class="lineno">  945</span> </div>
-<div class="line"><a id="l00946" name="l00946"></a><span class="lineno">  946</span>        std::size_t end_offset = object_offset + objectSize;</div>
-<div class="line"><a id="l00947" name="l00947"></a><span class="lineno">  947</span> </div>
-<div class="line"><a id="l00948" name="l00948"></a><span class="lineno">  948</span>        <span class="comment">// 1. If the new object does not fit into the current size, we must act</span></div>
-<div class="line"><a id="l00949" name="l00949"></a><span class="lineno">  949</span>        <span class="keywordflow">if</span> (end_offset &gt; buffer.size())</div>
-<div class="line"><a id="l00950" name="l00950"></a><span class="lineno">  950</span>        {</div>
-<div class="line"><a id="l00951" name="l00951"></a><span class="lineno">  951</span>            <span class="comment">// 2. If it even exceeds the capacity, we MUST relocate the whole arena</span></div>
-<div class="line"><a id="l00952" name="l00952"></a><span class="lineno">  952</span>            <span class="keywordflow">if</span> (end_offset &gt; buffer.capacity())</div>
-<div class="line"><a id="l00953" name="l00953"></a><span class="lineno">  953</span>            {</div>
-<div class="line"><a id="l00954" name="l00954"></a><span class="lineno">  954</span>                <a class="code hl_function" href="classArenaAllocator.html#aabacf64e24d318133add36bb61d8ee12">reallocate</a>(required_size);</div>
-<div class="line"><a id="l00955" name="l00955"></a><span class="lineno">  955</span>                header_offset = current_offset;</div>
-<div class="line"><a id="l00956" name="l00956"></a><span class="lineno">  956</span>                object_offset = align_offset(header_offset + HEADER_SIZE, align);</div>
-<div class="line"><a id="l00957" name="l00957"></a><span class="lineno">  957</span>                end_offset = object_offset + objectSize;</div>
-<div class="line"><a id="l00958" name="l00958"></a><span class="lineno">  958</span>            }</div>
-<div class="line"><a id="l00959" name="l00959"></a><span class="lineno">  959</span> </div>
-<div class="line"><a id="l00960" name="l00960"></a><span class="lineno">  960</span>            <span class="comment">// 3. In both cases (after reallocate OR if we just had unused capacity left),</span></div>
-<div class="line"><a id="l00961" name="l00961"></a><span class="lineno">  961</span>            <span class="comment">// we now safely grow the vector&#39;s size to match the new object&#39;s end boundary.</span></div>
-<div class="line"><a id="l00962" name="l00962"></a><span class="lineno">  962</span>            buffer.resize(end_offset);</div>
-<div class="line"><a id="l00963" name="l00963"></a><span class="lineno">  963</span>        }</div>
-<div class="line"><a id="l00964" name="l00964"></a><span class="lineno">  964</span> </div>
-<div class="line"><a id="l00965" name="l00965"></a><span class="lineno">  965</span>        <span class="comment">// 4. Construction safely happens within the officially resized vector bounds</span></div>
-<div class="line"><a id="l00966" name="l00966"></a><span class="lineno">  966</span>        AllocationHeader&amp; header = *<span class="keyword">reinterpret_cast&lt;</span>AllocationHeader*<span class="keyword">&gt;</span>(buffer.data() + header_offset);</div>
-<div class="line"><a id="l00967" name="l00967"></a><span class="lineno">  967</span>        header.size = objectSize;</div>
-<div class="line"><a id="l00968" name="l00968"></a><span class="lineno">  968</span>        header.is_alive = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00969" name="l00969"></a><span class="lineno">  969</span>        header.copy = copy;</div>
-<div class="line"><a id="l00970" name="l00970"></a><span class="lineno">  970</span>        header.destructor = destruct;</div>
-<div class="line"><a id="l00971" name="l00971"></a><span class="lineno">  971</span> </div>
-<div class="line"><a id="l00972" name="l00972"></a><span class="lineno">  972</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (StoreTypeInfo)</div>
-<div class="line"><a id="l00973" name="l00973"></a><span class="lineno">  973</span>        {</div>
-<div class="line"><a id="l00974" name="l00974"></a><span class="lineno">  974</span>            header.type_info = &amp;<span class="keyword">typeid</span>(T);</div>
-<div class="line"><a id="l00975" name="l00975"></a><span class="lineno">  975</span>        }</div>
-<div class="line"><a id="l00976" name="l00976"></a><span class="lineno">  976</span> </div>
-<div class="line"><a id="l00977" name="l00977"></a><span class="lineno">  977</span>        T* obj = construct(buffer.data() + object_offset);</div>
-<div class="line"><a id="l00978" name="l00978"></a><span class="lineno">  978</span> </div>
-<div class="line"><a id="l00979" name="l00979"></a><span class="lineno">  979</span><span class="preprocessor">#ifdef ARENA_ALLOCATOR_LOG</span></div>
-<div class="line"><a id="l00980" name="l00980"></a><span class="lineno">  980</span>        std::cout &lt;&lt; <span class="stringliteral">&quot;Construct &quot;</span> &lt;&lt; <span class="keyword">typeid</span>(T).name() &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; (<span class="keywordtype">void</span>*)obj &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00981" name="l00981"></a><span class="lineno">  981</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00982" name="l00982"></a><span class="lineno">  982</span> </div>
-<div class="line"><a id="l00983" name="l00983"></a><span class="lineno">  983</span>        current_offset = end_offset;</div>
-<div class="line"><a id="l00984" name="l00984"></a><span class="lineno">  984</span>        <span class="keywordflow">return</span> obj;</div>
-<div class="line"><a id="l00985" name="l00985"></a><span class="lineno">  985</span>    }</div>
-<div class="line"><a id="l00986" name="l00986"></a><span class="lineno">  986</span> </div>
-<div class="line"><a id="l00987" name="l00987"></a><span class="lineno">  987</span><span class="keyword">public</span>:<span class="comment"></span></div>
+<div class="line"><a id="l00969" name="l00969"></a><span class="lineno">  969</span><span class="comment"></span> </div>
+<div class="line"><a id="l00970" name="l00970"></a><span class="lineno">  970</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00971" name="l00971"></a><span class="lineno">  971</span><span class="comment">     * @brief Get an iterator to the first alive allocation.</span></div>
+<div class="line"><a id="l00972" name="l00972"></a><span class="lineno">  972</span><span class="comment">     * @return Iterator positioned at the first alive allocation</span></div>
+<div class="line"><a id="l00973" name="l00973"></a><span class="lineno">  973</span><span class="comment">     */</span></div>
+<div class="foldopen" id="foldopen00974" data-start="{" data-end="}">
+<div class="line"><a id="l00974" name="l00974"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#a4e658d55f3c49fd3d80a8bb3f2737ace">  974</a></span>    <a class="code hl_class" href="classArenaAllocator_1_1IteratorImpl.html">Iterator</a> <a class="code hl_function" href="classArenaAllocator.html#a4e658d55f3c49fd3d80a8bb3f2737ace">begin</a>()</div>
+<div class="line"><a id="l00975" name="l00975"></a><span class="lineno">  975</span>    {</div>
+<div class="line"><a id="l00976" name="l00976"></a><span class="lineno">  976</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classArenaAllocator_1_1IteratorImpl.html">Iterator</a>(<span class="keyword">this</span>, 0, <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00977" name="l00977"></a><span class="lineno">  977</span>    }</div>
+</div>
+<div class="line"><a id="l00978" name="l00978"></a><span class="lineno">  978</span><span class="comment"></span> </div>
+<div class="line"><a id="l00979" name="l00979"></a><span class="lineno">  979</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00980" name="l00980"></a><span class="lineno">  980</span><span class="comment">     * @brief Get an iterator past the last allocation.</span></div>
+<div class="line"><a id="l00981" name="l00981"></a><span class="lineno">  981</span><span class="comment">     * @return Iterator positioned at current_offset (end sentinel)</span></div>
+<div class="line"><a id="l00982" name="l00982"></a><span class="lineno">  982</span><span class="comment">     */</span></div>
+<div class="foldopen" id="foldopen00983" data-start="{" data-end="}">
+<div class="line"><a id="l00983" name="l00983"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#a289b77c251f1e4f5426de628eb80430e">  983</a></span>    <a class="code hl_class" href="classArenaAllocator_1_1IteratorImpl.html">Iterator</a> <a class="code hl_function" href="classArenaAllocator.html#a289b77c251f1e4f5426de628eb80430e">end</a>()</div>
+<div class="line"><a id="l00984" name="l00984"></a><span class="lineno">  984</span>    {</div>
+<div class="line"><a id="l00985" name="l00985"></a><span class="lineno">  985</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classArenaAllocator_1_1IteratorImpl.html">Iterator</a>(<span class="keyword">this</span>, current_offset, <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00986" name="l00986"></a><span class="lineno">  986</span>    }</div>
+</div>
+<div class="line"><a id="l00987" name="l00987"></a><span class="lineno">  987</span><span class="comment"></span> </div>
 <div class="line"><a id="l00988" name="l00988"></a><span class="lineno">  988</span><span class="comment">    /**</span></div>
-<div class="line"><a id="l00989" name="l00989"></a><span class="lineno">  989</span><span class="comment">     * @brief Deallocate an object previously allocated via allocate().</span></div>
-<div class="line"><a id="l00990" name="l00990"></a><span class="lineno">  990</span><span class="comment">     * </span></div>
-<div class="line"><a id="l00991" name="l00991"></a><span class="lineno">  991</span><span class="comment">     * Calls the object&#39;s destructor and marks the allocation as dead.</span></div>
-<div class="line"><a id="l00992" name="l00992"></a><span class="lineno">  992</span><span class="comment">     * The space remains in the buffer until the next reallocation.</span></div>
-<div class="line"><a id="l00993" name="l00993"></a><span class="lineno">  993</span><span class="comment">     * </span></div>
-<div class="line"><a id="l00994" name="l00994"></a><span class="lineno">  994</span><span class="comment">     * @tparam T Type of object to deallocate</span></div>
-<div class="line"><a id="l00995" name="l00995"></a><span class="lineno">  995</span><span class="comment">     * @param ptr Pointer to object returned by allocate()</span></div>
-<div class="line"><a id="l00996" name="l00996"></a><span class="lineno">  996</span><span class="comment">     * </span></div>
-<div class="line"><a id="l00997" name="l00997"></a><span class="lineno">  997</span><span class="comment">     * @note Must be called with a pointer returned by allocate() on this allocator</span></div>
-<div class="line"><a id="l00998" name="l00998"></a><span class="lineno">  998</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00999" name="l00999"></a><span class="lineno">  999</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="foldopen" id="foldopen01000" data-start="{" data-end="}">
-<div class="line"><a id="l01000" name="l01000"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#a232da1c84901395cda90c088bc7543d0"> 1000</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classArenaAllocator.html#a232da1c84901395cda90c088bc7543d0">deallocate</a>(T* ptr)</div>
-<div class="line"><a id="l01001" name="l01001"></a><span class="lineno"> 1001</span>    {</div>
-<div class="line"><a id="l01002" name="l01002"></a><span class="lineno"> 1002</span>        <span class="keywordflow">if</span> (!ptr) <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l01003" name="l01003"></a><span class="lineno"> 1003</span> </div>
-<div class="line"><a id="l01004" name="l01004"></a><span class="lineno"> 1004</span>        <span class="comment">// Direktzugriff auf den Header in O(1) statt linearer Suchschleife</span></div>
-<div class="line"><a id="l01005" name="l01005"></a><span class="lineno"> 1005</span>        std::byte* header_ptr = <span class="keyword">reinterpret_cast&lt;</span>std::byte*<span class="keyword">&gt;</span>(ptr) - HEADER_SIZE;</div>
-<div class="line"><a id="l01006" name="l01006"></a><span class="lineno"> 1006</span>        AllocationHeader&amp; header = *<span class="keyword">reinterpret_cast&lt;</span>AllocationHeader*<span class="keyword">&gt;</span>(header_ptr);</div>
-<div class="line"><a id="l01007" name="l01007"></a><span class="lineno"> 1007</span> </div>
-<div class="line"><a id="l01008" name="l01008"></a><span class="lineno"> 1008</span>        <span class="comment">// Aufruf des Destruktors, falls das Objekt noch lebt</span></div>
-<div class="line"><a id="l01009" name="l01009"></a><span class="lineno"> 1009</span>        <span class="keywordflow">if</span> (header.is_alive &amp;&amp; header.destructor)</div>
-<div class="line"><a id="l01010" name="l01010"></a><span class="lineno"> 1010</span>        {</div>
-<div class="line"><a id="l01011" name="l01011"></a><span class="lineno"> 1011</span>            header.destructor(ptr);</div>
-<div class="line"><a id="l01012" name="l01012"></a><span class="lineno"> 1012</span>        }</div>
-<div class="line"><a id="l01013" name="l01013"></a><span class="lineno"> 1013</span>        header.is_alive = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l01014" name="l01014"></a><span class="lineno"> 1014</span>    }</div>
+<div class="line"><a id="l00989" name="l00989"></a><span class="lineno">  989</span><span class="comment">     * @brief Get an iterator to the first alive allocation.</span></div>
+<div class="line"><a id="l00990" name="l00990"></a><span class="lineno">  990</span><span class="comment">     * @return Iterator positioned at the first alive allocation</span></div>
+<div class="line"><a id="l00991" name="l00991"></a><span class="lineno">  991</span><span class="comment">     */</span></div>
+<div class="foldopen" id="foldopen00992" data-start="{" data-end="}">
+<div class="line"><a id="l00992" name="l00992"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#aa16f80254bb394cdd74f467f5fed2359">  992</a></span>    <a class="code hl_class" href="classArenaAllocator_1_1IteratorImpl.html">ConstIterator</a> <a class="code hl_function" href="classArenaAllocator.html#aa16f80254bb394cdd74f467f5fed2359">begin</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00993" name="l00993"></a><span class="lineno">  993</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00994" name="l00994"></a><span class="lineno">  994</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classArenaAllocator_1_1IteratorImpl.html">ConstIterator</a>(<span class="keyword">this</span>, 0, <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00995" name="l00995"></a><span class="lineno">  995</span>    }</div>
 </div>
-<div class="line"><a id="l01015" name="l01015"></a><span class="lineno"> 1015</span><span class="comment"></span> </div>
-<div class="line"><a id="l01016" name="l01016"></a><span class="lineno"> 1016</span><span class="comment">    /**</span></div>
-<div class="line"><a id="l01017" name="l01017"></a><span class="lineno"> 1017</span><span class="comment">     * @brief Get runtime type information for an allocated object.</span></div>
-<div class="line"><a id="l01018" name="l01018"></a><span class="lineno"> 1018</span><span class="comment">     * </span></div>
-<div class="line"><a id="l01019" name="l01019"></a><span class="lineno"> 1019</span><span class="comment">     * @tparam T Type of object</span></div>
-<div class="line"><a id="l01020" name="l01020"></a><span class="lineno"> 1020</span><span class="comment">     * @param ptr Pointer to object returned by allocate()</span></div>
-<div class="line"><a id="l01021" name="l01021"></a><span class="lineno"> 1021</span><span class="comment">     * @return Pointer to std::type_info for the allocated object, or nullptr if not found</span></div>
-<div class="line"><a id="l01022" name="l01022"></a><span class="lineno"> 1022</span><span class="comment">     * </span></div>
-<div class="line"><a id="l01023" name="l01023"></a><span class="lineno"> 1023</span><span class="comment">     * @note This method is only available if StoreTypeInfo template parameter is true</span></div>
-<div class="line"><a id="l01024" name="l01024"></a><span class="lineno"> 1024</span><span class="comment">     */</span></div>
-<div class="line"><a id="l01025" name="l01025"></a><span class="lineno"> 1025</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="foldopen" id="foldopen01026" data-start="{" data-end="}">
-<div class="line"><a id="l01026" name="l01026"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#a0f056716b600807495dd51c53d3b0ec2"> 1026</a></span>    <span class="keyword">const</span> std::type_info* <a class="code hl_function" href="classArenaAllocator.html#a0f056716b600807495dd51c53d3b0ec2">get_type_info</a>(T* ptr) <span class="keyword">const</span> </div>
-<div class="line"><a id="l01027" name="l01027"></a><span class="lineno"> 1027</span>        <span class="keyword">requires</span> StoreTypeInfo</div>
-<div class="line"><a id="l01028" name="l01028"></a><span class="lineno"> 1028</span>    {</div>
-<div class="line"><a id="l01029" name="l01029"></a><span class="lineno"> 1029</span>        <span class="keywordflow">if</span> (!ptr) <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l01030" name="l01030"></a><span class="lineno"> 1030</span> </div>
-<div class="line"><a id="l01031" name="l01031"></a><span class="lineno"> 1031</span>        std::size_t offset = 0;</div>
-<div class="line"><a id="l01032" name="l01032"></a><span class="lineno"> 1032</span>        <span class="keywordflow">while</span> (offset &lt; current_offset)</div>
-<div class="line"><a id="l01033" name="l01033"></a><span class="lineno"> 1033</span>        {</div>
-<div class="line"><a id="l01034" name="l01034"></a><span class="lineno"> 1034</span>            <span class="keyword">const</span> AllocationHeader&amp; header = get_header(offset);</div>
-<div class="line"><a id="l01035" name="l01035"></a><span class="lineno"> 1035</span>            std::size_t object_size = header.size;</div>
-<div class="line"><a id="l01036" name="l01036"></a><span class="lineno"> 1036</span>            <span class="keyword">const</span> std::byte* object_ptr = get_object_pointer(offset);</div>
-<div class="line"><a id="l01037" name="l01037"></a><span class="lineno"> 1037</span> </div>
-<div class="line"><a id="l01038" name="l01038"></a><span class="lineno"> 1038</span>            <span class="keywordflow">if</span> (object_ptr == <span class="keyword">reinterpret_cast&lt;</span>std::byte*<span class="keyword">&gt;</span>(ptr))</div>
-<div class="line"><a id="l01039" name="l01039"></a><span class="lineno"> 1039</span>                <span class="keywordflow">return</span> header.type_info;</div>
-<div class="line"><a id="l01040" name="l01040"></a><span class="lineno"> 1040</span> </div>
-<div class="line"><a id="l01041" name="l01041"></a><span class="lineno"> 1041</span>            offset += HEADER_SIZE + object_size;</div>
-<div class="line"><a id="l01042" name="l01042"></a><span class="lineno"> 1042</span>        }</div>
-<div class="line"><a id="l01043" name="l01043"></a><span class="lineno"> 1043</span> </div>
-<div class="line"><a id="l01044" name="l01044"></a><span class="lineno"> 1044</span>        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l01045" name="l01045"></a><span class="lineno"> 1045</span>    }</div>
+<div class="line"><a id="l00996" name="l00996"></a><span class="lineno">  996</span><span class="comment"></span> </div>
+<div class="line"><a id="l00997" name="l00997"></a><span class="lineno">  997</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00998" name="l00998"></a><span class="lineno">  998</span><span class="comment">     * @brief Get an iterator past the last allocation.</span></div>
+<div class="line"><a id="l00999" name="l00999"></a><span class="lineno">  999</span><span class="comment">     * @return Iterator positioned at current_offset (end sentinel)</span></div>
+<div class="line"><a id="l01000" name="l01000"></a><span class="lineno"> 1000</span><span class="comment">     */</span></div>
+<div class="foldopen" id="foldopen01001" data-start="{" data-end="}">
+<div class="line"><a id="l01001" name="l01001"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#ab216d91db57c34866be1196f49bc3dd6"> 1001</a></span>    <a class="code hl_class" href="classArenaAllocator_1_1IteratorImpl.html">ConstIterator</a> <a class="code hl_function" href="classArenaAllocator.html#ab216d91db57c34866be1196f49bc3dd6">end</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l01002" name="l01002"></a><span class="lineno"> 1002</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l01003" name="l01003"></a><span class="lineno"> 1003</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classArenaAllocator_1_1IteratorImpl.html">ConstIterator</a>(<span class="keyword">this</span>, current_offset, <span class="keyword">false</span>);</div>
+<div class="line"><a id="l01004" name="l01004"></a><span class="lineno"> 1004</span>    }</div>
 </div>
-<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span><span class="comment"></span> </div>
-<div class="line"><a id="l01047" name="l01047"></a><span class="lineno"> 1047</span><span class="comment">    /**</span></div>
-<div class="line"><a id="l01048" name="l01048"></a><span class="lineno"> 1048</span><span class="comment">     * @brief Get an iterator to the first alive allocation.</span></div>
-<div class="line"><a id="l01049" name="l01049"></a><span class="lineno"> 1049</span><span class="comment">     * @return Iterator positioned at the first alive allocation</span></div>
-<div class="line"><a id="l01050" name="l01050"></a><span class="lineno"> 1050</span><span class="comment">     */</span></div>
-<div class="foldopen" id="foldopen01051" data-start="{" data-end="}">
-<div class="line"><a id="l01051" name="l01051"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#a4e658d55f3c49fd3d80a8bb3f2737ace"> 1051</a></span>    <a class="code hl_class" href="classArenaAllocator_1_1IteratorImpl.html">Iterator</a> <a class="code hl_function" href="classArenaAllocator.html#a4e658d55f3c49fd3d80a8bb3f2737ace">begin</a>()</div>
-<div class="line"><a id="l01052" name="l01052"></a><span class="lineno"> 1052</span>    {</div>
-<div class="line"><a id="l01053" name="l01053"></a><span class="lineno"> 1053</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classArenaAllocator_1_1IteratorImpl.html">Iterator</a>(<span class="keyword">this</span>, 0, <span class="keyword">true</span>);</div>
-<div class="line"><a id="l01054" name="l01054"></a><span class="lineno"> 1054</span>    }</div>
+<div class="line"><a id="l01005" name="l01005"></a><span class="lineno"> 1005</span><span class="comment"></span> </div>
+<div class="line"><a id="l01006" name="l01006"></a><span class="lineno"> 1006</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l01007" name="l01007"></a><span class="lineno"> 1007</span><span class="comment">     * @brief Get the current buffer usage in bytes.</span></div>
+<div class="line"><a id="l01008" name="l01008"></a><span class="lineno"> 1008</span><span class="comment">     * </span></div>
+<div class="line"><a id="l01009" name="l01009"></a><span class="lineno"> 1009</span><span class="comment">     * Includes space used by alive and dead allocations, plus headers and padding.</span></div>
+<div class="line"><a id="l01010" name="l01010"></a><span class="lineno"> 1010</span><span class="comment">     * </span></div>
+<div class="line"><a id="l01011" name="l01011"></a><span class="lineno"> 1011</span><span class="comment">     * @return Number of bytes currently used in the buffer</span></div>
+<div class="line"><a id="l01012" name="l01012"></a><span class="lineno"> 1012</span><span class="comment">     */</span></div>
+<div class="foldopen" id="foldopen01013" data-start="{" data-end="}">
+<div class="line"><a id="l01013" name="l01013"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#aaac8564f05bdbe0fe389aa9490541cc7"> 1013</a></span>    std::size_t <a class="code hl_function" href="classArenaAllocator.html#aaac8564f05bdbe0fe389aa9490541cc7">get_used_bytes</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l01014" name="l01014"></a><span class="lineno"> 1014</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l01015" name="l01015"></a><span class="lineno"> 1015</span>        <span class="keywordflow">return</span> current_offset;</div>
+<div class="line"><a id="l01016" name="l01016"></a><span class="lineno"> 1016</span>    }</div>
 </div>
-<div class="line"><a id="l01055" name="l01055"></a><span class="lineno"> 1055</span><span class="comment"></span> </div>
-<div class="line"><a id="l01056" name="l01056"></a><span class="lineno"> 1056</span><span class="comment">    /**</span></div>
-<div class="line"><a id="l01057" name="l01057"></a><span class="lineno"> 1057</span><span class="comment">     * @brief Get an iterator past the last allocation.</span></div>
-<div class="line"><a id="l01058" name="l01058"></a><span class="lineno"> 1058</span><span class="comment">     * @return Iterator positioned at current_offset (end sentinel)</span></div>
-<div class="line"><a id="l01059" name="l01059"></a><span class="lineno"> 1059</span><span class="comment">     */</span></div>
-<div class="foldopen" id="foldopen01060" data-start="{" data-end="}">
-<div class="line"><a id="l01060" name="l01060"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#a289b77c251f1e4f5426de628eb80430e"> 1060</a></span>    <a class="code hl_class" href="classArenaAllocator_1_1IteratorImpl.html">Iterator</a> <a class="code hl_function" href="classArenaAllocator.html#a289b77c251f1e4f5426de628eb80430e">end</a>()</div>
-<div class="line"><a id="l01061" name="l01061"></a><span class="lineno"> 1061</span>    {</div>
-<div class="line"><a id="l01062" name="l01062"></a><span class="lineno"> 1062</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classArenaAllocator_1_1IteratorImpl.html">Iterator</a>(<span class="keyword">this</span>, current_offset, <span class="keyword">false</span>);</div>
-<div class="line"><a id="l01063" name="l01063"></a><span class="lineno"> 1063</span>    }</div>
+<div class="line"><a id="l01017" name="l01017"></a><span class="lineno"> 1017</span><span class="comment"></span> </div>
+<div class="line"><a id="l01018" name="l01018"></a><span class="lineno"> 1018</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l01019" name="l01019"></a><span class="lineno"> 1019</span><span class="comment">     * @brief Get the current buffer capacity in bytes.</span></div>
+<div class="line"><a id="l01020" name="l01020"></a><span class="lineno"> 1020</span><span class="comment">     * @return Total capacity of the underlying buffer</span></div>
+<div class="line"><a id="l01021" name="l01021"></a><span class="lineno"> 1021</span><span class="comment">     */</span></div>
+<div class="foldopen" id="foldopen01022" data-start="{" data-end="}">
+<div class="line"><a id="l01022" name="l01022"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#a0c2ee803d7e32389dcb4023995f3a07c"> 1022</a></span>    std::size_t <a class="code hl_function" href="classArenaAllocator.html#a0c2ee803d7e32389dcb4023995f3a07c">get_capacity</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l01023" name="l01023"></a><span class="lineno"> 1023</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l01024" name="l01024"></a><span class="lineno"> 1024</span>        <span class="keywordflow">return</span> buffer.capacity();</div>
+<div class="line"><a id="l01025" name="l01025"></a><span class="lineno"> 1025</span>    }</div>
 </div>
-<div class="line"><a id="l01064" name="l01064"></a><span class="lineno"> 1064</span><span class="comment"></span> </div>
-<div class="line"><a id="l01065" name="l01065"></a><span class="lineno"> 1065</span><span class="comment">    /**</span></div>
-<div class="line"><a id="l01066" name="l01066"></a><span class="lineno"> 1066</span><span class="comment">     * @brief Get an iterator to the first alive allocation.</span></div>
-<div class="line"><a id="l01067" name="l01067"></a><span class="lineno"> 1067</span><span class="comment">     * @return Iterator positioned at the first alive allocation</span></div>
-<div class="line"><a id="l01068" name="l01068"></a><span class="lineno"> 1068</span><span class="comment">     */</span></div>
-<div class="foldopen" id="foldopen01069" data-start="{" data-end="}">
-<div class="line"><a id="l01069" name="l01069"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#aa16f80254bb394cdd74f467f5fed2359"> 1069</a></span>    <a class="code hl_class" href="classArenaAllocator_1_1IteratorImpl.html">ConstIterator</a> <a class="code hl_function" href="classArenaAllocator.html#aa16f80254bb394cdd74f467f5fed2359">begin</a>()<span class="keyword"> const</span></div>
-<div class="line"><a id="l01070" name="l01070"></a><span class="lineno"> 1070</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l01071" name="l01071"></a><span class="lineno"> 1071</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classArenaAllocator_1_1IteratorImpl.html">ConstIterator</a>(<span class="keyword">this</span>, 0, <span class="keyword">true</span>);</div>
-<div class="line"><a id="l01072" name="l01072"></a><span class="lineno"> 1072</span>    }</div>
+<div class="line"><a id="l01026" name="l01026"></a><span class="lineno"> 1026</span><span class="comment"></span> </div>
+<div class="line"><a id="l01027" name="l01027"></a><span class="lineno"> 1027</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l01028" name="l01028"></a><span class="lineno"> 1028</span><span class="comment">     * @brief Clear the arena and destroy all alive objects.</span></div>
+<div class="line"><a id="l01029" name="l01029"></a><span class="lineno"> 1029</span><span class="comment">     * </span></div>
+<div class="line"><a id="l01030" name="l01030"></a><span class="lineno"> 1030</span><span class="comment">     * Calls destructors for all alive objects and resets the allocator to empty state.</span></div>
+<div class="line"><a id="l01031" name="l01031"></a><span class="lineno"> 1031</span><span class="comment">     * The buffer is cleared but not deallocated (capacity is reset).</span></div>
+<div class="line"><a id="l01032" name="l01032"></a><span class="lineno"> 1032</span><span class="comment">     */</span></div>
+<div class="foldopen" id="foldopen01033" data-start="{" data-end="}">
+<div class="line"><a id="l01033" name="l01033"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#a71de053135358c8224f3df7ff5a9942f"> 1033</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classArenaAllocator.html#a71de053135358c8224f3df7ff5a9942f">clear</a>()</div>
+<div class="line"><a id="l01034" name="l01034"></a><span class="lineno"> 1034</span>    {</div>
+<div class="line"><a id="l01035" name="l01035"></a><span class="lineno"> 1035</span>        destroy_objects_in_range(buffer.data(), current_offset);</div>
+<div class="line"><a id="l01036" name="l01036"></a><span class="lineno"> 1036</span>        buffer.clear();</div>
+<div class="line"><a id="l01037" name="l01037"></a><span class="lineno"> 1037</span>        current_offset = 0;</div>
+<div class="line"><a id="l01038" name="l01038"></a><span class="lineno"> 1038</span>    }</div>
 </div>
-<div class="line"><a id="l01073" name="l01073"></a><span class="lineno"> 1073</span><span class="comment"></span> </div>
-<div class="line"><a id="l01074" name="l01074"></a><span class="lineno"> 1074</span><span class="comment">    /**</span></div>
-<div class="line"><a id="l01075" name="l01075"></a><span class="lineno"> 1075</span><span class="comment">     * @brief Get an iterator past the last allocation.</span></div>
-<div class="line"><a id="l01076" name="l01076"></a><span class="lineno"> 1076</span><span class="comment">     * @return Iterator positioned at current_offset (end sentinel)</span></div>
-<div class="line"><a id="l01077" name="l01077"></a><span class="lineno"> 1077</span><span class="comment">     */</span></div>
-<div class="foldopen" id="foldopen01078" data-start="{" data-end="}">
-<div class="line"><a id="l01078" name="l01078"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#ab216d91db57c34866be1196f49bc3dd6"> 1078</a></span>    <a class="code hl_class" href="classArenaAllocator_1_1IteratorImpl.html">ConstIterator</a> <a class="code hl_function" href="classArenaAllocator.html#ab216d91db57c34866be1196f49bc3dd6">end</a>()<span class="keyword"> const</span></div>
-<div class="line"><a id="l01079" name="l01079"></a><span class="lineno"> 1079</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l01080" name="l01080"></a><span class="lineno"> 1080</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classArenaAllocator_1_1IteratorImpl.html">ConstIterator</a>(<span class="keyword">this</span>, current_offset, <span class="keyword">false</span>);</div>
-<div class="line"><a id="l01081" name="l01081"></a><span class="lineno"> 1081</span>    }</div>
+<div class="line"><a id="l01039" name="l01039"></a><span class="lineno"> 1039</span><span class="comment"></span> </div>
+<div class="line"><a id="l01040" name="l01040"></a><span class="lineno"> 1040</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l01041" name="l01041"></a><span class="lineno"> 1041</span><span class="comment">     * @brief Destructor that clears all allocations.</span></div>
+<div class="line"><a id="l01042" name="l01042"></a><span class="lineno"> 1042</span><span class="comment">     */</span></div>
+<div class="foldopen" id="foldopen01043" data-start="{" data-end="}">
+<div class="line"><a id="l01043" name="l01043"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#ae9aeae9e28ef1fbf9252e15fb65fd45a"> 1043</a></span>    <a class="code hl_function" href="classArenaAllocator.html#ae9aeae9e28ef1fbf9252e15fb65fd45a">~ArenaAllocator</a>()</div>
+<div class="line"><a id="l01044" name="l01044"></a><span class="lineno"> 1044</span>    {</div>
+<div class="line"><a id="l01045" name="l01045"></a><span class="lineno"> 1045</span>        <a class="code hl_function" href="classArenaAllocator.html#a71de053135358c8224f3df7ff5a9942f">clear</a>();</div>
+<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span>    }</div>
 </div>
-<div class="line"><a id="l01082" name="l01082"></a><span class="lineno"> 1082</span><span class="comment"></span> </div>
-<div class="line"><a id="l01083" name="l01083"></a><span class="lineno"> 1083</span><span class="comment">    /**</span></div>
-<div class="line"><a id="l01084" name="l01084"></a><span class="lineno"> 1084</span><span class="comment">     * @brief Get the current buffer usage in bytes.</span></div>
-<div class="line"><a id="l01085" name="l01085"></a><span class="lineno"> 1085</span><span class="comment">     * </span></div>
-<div class="line"><a id="l01086" name="l01086"></a><span class="lineno"> 1086</span><span class="comment">     * Includes space used by alive and dead allocations, plus headers and padding.</span></div>
-<div class="line"><a id="l01087" name="l01087"></a><span class="lineno"> 1087</span><span class="comment">     * </span></div>
-<div class="line"><a id="l01088" name="l01088"></a><span class="lineno"> 1088</span><span class="comment">     * @return Number of bytes currently used in the buffer</span></div>
-<div class="line"><a id="l01089" name="l01089"></a><span class="lineno"> 1089</span><span class="comment">     */</span></div>
-<div class="foldopen" id="foldopen01090" data-start="{" data-end="}">
-<div class="line"><a id="l01090" name="l01090"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#aaac8564f05bdbe0fe389aa9490541cc7"> 1090</a></span>    std::size_t <a class="code hl_function" href="classArenaAllocator.html#aaac8564f05bdbe0fe389aa9490541cc7">get_used_bytes</a>()<span class="keyword"> const</span></div>
-<div class="line"><a id="l01091" name="l01091"></a><span class="lineno"> 1091</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l01092" name="l01092"></a><span class="lineno"> 1092</span>        <span class="keywordflow">return</span> current_offset;</div>
-<div class="line"><a id="l01093" name="l01093"></a><span class="lineno"> 1093</span>    }</div>
+<div class="line"><a id="l01047" name="l01047"></a><span class="lineno"> 1047</span>};</div>
 </div>
-<div class="line"><a id="l01094" name="l01094"></a><span class="lineno"> 1094</span><span class="comment"></span> </div>
-<div class="line"><a id="l01095" name="l01095"></a><span class="lineno"> 1095</span><span class="comment">    /**</span></div>
-<div class="line"><a id="l01096" name="l01096"></a><span class="lineno"> 1096</span><span class="comment">     * @brief Get the current buffer capacity in bytes.</span></div>
-<div class="line"><a id="l01097" name="l01097"></a><span class="lineno"> 1097</span><span class="comment">     * @return Total capacity of the underlying buffer</span></div>
-<div class="line"><a id="l01098" name="l01098"></a><span class="lineno"> 1098</span><span class="comment">     */</span></div>
-<div class="foldopen" id="foldopen01099" data-start="{" data-end="}">
-<div class="line"><a id="l01099" name="l01099"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#a0c2ee803d7e32389dcb4023995f3a07c"> 1099</a></span>    std::size_t <a class="code hl_function" href="classArenaAllocator.html#a0c2ee803d7e32389dcb4023995f3a07c">get_capacity</a>()<span class="keyword"> const</span></div>
-<div class="line"><a id="l01100" name="l01100"></a><span class="lineno"> 1100</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l01101" name="l01101"></a><span class="lineno"> 1101</span>        <span class="keywordflow">return</span> buffer.capacity();</div>
-<div class="line"><a id="l01102" name="l01102"></a><span class="lineno"> 1102</span>    }</div>
-</div>
-<div class="line"><a id="l01103" name="l01103"></a><span class="lineno"> 1103</span><span class="comment"></span> </div>
-<div class="line"><a id="l01104" name="l01104"></a><span class="lineno"> 1104</span><span class="comment">    /**</span></div>
-<div class="line"><a id="l01105" name="l01105"></a><span class="lineno"> 1105</span><span class="comment">     * @brief Clear the arena and destroy all alive objects.</span></div>
-<div class="line"><a id="l01106" name="l01106"></a><span class="lineno"> 1106</span><span class="comment">     * </span></div>
-<div class="line"><a id="l01107" name="l01107"></a><span class="lineno"> 1107</span><span class="comment">     * Calls destructors for all alive objects and resets the allocator to empty state.</span></div>
-<div class="line"><a id="l01108" name="l01108"></a><span class="lineno"> 1108</span><span class="comment">     * The buffer is cleared but not deallocated (capacity is reset).</span></div>
-<div class="line"><a id="l01109" name="l01109"></a><span class="lineno"> 1109</span><span class="comment">     */</span></div>
-<div class="foldopen" id="foldopen01110" data-start="{" data-end="}">
-<div class="line"><a id="l01110" name="l01110"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#a71de053135358c8224f3df7ff5a9942f"> 1110</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classArenaAllocator.html#a71de053135358c8224f3df7ff5a9942f">clear</a>()</div>
-<div class="line"><a id="l01111" name="l01111"></a><span class="lineno"> 1111</span>    {</div>
-<div class="line"><a id="l01112" name="l01112"></a><span class="lineno"> 1112</span>        destroy_objects_in_range(buffer.data(), current_offset);</div>
-<div class="line"><a id="l01113" name="l01113"></a><span class="lineno"> 1113</span>        buffer.clear();</div>
-<div class="line"><a id="l01114" name="l01114"></a><span class="lineno"> 1114</span>        current_offset = 0;</div>
-<div class="line"><a id="l01115" name="l01115"></a><span class="lineno"> 1115</span>    }</div>
-</div>
-<div class="line"><a id="l01116" name="l01116"></a><span class="lineno"> 1116</span><span class="comment"></span> </div>
-<div class="line"><a id="l01117" name="l01117"></a><span class="lineno"> 1117</span><span class="comment">    /**</span></div>
-<div class="line"><a id="l01118" name="l01118"></a><span class="lineno"> 1118</span><span class="comment">     * @brief Destructor that clears all allocations.</span></div>
-<div class="line"><a id="l01119" name="l01119"></a><span class="lineno"> 1119</span><span class="comment">     */</span></div>
-<div class="foldopen" id="foldopen01120" data-start="{" data-end="}">
-<div class="line"><a id="l01120" name="l01120"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#ae9aeae9e28ef1fbf9252e15fb65fd45a"> 1120</a></span>    <a class="code hl_function" href="classArenaAllocator.html#ae9aeae9e28ef1fbf9252e15fb65fd45a">~ArenaAllocator</a>()</div>
-<div class="line"><a id="l01121" name="l01121"></a><span class="lineno"> 1121</span>    {</div>
-<div class="line"><a id="l01122" name="l01122"></a><span class="lineno"> 1122</span>        <a class="code hl_function" href="classArenaAllocator.html#a71de053135358c8224f3df7ff5a9942f">clear</a>();</div>
-<div class="line"><a id="l01123" name="l01123"></a><span class="lineno"> 1123</span>    }</div>
-</div>
-<div class="line"><a id="l01124" name="l01124"></a><span class="lineno"> 1124</span>};</div>
-</div>
-<div class="line"><a id="l01125" name="l01125"></a><span class="lineno"> 1125</span> </div>
-<div class="line"><a id="l01126" name="l01126"></a><span class="lineno"> 1126</span><span class="keyword">using </span><a class="code hl_class" href="classArenaAllocator.html">PlainArenaAllocator</a> = <a class="code hl_class" href="classArenaAllocator.html">ArenaAllocator&lt;StoreTypeInfoType::no&gt;</a>;</div>
-<div class="line"><a id="l01127" name="l01127"></a><span class="lineno"> 1127</span><span class="keyword">using </span><a class="code hl_class" href="classArenaAllocator.html">TypeAwareArenaAllocator</a> = <a class="code hl_class" href="classArenaAllocator.html">ArenaAllocator&lt;StoreTypeInfoType::yes&gt;</a>;</div>
-<div class="line"><a id="l01128" name="l01128"></a><span class="lineno"> 1128</span> </div>
-<div class="line"><a id="l01129" name="l01129"></a><span class="lineno"> 1129</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l01048" name="l01048"></a><span class="lineno"> 1048</span> </div>
+<div class="line"><a id="l01049" name="l01049"></a><span class="lineno"> 1049</span><span class="keyword">using </span><a class="code hl_class" href="classArenaAllocator.html">PlainArenaAllocator</a> = <a class="code hl_class" href="classArenaAllocator.html">ArenaAllocator&lt;StoreTypeInfoType::no&gt;</a>;</div>
+<div class="line"><a id="l01050" name="l01050"></a><span class="lineno"> 1050</span><span class="keyword">using </span><a class="code hl_class" href="classArenaAllocator.html">TypeAwareArenaAllocator</a> = <a class="code hl_class" href="classArenaAllocator.html">ArenaAllocator&lt;StoreTypeInfoType::yes&gt;</a>;</div>
+<div class="line"><a id="l01051" name="l01051"></a><span class="lineno"> 1051</span> </div>
+<div class="line"><a id="l01052" name="l01052"></a><span class="lineno"> 1052</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassArenaAllocator_1_1Entry_html"><div class="ttname"><a href="classArenaAllocator_1_1Entry.html">ArenaAllocator::Entry</a></div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00066">arena_allocator.hpp:67</a></div></div>
 <div class="ttc" id="aclassArenaAllocator_1_1IteratorImpl_html"><div class="ttname"><a href="classArenaAllocator_1_1IteratorImpl.html">ArenaAllocator::IteratorImpl</a></div><div class="ttdoc">Forward iterator for traversing alive allocations in the arena.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00117">arena_allocator.hpp:118</a></div></div>
 <div class="ttc" id="aclassArenaAllocator_1_1IteratorImpl_html_a0672b3dfea5ddd1fdae99d71104968d3"><div class="ttname"><a href="classArenaAllocator_1_1IteratorImpl.html#a0672b3dfea5ddd1fdae99d71104968d3">ArenaAllocator::IteratorImpl::get_header</a></div><div class="ttdeci">const AllocationHeader &amp; get_header() const</div><div class="ttdoc">Get the allocation header for the current object.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00237">arena_allocator.hpp:237</a></div></div>
@@ -1304,28 +1227,28 @@ $(document).ready(function(){initNavTree('arena__allocator_8hpp_source.html','')
 <div class="ttc" id="aclassArenaAllocator_1_1IteratorImpl_html_ada5ca9667fa3cc59a21342692d0543c2"><div class="ttname"><a href="classArenaAllocator_1_1IteratorImpl.html#ada5ca9667fa3cc59a21342692d0543c2">ArenaAllocator::IteratorImpl::operator++</a></div><div class="ttdeci">IteratorImpl &amp; operator++()</div><div class="ttdoc">Pre-increment operator.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00211">arena_allocator.hpp:211</a></div></div>
 <div class="ttc" id="aclassArenaAllocator_html"><div class="ttname"><a href="classArenaAllocator.html">ArenaAllocator</a></div><div class="ttdoc">A growth-based arena allocator that stores objects in contiguous memory.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00028">arena_allocator.hpp:29</a></div></div>
 <div class="ttc" id="aclassArenaAllocator_html_a0859f787e08c37179e646512b16efa9c"><div class="ttname"><a href="classArenaAllocator.html#a0859f787e08c37179e646512b16efa9c">ArenaAllocator::compact</a></div><div class="ttdeci">void compact()</div><div class="ttdoc">Compacts the arena in-place without allocating a new buffer vector.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00467">arena_allocator.hpp:467</a></div></div>
-<div class="ttc" id="aclassArenaAllocator_html_a0c2ee803d7e32389dcb4023995f3a07c"><div class="ttname"><a href="classArenaAllocator.html#a0c2ee803d7e32389dcb4023995f3a07c">ArenaAllocator::get_capacity</a></div><div class="ttdeci">std::size_t get_capacity() const</div><div class="ttdoc">Get the current buffer capacity in bytes.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l01099">arena_allocator.hpp:1099</a></div></div>
-<div class="ttc" id="aclassArenaAllocator_html_a0f056716b600807495dd51c53d3b0ec2"><div class="ttname"><a href="classArenaAllocator.html#a0f056716b600807495dd51c53d3b0ec2">ArenaAllocator::get_type_info</a></div><div class="ttdeci">const std::type_info * get_type_info(T *ptr) const</div><div class="ttdoc">Get runtime type information for an allocated object.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l01026">arena_allocator.hpp:1026</a></div></div>
+<div class="ttc" id="aclassArenaAllocator_html_a0c2ee803d7e32389dcb4023995f3a07c"><div class="ttname"><a href="classArenaAllocator.html#a0c2ee803d7e32389dcb4023995f3a07c">ArenaAllocator::get_capacity</a></div><div class="ttdeci">std::size_t get_capacity() const</div><div class="ttdoc">Get the current buffer capacity in bytes.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l01022">arena_allocator.hpp:1022</a></div></div>
+<div class="ttc" id="aclassArenaAllocator_html_a0f056716b600807495dd51c53d3b0ec2"><div class="ttname"><a href="classArenaAllocator.html#a0f056716b600807495dd51c53d3b0ec2">ArenaAllocator::get_type_info</a></div><div class="ttdeci">const std::type_info * get_type_info(T *ptr) const</div><div class="ttdoc">Get runtime type information for an allocated object.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00949">arena_allocator.hpp:949</a></div></div>
 <div class="ttc" id="aclassArenaAllocator_html_a1011c02ffa8636083de4c09ee97fb5a6"><div class="ttname"><a href="classArenaAllocator.html#a1011c02ffa8636083de4c09ee97fb5a6">ArenaAllocator::allocate</a></div><div class="ttdeci">T * allocate(Args &amp;&amp;... args)</div><div class="ttdoc">Allocate memory for an object of type T and construct it.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00590">arena_allocator.hpp:590</a></div></div>
-<div class="ttc" id="aclassArenaAllocator_html_a15c440cb45186178255b392f836a0b1a"><div class="ttname"><a href="classArenaAllocator.html#a15c440cb45186178255b392f836a0b1a">ArenaAllocator::allocateArray</a></div><div class="ttdeci">ArenaArrayView&lt; T &gt; allocateArray(std::size_t count, bool zero_initialize=false)</div><div class="ttdoc">Allocates a continuous array of type T with 'count' elements.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00685">arena_allocator.hpp:685</a></div></div>
+<div class="ttc" id="aclassArenaAllocator_html_a15c440cb45186178255b392f836a0b1a"><div class="ttname"><a href="classArenaAllocator.html#a15c440cb45186178255b392f836a0b1a">ArenaAllocator::allocateArray</a></div><div class="ttdeci">ArenaArrayView&lt; T &gt; allocateArray(std::size_t count, bool zero_initialize=false)</div><div class="ttdoc">Allocates a continuous array of type T with 'count' elements.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00735">arena_allocator.hpp:735</a></div></div>
 <div class="ttc" id="aclassArenaAllocator_html_a1a5cc34ddf5d3fe7286fdae8e1976d39"><div class="ttname"><a href="classArenaAllocator.html#a1a5cc34ddf5d3fe7286fdae8e1976d39">ArenaAllocator::get_dead_bytes</a></div><div class="ttdeci">std::size_t get_dead_bytes() const noexcept</div><div class="ttdoc">Calculates the total memory wasted by dead allocations.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00335">arena_allocator.hpp:335</a></div></div>
 <div class="ttc" id="aclassArenaAllocator_html_a221ec30886adf80609635d0af2e9f47b"><div class="ttname"><a href="classArenaAllocator.html#a221ec30886adf80609635d0af2e9f47b">ArenaAllocator::forceReallocate</a></div><div class="ttdeci">void forceReallocate()</div><div class="ttdoc">forces a reallocating which will trigger moving objects</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00380">arena_allocator.hpp:380</a></div></div>
 <div class="ttc" id="aclassArenaAllocator_html_a22ecbcb7049423c8010d481092b4a8dc"><div class="ttname"><a href="classArenaAllocator.html#a22ecbcb7049423c8010d481092b4a8dc">ArenaAllocator::contains</a></div><div class="ttdeci">bool contains(const void *ptr) const noexcept</div><div class="ttdoc">Checks if a given pointer resides within the currently active buffer bounds of this arena.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00321">arena_allocator.hpp:321</a></div></div>
-<div class="ttc" id="aclassArenaAllocator_html_a232da1c84901395cda90c088bc7543d0"><div class="ttname"><a href="classArenaAllocator.html#a232da1c84901395cda90c088bc7543d0">ArenaAllocator::deallocate</a></div><div class="ttdeci">void deallocate(T *ptr)</div><div class="ttdoc">Deallocate an object previously allocated via allocate().</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l01000">arena_allocator.hpp:1000</a></div></div>
-<div class="ttc" id="aclassArenaAllocator_html_a289b77c251f1e4f5426de628eb80430e"><div class="ttname"><a href="classArenaAllocator.html#a289b77c251f1e4f5426de628eb80430e">ArenaAllocator::end</a></div><div class="ttdeci">Iterator end()</div><div class="ttdoc">Get an iterator past the last allocation.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l01060">arena_allocator.hpp:1060</a></div></div>
+<div class="ttc" id="aclassArenaAllocator_html_a232da1c84901395cda90c088bc7543d0"><div class="ttname"><a href="classArenaAllocator.html#a232da1c84901395cda90c088bc7543d0">ArenaAllocator::deallocate</a></div><div class="ttdeci">void deallocate(T *ptr)</div><div class="ttdoc">Deallocate an object previously allocated via allocate().</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00923">arena_allocator.hpp:923</a></div></div>
+<div class="ttc" id="aclassArenaAllocator_html_a289b77c251f1e4f5426de628eb80430e"><div class="ttname"><a href="classArenaAllocator.html#a289b77c251f1e4f5426de628eb80430e">ArenaAllocator::end</a></div><div class="ttdeci">Iterator end()</div><div class="ttdoc">Get an iterator past the last allocation.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00983">arena_allocator.hpp:983</a></div></div>
 <div class="ttc" id="aclassArenaAllocator_html_a30331f7e068005dc0b7a6f02f6c9f967"><div class="ttname"><a href="classArenaAllocator.html#a30331f7e068005dc0b7a6f02f6c9f967">ArenaAllocator::ArenaAllocator</a></div><div class="ttdeci">ArenaAllocator()</div><div class="ttdoc">Construct an empty arena allocator.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00553">arena_allocator.hpp:553</a></div></div>
-<div class="ttc" id="aclassArenaAllocator_html_a4e658d55f3c49fd3d80a8bb3f2737ace"><div class="ttname"><a href="classArenaAllocator.html#a4e658d55f3c49fd3d80a8bb3f2737ace">ArenaAllocator::begin</a></div><div class="ttdeci">Iterator begin()</div><div class="ttdoc">Get an iterator to the first alive allocation.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l01051">arena_allocator.hpp:1051</a></div></div>
-<div class="ttc" id="aclassArenaAllocator_html_a71de053135358c8224f3df7ff5a9942f"><div class="ttname"><a href="classArenaAllocator.html#a71de053135358c8224f3df7ff5a9942f">ArenaAllocator::clear</a></div><div class="ttdeci">void clear()</div><div class="ttdoc">Clear the arena and destroy all alive objects.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l01110">arena_allocator.hpp:1110</a></div></div>
-<div class="ttc" id="aclassArenaAllocator_html_a8578f17c8f462220a3062dda8169317c"><div class="ttname"><a href="classArenaAllocator.html#a8578f17c8f462220a3062dda8169317c">ArenaAllocator::getArrayCount</a></div><div class="ttdeci">std::size_t getArrayCount(const T *ptr) const</div><div class="ttdoc">Returns the number of elements in the array.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00917">arena_allocator.hpp:917</a></div></div>
+<div class="ttc" id="aclassArenaAllocator_html_a4e658d55f3c49fd3d80a8bb3f2737ace"><div class="ttname"><a href="classArenaAllocator.html#a4e658d55f3c49fd3d80a8bb3f2737ace">ArenaAllocator::begin</a></div><div class="ttdeci">Iterator begin()</div><div class="ttdoc">Get an iterator to the first alive allocation.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00974">arena_allocator.hpp:974</a></div></div>
+<div class="ttc" id="aclassArenaAllocator_html_a71de053135358c8224f3df7ff5a9942f"><div class="ttname"><a href="classArenaAllocator.html#a71de053135358c8224f3df7ff5a9942f">ArenaAllocator::clear</a></div><div class="ttdeci">void clear()</div><div class="ttdoc">Clear the arena and destroy all alive objects.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l01033">arena_allocator.hpp:1033</a></div></div>
+<div class="ttc" id="aclassArenaAllocator_html_a8578f17c8f462220a3062dda8169317c"><div class="ttname"><a href="classArenaAllocator.html#a8578f17c8f462220a3062dda8169317c">ArenaAllocator::getArrayCount</a></div><div class="ttdeci">std::size_t getArrayCount(const T *ptr) const</div><div class="ttdoc">Returns the number of elements in the array.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00840">arena_allocator.hpp:840</a></div></div>
 <div class="ttc" id="aclassArenaAllocator_html_a8ab367040b671abbcd24dd0271f2a699"><div class="ttname"><a href="classArenaAllocator.html#a8ab367040b671abbcd24dd0271f2a699">ArenaAllocator::reserve</a></div><div class="ttdeci">void reserve(std::size_t new_capacity)</div><div class="ttdoc">Reserves at least the specified minimum capacity in the arena buffer.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00535">arena_allocator.hpp:535</a></div></div>
-<div class="ttc" id="aclassArenaAllocator_html_a98e7b7baf0da2b73981f20c3ef370238"><div class="ttname"><a href="classArenaAllocator.html#a98e7b7baf0da2b73981f20c3ef370238">ArenaAllocator::allocateArray</a></div><div class="ttdeci">ArenaArrayView&lt; T &gt; allocateArray(std::size_t count, const T &amp;value)</div><div class="ttdoc">Allocates a continuous array of type T where each element is a copy of the given value.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00810">arena_allocator.hpp:810</a></div></div>
-<div class="ttc" id="aclassArenaAllocator_html_aa16f80254bb394cdd74f467f5fed2359"><div class="ttname"><a href="classArenaAllocator.html#aa16f80254bb394cdd74f467f5fed2359">ArenaAllocator::begin</a></div><div class="ttdeci">ConstIterator begin() const</div><div class="ttdoc">Get an iterator to the first alive allocation.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l01069">arena_allocator.hpp:1069</a></div></div>
-<div class="ttc" id="aclassArenaAllocator_html_aaac8564f05bdbe0fe389aa9490541cc7"><div class="ttname"><a href="classArenaAllocator.html#aaac8564f05bdbe0fe389aa9490541cc7">ArenaAllocator::get_used_bytes</a></div><div class="ttdeci">std::size_t get_used_bytes() const</div><div class="ttdoc">Get the current buffer usage in bytes.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l01090">arena_allocator.hpp:1090</a></div></div>
+<div class="ttc" id="aclassArenaAllocator_html_a98e7b7baf0da2b73981f20c3ef370238"><div class="ttname"><a href="classArenaAllocator.html#a98e7b7baf0da2b73981f20c3ef370238">ArenaAllocator::allocateArray</a></div><div class="ttdeci">ArenaArrayView&lt; T &gt; allocateArray(std::size_t count, const T &amp;value)</div><div class="ttdoc">Allocates a continuous array of type T where each element is a copy of the given value.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00794">arena_allocator.hpp:794</a></div></div>
+<div class="ttc" id="aclassArenaAllocator_html_aa16f80254bb394cdd74f467f5fed2359"><div class="ttname"><a href="classArenaAllocator.html#aa16f80254bb394cdd74f467f5fed2359">ArenaAllocator::begin</a></div><div class="ttdeci">ConstIterator begin() const</div><div class="ttdoc">Get an iterator to the first alive allocation.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00992">arena_allocator.hpp:992</a></div></div>
+<div class="ttc" id="aclassArenaAllocator_html_aaac8564f05bdbe0fe389aa9490541cc7"><div class="ttname"><a href="classArenaAllocator.html#aaac8564f05bdbe0fe389aa9490541cc7">ArenaAllocator::get_used_bytes</a></div><div class="ttdeci">std::size_t get_used_bytes() const</div><div class="ttdoc">Get the current buffer usage in bytes.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l01013">arena_allocator.hpp:1013</a></div></div>
 <div class="ttc" id="aclassArenaAllocator_html_aabacf64e24d318133add36bb61d8ee12"><div class="ttname"><a href="classArenaAllocator.html#aabacf64e24d318133add36bb61d8ee12">ArenaAllocator::reallocate</a></div><div class="ttdeci">void reallocate(std::size_t required_size)</div><div class="ttdoc">Reallocate to a larger buffer and move all alive objects.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00393">arena_allocator.hpp:393</a></div></div>
-<div class="ttc" id="aclassArenaAllocator_html_ab216d91db57c34866be1196f49bc3dd6"><div class="ttname"><a href="classArenaAllocator.html#ab216d91db57c34866be1196f49bc3dd6">ArenaAllocator::end</a></div><div class="ttdeci">ConstIterator end() const</div><div class="ttdoc">Get an iterator past the last allocation.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l01078">arena_allocator.hpp:1078</a></div></div>
+<div class="ttc" id="aclassArenaAllocator_html_ab216d91db57c34866be1196f49bc3dd6"><div class="ttname"><a href="classArenaAllocator.html#ab216d91db57c34866be1196f49bc3dd6">ArenaAllocator::end</a></div><div class="ttdeci">ConstIterator end() const</div><div class="ttdoc">Get an iterator past the last allocation.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l01001">arena_allocator.hpp:1001</a></div></div>
 <div class="ttc" id="aclassArenaAllocator_html_abbd696e0be51530d77fbb7e82c1511f7"><div class="ttname"><a href="classArenaAllocator.html#abbd696e0be51530d77fbb7e82c1511f7">ArenaAllocator::allocateWithNoOffset</a></div><div class="ttdeci">T * allocateWithNoOffset(Args &amp;&amp;... args)</div><div class="ttdoc">allocateWithNoOffset</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00611">arena_allocator.hpp:611</a></div></div>
-<div class="ttc" id="aclassArenaAllocator_html_aca7250a5e890971bb78b46a2444a95a3"><div class="ttname"><a href="classArenaAllocator.html#aca7250a5e890971bb78b46a2444a95a3">ArenaAllocator::allocateRaw</a></div><div class="ttdeci">void * allocateRaw(std::size_t size, std::size_t alignment)</div><div class="ttdoc">Allocates raw, uninitialized memory of a specific size and alignment.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00647">arena_allocator.hpp:647</a></div></div>
-<div class="ttc" id="aclassArenaAllocator_html_ae9aeae9e28ef1fbf9252e15fb65fd45a"><div class="ttname"><a href="classArenaAllocator.html#ae9aeae9e28ef1fbf9252e15fb65fd45a">ArenaAllocator::~ArenaAllocator</a></div><div class="ttdeci">~ArenaAllocator()</div><div class="ttdoc">Destructor that clears all allocations.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l01120">arena_allocator.hpp:1120</a></div></div>
+<div class="ttc" id="aclassArenaAllocator_html_aca7250a5e890971bb78b46a2444a95a3"><div class="ttname"><a href="classArenaAllocator.html#aca7250a5e890971bb78b46a2444a95a3">ArenaAllocator::allocateRaw</a></div><div class="ttdeci">void * allocateRaw(std::size_t size, std::size_t alignment)</div><div class="ttdoc">Allocates raw, uninitialized memory of a specific size and alignment.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00633">arena_allocator.hpp:633</a></div></div>
+<div class="ttc" id="aclassArenaAllocator_html_ae9aeae9e28ef1fbf9252e15fb65fd45a"><div class="ttname"><a href="classArenaAllocator.html#ae9aeae9e28ef1fbf9252e15fb65fd45a">ArenaAllocator::~ArenaAllocator</a></div><div class="ttdeci">~ArenaAllocator()</div><div class="ttdoc">Destructor that clears all allocations.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l01043">arena_allocator.hpp:1043</a></div></div>
 <div class="ttc" id="aclassArenaArrayView_html"><div class="ttname"><a href="classArenaArrayView.html">ArenaArrayView</a></div><div class="ttdef"><b>Definition</b> <a href="arena__allocator__basic_8h_source.html#l00055">arena_allocator_basic.h:56</a></div></div>
 <div class="ttc" id="aconceptArenaAllocatorConstructable_html"><div class="ttname"><a href="conceptArenaAllocatorConstructable.html">ArenaAllocatorConstructable</a></div><div class="ttdef"><b>Definition</b> <a href="arena__allocator__basic_8h_source.html#l00052">arena_allocator_basic.h:52</a></div></div>
 <div class="ttc" id="aconceptCopyWithOffsetConstructable_html"><div class="ttname"><a href="conceptCopyWithOffsetConstructable.html">CopyWithOffsetConstructable</a></div><div class="ttdef"><b>Definition</b> <a href="arena__allocator__basic_8h_source.html#l00048">arena_allocator_basic.h:48</a></div></div>
