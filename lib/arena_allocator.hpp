@@ -361,6 +361,23 @@ public:
         }
         return dead_bytes;
     }
+    /**
+     * @brief Calculates the memory fragmentation ratio within the used buffer range.
+     *
+     * The ratio is determined by dividing the bytes wasted by dead allocations
+     * by the total active buffer offset.
+     *
+     * @return double A value between 0.0 (no fragmentation) and 1.0 (completely fragmented).
+     */
+    double get_fragmentation_ratio() const noexcept
+    {
+        if (current_offset == 0)
+        {
+            return 0.0;
+        }
+
+        return static_cast<double>(get_dead_bytes()) / static_cast<double>(current_offset);
+    }
 private:
     /**
      * @brief Zerstört alle lebendigen Objekte in einem spezifizierten Speicherbereich.
