@@ -68,6 +68,7 @@ public:
     using iterator = T*;
     using const_iterator = const T*;
 
+    ArenaArrayView(): ArenaArrayView(nullptr, 0){}
     ArenaArrayView(T* data, std::size_t size) : m_data(data), m_size(size) {}
 
     // Observers and data access
@@ -88,5 +89,15 @@ public:
     const_iterator cbegin() const noexcept { return m_data; }
     const_iterator cend() const noexcept { return m_data + m_size; }
 };
+
+#if __cplusplus >= 202002L
+#include <span>
+template <typename T>
+using ArenaArrayResult = std::span<T>;
+#else
+// Fallback for older C++ standards
+template <typename T>
+using ArenaArrayResult = ArenaArrayView<T>;
+#endif
 
 #endif // ARENA_ALLOCATOR_BASIC_H

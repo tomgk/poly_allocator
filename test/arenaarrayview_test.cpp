@@ -14,7 +14,7 @@ TEST_F(ArenaArrayViewTest, ContainerInterfaceVerificationTest)
 {
     // Arrange: Allocate an array of 5 integers, zero-initialized
     std::size_t count = 5;
-    ArenaArrayView<int> view = arena.allocateArray<int>(count, true);
+    ArenaArrayResult<int> view = arena.allocateArray<int>(count, true);
 
     // Assert 1: Verify data() and size() methods
     ASSERT_NE(view.data(), nullptr);
@@ -74,7 +74,7 @@ protected:
 TEST_F(ArenaArrayViewAdvancedTest, STLAlgorithmsCompatibilityTest)
 {
     std::size_t count = 6;
-    ArenaArrayView<int> view = arena.allocateArray<int>(count, true);
+    ArenaArrayResult<int> view = arena.allocateArray<int>(count, true);
 
     // Act: Fill with unsorted data using standard iterators
     view[0] = 50; view[1] = 10; view[2] = 40;
@@ -104,13 +104,13 @@ TEST_F(ArenaArrayViewAdvancedTest, STLAlgorithmsCompatibilityTest)
 TEST_F(ArenaArrayViewAdvancedTest, ConstViewAccessTest)
 {
     std::size_t count = 3;
-    ArenaArrayView<int> mutable_view = arena.allocateArray<int>(count, true);
+    ArenaArrayResult<int> mutable_view = arena.allocateArray<int>(count, true);
     mutable_view[0] = 100;
     mutable_view[1] = 200;
     mutable_view[2] = 300;
 
     // Create a read-only const reference to the view
-    const ArenaArrayView<int>& const_view = mutable_view;
+    const ArenaArrayResult<int>& const_view = mutable_view;
 
     // Assert: Read access works via const_iterator and const operator[]
     EXPECT_EQ(const_view.size(), count);
@@ -132,7 +132,7 @@ TEST_F(ArenaArrayViewAdvancedTest, ValueInitializationDeepCopyTest)
     std::size_t count = 4;
 
     // Act: Create view where every slot is initialized with a copy of blueprint
-    ArenaArrayView<ElementTracker> view = arena.allocateArray<ElementTracker>(count, blueprint);
+    ArenaArrayResult<ElementTracker> view = arena.allocateArray<ElementTracker>(count, blueprint);
 
     // Assert: The copy constructor must have been called exactly 'count' times
     EXPECT_EQ(ElementTracker::copies, static_cast<int>(count));
@@ -156,12 +156,12 @@ TEST_F(ArenaArrayViewAdvancedTest, ValueInitializationDeepCopyTest)
 TEST_F(ArenaArrayViewAdvancedTest, ViewValidityBeforeReallocationTest)
 {
     std::size_t count = 2;
-    ArenaArrayView<int> view_1 = arena.allocateArray<int>(count, true);
+    ArenaArrayResult<int> view_1 = arena.allocateArray<int>(count, true);
     view_1[0] = 7;
     view_1[1] = 8;
 
     // Allocate a second array without triggering a reallocation limit
-    ArenaArrayView<int> view_2 = arena.allocateArray<int>(count, true);
+    ArenaArrayResult<int> view_2 = arena.allocateArray<int>(count, true);
     view_2[0] = 9;
 
     // Assert: Allocating more elements in the same buffer capacity must not invalidate view_1
@@ -194,7 +194,7 @@ TEST_F(ArenaAllocatorReserveTest, ReserveCapacityVerificationTest)
     // Act 2: Perform multiple allocations that fit within the reserved space
     int* first_item = arena.allocate<int>(42);
     int* second_item = arena.allocate<int>(84);
-    ArenaArrayView<int> view = arena.allocateArray<int>(10, true);
+    ArenaArrayResult<int> view = arena.allocateArray<int>(10, true);
 
     // Assert 2: Verify that capacity stayed stable and didn't expand unexpectedly
     EXPECT_GE(arena.get_capacity(), target_capacity);
