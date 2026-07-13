@@ -1033,6 +1033,15 @@ public:
     void clear()
     {
         destroy_objects_in_range(buffer.data(), current_offset);
+        clearWithoutDestruct();
+    }
+
+    /**
+     * @brief Clears the arena but calls no destructors
+     * @warning This function is only supposed to be called when no type with a destructor has been allocated
+     */
+    void clearWithoutDestruct()
+    {
         buffer.clear();
         current_offset = 0;
     }
