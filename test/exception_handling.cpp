@@ -65,6 +65,9 @@ LONG WINAPI vectoredCrashCallback(EXCEPTION_POINTERS* exceptionInfo)
 {
     DWORD code = exceptionInfo->ExceptionRecord->ExceptionCode;
 
+    if(code < 0x80000000)
+        return EXCEPTION_CONTINUE_SEARCH;
+
     // Ignore harmless background debugger signals (like thread names being set)
     if (code == 0x406D1388) return EXCEPTION_CONTINUE_SEARCH;
 
