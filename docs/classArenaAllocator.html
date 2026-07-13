@@ -200,6 +200,9 @@ requires StoreTypeInfo</td></tr>
 <tr class="memitem:a71de053135358c8224f3df7ff5a9942f" id="r_a71de053135358c8224f3df7ff5a9942f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a71de053135358c8224f3df7ff5a9942f">clear</a> ()</td></tr>
 <tr class="memdesc:a71de053135358c8224f3df7ff5a9942f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear the arena and destroy all alive objects.  <br /></td></tr>
 <tr class="separator:a71de053135358c8224f3df7ff5a9942f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a6a3e7e3a7ea2e0001a525ad5a04a8c" id="r_a7a6a3e7e3a7ea2e0001a525ad5a04a8c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a7a6a3e7e3a7ea2e0001a525ad5a04a8c">clearWithoutDestruct</a> ()</td></tr>
+<tr class="memdesc:a7a6a3e7e3a7ea2e0001a525ad5a04a8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the arena but calls no destructors.  <br /></td></tr>
+<tr class="separator:a7a6a3e7e3a7ea2e0001a525ad5a04a8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9aeae9e28ef1fbf9252e15fb65fd45a" id="r_ae9aeae9e28ef1fbf9252e15fb65fd45a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#ae9aeae9e28ef1fbf9252e15fb65fd45a">~ArenaAllocator</a> ()</td></tr>
 <tr class="memdesc:ae9aeae9e28ef1fbf9252e15fb65fd45a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor that clears all allocations.  <br /></td></tr>
 <tr class="separator:ae9aeae9e28ef1fbf9252e15fb65fd45a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -327,7 +330,7 @@ template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 
 <p>Destructor that clears all allocations. </p>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01043">1043</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01052">1052</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 <p class="reference">References <a class="el" href="arena__allocator_8hpp_source.html#l01033">ArenaAllocator&lt; S &gt;::clear()</a>.</p>
 
@@ -718,7 +721,43 @@ template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01033">1033</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="arena__allocator_8hpp_source.html#l01043">ArenaAllocator&lt; S &gt;::~ArenaAllocator()</a>.</p>
+<p class="reference">References <a class="el" href="arena__allocator_8hpp_source.html#l01043">ArenaAllocator&lt; S &gt;::clearWithoutDestruct()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="arena__allocator_8hpp_source.html#l01052">ArenaAllocator&lt; S &gt;::~ArenaAllocator()</a>.</p>
+
+</div>
+</div>
+<a id="a7a6a3e7e3a7ea2e0001a525ad5a04a8c" name="a7a6a3e7e3a7ea2e0001a525ad5a04a8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a6a3e7e3a7ea2e0001a525ad5a04a8c">&#9670;&#160;</a></span>clearWithoutDestruct()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::clearWithoutDestruct </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Clears the arena but calls no destructors. </p>
+<dl class="section warning"><dt>Warning</dt><dd>This function is only supposed to be called when no type with a destructor has been allocated </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01043">1043</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="arena__allocator_8hpp_source.html#l01033">ArenaAllocator&lt; S &gt;::clear()</a>.</p>
 
 </div>
 </div>
