@@ -614,22 +614,8 @@ public:
             return new (ptr) T(std::forward<Args>(args)...);
         };
 
-        CopyFunction copy = [](void* src, void *dst, std::ptrdiff_t offset)
-        {
-#ifdef ARENA_ALLOCATOR_LOG
-            std::cout << "Copy " << typeid(T).name() << " " << src << " to " << dst << std::endl;
-#endif
-            new (dst)T(std::move(*reinterpret_cast<T*>(src)));
-        };
-        DestructorFunction destruct = [](void* ptr)
-        {
-#ifdef ARENA_ALLOCATOR_LOG
-            std::cout << "Destruct " << typeid(T).name() << " " << ptr << std::endl;
-#endif
-            ///\todo check with std::is_constructible if there is a constructor with an offset
-            auto str = reinterpret_cast<T*>(ptr);
-            str->~T();
-        };
+        CopyFunction copy = callback::Callback_CopyObjectWithNoObject<T>;
+        DestructorFunction destruct = callback::Callback_DestructObject<T>;
 
         return allocate0<T>(construct, alignof(T), sizeof(T), copy, destruct);
     }

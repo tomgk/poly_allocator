@@ -53,6 +53,26 @@ static void Callback_CopyObject(void* src, void* dst, std::ptrdiff_t offset)
     }
 }
 
+template<typename T>
+void Callback_CopyObjectWithNoObject(void* src, void *dst, std::ptrdiff_t offset)
+{
+#ifdef ARENA_ALLOCATOR_LOG
+    std::cout << "Copy " << typeid(T).name() << " " << src << " to " << dst << std::endl;
+#endif
+    new (dst)T(std::move(*reinterpret_cast<T*>(src)));
+}
+
+template<typename T>
+void Callback_DestructObject(void* ptr)
+{
+#ifdef ARENA_ALLOCATOR_LOG
+    std::cout << "Destruct " << typeid(T).name() << " " << ptr << std::endl;
+#endif
+    ///\todo check with std::is_constructible if there is a constructor with an offset
+    auto str = reinterpret_cast<T*>(ptr);
+    str->~T();
+}
+
 }
 
 #endif // CALLBACK_H
