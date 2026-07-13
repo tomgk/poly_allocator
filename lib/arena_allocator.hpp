@@ -422,6 +422,8 @@ public:
         std::vector<std::byte> new_buffer;
         new_buffer.resize(new_capacity);
 
+        std::ptrdiff_t memoryRelocationOffset = new_buffer.data() - buffer.data();
+
         std::size_t new_offset = 0;
         std::size_t old_offset = 0;
 
@@ -447,16 +449,7 @@ public:
                     void *dst = new_buffer.data() + aligned_new_offset + HEADER_SIZE;
                     void *src = get_object_pointer(old_offset);
 
-                    // Pass the custom-calculated array/object delta to the copy function
-                    std::ptrdiff_t exactObjectOffset = reinterpret_cast<std::byte*>(dst) - reinterpret_cast<std::byte*>(src);
-                    new_header.copy(src, dst, exactObjectOffset);
-
-                    // SAFE COMPACT FIX: Instantly destruct the old object in place
-                    // now that it has been safely moved/copied to the new buffer!
-                    if (old_header.destructor)
-                    {
-                        old_header.destructor(src);
-                    }
+                    new_header.copy(src, dst, memoryRelocationOffset);
 
                     new_offset = aligned_new_offset + HEADER_SIZE + object_size;
                 }
@@ -466,7 +459,7 @@ public:
         }
         catch (...)
         {
-            // Rollback: Destroy newly constructed objects in new_buffer if a copy constructor throws
+            //destroy newly constructed objects in case of an exception
             destroy_objects_in_range(new_buffer.data(), new_offset);
             throw;
         }
