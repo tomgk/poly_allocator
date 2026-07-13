@@ -42,7 +42,7 @@ T* getNewMemoryLocation(T* org, std::ptrdiff_t offset)
 
 ///\todo better name and actually check for members of pointer type which may point to a memory inside the arena allocator
 template<typename T>
-concept PlainObject = std::is_trivial_v<T> && std::is_standard_layout_v<T>;
+concept PlainObject = (std::is_trivial_v<T> && std::is_standard_layout_v<T>) || !std::is_class_v<T>;
 
 template<typename T>
 concept CopyWithOffsetConstructable =

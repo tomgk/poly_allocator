@@ -634,12 +634,11 @@ public:
     {
         if (size == 0) return nullptr;
 
-        // 1. A trivial inline constructor lambda that does absolutely nothing
-        auto construct = [](void* ptr) {
+        auto construct = [](void* ptr)
+        {
             return ptr;
         };
 
-        // 2. A fast bitwise memory copy for reallocation
         CopyFunction copy = [](void* src, void* dst, std::ptrdiff_t offset)
         {
             // To safely copy during reallocate, we extract the size from the header
@@ -647,16 +646,81 @@ public:
             AllocationHeader* header = reinterpret_cast<AllocationHeader*>(header_ptr);
             std::memcpy(dst, src, header->size);
         };
+        DestructorFunction destruct = [](void* ptr){};
 
-        // 3. A no-op destructor (raw bytes don't need destruction)
-        DestructorFunction destruct = [](void* ptr)
-        {
-            // No operation needed for raw uninitialized bytes
-        };
-
-        // 4. Fall back to your optimized allocate0 method
         return allocate0<std::byte>(construct, alignment, size, copy, destruct);
     }
+
+private:
+    template<typename T>
+    static void Callback_CopyArray(void* src, void* dst, std::ptrdiff_t offset)
+    {
+        T* src_array = reinterpret_cast<T*>(src);
+        T* dst_array = reinterpret_cast<T*>(dst);
+
+        // Wichtig: Ohne exakten Alignment-Fix ist diese Zeile gefährlich,
+        // aber wir korrigieren zumindest die Kopierlogik:
+        std::byte* header_ptr = reinterpret_cast<std::byte*>(src) - sizeof(AllocationHeader);
+        AllocationHeader* header = reinterpret_cast<AllocationHeader*>(header_ptr);
+        std::size_t element_count = header->size / sizeof(T);
+
+        if constexpr (PlainObject<T>)
+        {
+            std::memcpy(dst, src, header->size);
+        }
+        else
+        {
+            std::size_t copied = 0;
+            try
+            {
+                for (; copied < element_count; ++copied)
+                {
+                    if constexpr (CopyWithOffsetConstructable<T>)
+                    {
+                        new (&dst_array[copied]) T(copyWithOffsetConstruct, std::move(src_array[copied]), offset);
+                    }
+                    else
+                    {
+                        // FIX: Falls der Typ kein Custom-Offset unterstützt,
+                        // nutzen wir ein normales Placement-New mit std::move
+                        new (&dst_array[copied]) T(std::move(src_array[copied]));
+                    }
+                }
+            }
+            catch (...)
+            {
+                // Rollback bei Konstruktor-Ausnahme
+                for (std::size_t i = copied; i > 0; --i)
+                {
+                    dst_array[i - 1].~T();
+                }
+                throw;
+            }
+        }
+    }
+
+    template<typename T>
+    static void Callback_DestructArray(void* ptr)
+    {
+#ifdef ARENA_ALLOCATOR_LOG
+        std::cout << "Destruct Array of " << typeid(T).name() << " at " << ptr << std::endl;
+#endif
+        if constexpr (!PlainObject<T>)
+        {
+            T* array_start = reinterpret_cast<T*>(ptr);
+            std::byte* header_ptr = reinterpret_cast<std::byte*>(ptr) - sizeof(AllocationHeader);
+            AllocationHeader* header = reinterpret_cast<AllocationHeader*>(header_ptr);
+            std::size_t element_count = header->size / sizeof(T);
+
+            // Destroy custom elements in reverse order
+            for (std::size_t i = element_count; i > 0; --i)
+            {
+                array_start[i - 1].~T();
+            }
+        }
+        // Trivial types don't need their destructors called
+    }
+public:
 
     /**
      * @brief Allocates a continuous array of type T with 'count' elements.
@@ -711,74 +775,8 @@ public:
             }
         };
 
-        // Copy function for the entire array during reallocation
-        CopyFunction copy = [](void* src, void* dst, std::ptrdiff_t offset)
-        {
-            T* src_array = reinterpret_cast<T*>(src);
-            T* dst_array = reinterpret_cast<T*>(dst);
-
-            // Wichtig: Ohne exakten Alignment-Fix ist diese Zeile gefährlich,
-            // aber wir korrigieren zumindest die Kopierlogik:
-            std::byte* header_ptr = reinterpret_cast<std::byte*>(src) - sizeof(AllocationHeader);
-            AllocationHeader* header = reinterpret_cast<AllocationHeader*>(header_ptr);
-            std::size_t element_count = header->size / sizeof(T);
-
-            if constexpr (PlainObject<T>)
-            {
-                std::memcpy(dst, src, header->size);
-            }
-            else
-            {
-                std::size_t copied = 0;
-                try
-                {
-                    for (; copied < element_count; ++copied)
-                    {
-                        if constexpr (CopyWithOffsetConstructable<T>)
-                        {
-                            new (&dst_array[copied]) T(copyWithOffsetConstruct, std::move(src_array[copied]), offset);
-                        }
-                        else
-                        {
-                            // FIX: Falls der Typ kein Custom-Offset unterstützt,
-                            // nutzen wir ein normales Placement-New mit std::move
-                            new (&dst_array[copied]) T(std::move(src_array[copied]));
-                        }
-                    }
-                }
-                catch (...)
-                {
-                    // Rollback bei Konstruktor-Ausnahme
-                    for (std::size_t i = copied; i > 0; --i)
-                    {
-                        dst_array[i - 1].~T();
-                    }
-                    throw;
-                }
-            }
-        };
-
-        // Destructor function for the entire array
-        DestructorFunction destruct = [](void* ptr)
-        {
-#ifdef ARENA_ALLOCATOR_LOG
-            std::cout << "Destruct Array of " << typeid(T).name() << " at " << ptr << std::endl;
-#endif
-            if constexpr (!PlainObject<T>)
-            {
-                T* array_start = reinterpret_cast<T*>(ptr);
-                std::byte* header_ptr = reinterpret_cast<std::byte*>(ptr) - sizeof(AllocationHeader);
-                AllocationHeader* header = reinterpret_cast<AllocationHeader*>(header_ptr);
-                std::size_t element_count = header->size / sizeof(T);
-
-                // Destroy custom elements in reverse order
-                for (std::size_t i = element_count; i > 0; --i)
-                {
-                    array_start[i - 1].~T();
-                }
-            }
-            // Trivial types don't need their destructors called
-        };
+        CopyFunction copy = Callback_CopyArray<T>;
+        DestructorFunction destruct = Callback_DestructArray<T>;
 
         T* raw_ptr = allocate0<T>(construct, alignof(T), objectSize, copy, destruct);
         return ArenaArrayView<T>(raw_ptr, count);
@@ -822,69 +820,8 @@ public:
             }
             return array_start;
         };
-
-        // Copy function for the entire array during reallocation (reused from default version)
-        CopyFunction copy = [](void* src, void* dst, std::ptrdiff_t offset)
-        {
-#ifdef ARENA_ALLOCATOR_LOG
-            std::cout << "Copy Array of " << typeid(T).name() << " from " << src << " to " << dst << std::endl;
-#endif
-            T* src_array = reinterpret_cast<T*>(src);
-            T* dst_array = reinterpret_cast<T*>(dst);
-
-            std::byte* header_ptr = reinterpret_cast<std::byte*>(src) - sizeof(AllocationHeader);
-            AllocationHeader* header = reinterpret_cast<AllocationHeader*>(header_ptr);
-            std::size_t element_count = header->size / sizeof(T);
-
-            if constexpr (PlainObject<T>)
-            {
-                std::memcpy(dst, src, header->size);
-            }
-            else
-            {
-                std::size_t copied = 0;
-                try
-                {
-                    for (; copied < element_count; ++copied)
-                    {
-                        if constexpr (CopyWithOffsetConstructable<T>)
-                        {
-                            new (&dst_array[copied]) T(copyWithOffsetConstruct, std::move(src_array[copied]), offset);
-                        }
-                        else
-                            new (&dst_array[copied]) T(std::move(src_array[copied]), offset);
-                    }
-                }
-                catch (...)
-                {
-                    for (std::size_t i = copied; i > 0; --i)
-                    {
-                        dst_array[i - 1].~T();
-                    }
-                    throw;
-                }
-            }
-        };
-
-        // Destructor function for the entire array (reused from default version)
-        DestructorFunction destruct = [](void* ptr)
-        {
-#ifdef ARENA_ALLOCATOR_LOG
-            std::cout << "Destruct Array of " << typeid(T).name() << " at " << ptr << std::endl;
-#endif
-            if constexpr (!PlainObject<T>)
-            {
-                T* array_start = reinterpret_cast<T*>(ptr);
-                std::byte* header_ptr = reinterpret_cast<std::byte*>(ptr) - sizeof(AllocationHeader);
-                AllocationHeader* header = reinterpret_cast<AllocationHeader*>(header_ptr);
-                std::size_t element_count = header->size / sizeof(T);
-
-                for (std::size_t i = element_count; i > 0; --i)
-                {
-                    array_start[i - 1].~T();
-                }
-            }
-        };
+        CopyFunction copy = Callback_CopyArray<T>;
+        DestructorFunction destruct = Callback_Destruct<T>;
 
         T* raw_ptr = allocate0<T>(construct, alignof(T), objectSize, copy, destruct);
         return ArenaArrayView<T>(raw_ptr, count);
