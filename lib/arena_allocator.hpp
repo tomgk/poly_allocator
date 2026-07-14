@@ -1212,8 +1212,20 @@ public:
     }
 };
 
+/**
+ * \brief ArenaAllocator who supports any type but doesn't keep track of type it is
+ */
 using PlainArenaAllocator = ArenaAllocator<ArenaMode::Standard>;
+
+/**
+ * \brief ArenaAllocator who supports any type and doesn't keep track of type it is
+ */
 using TypeAwareArenaAllocator = ArenaAllocator<ArenaMode::TypeAware>;
+
+/**
+ * \brief ArenaAllocator that just allocates raw bytes
+ * \warning do not use with any type that can't deal with std::memcpy
+ */
 using LightweightArenaAllocator = ArenaAllocator<ArenaMode::Lightweight>;
 
 #endif
