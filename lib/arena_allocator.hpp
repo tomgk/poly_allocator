@@ -354,6 +354,9 @@ public:
 
             if (!header.is_alive)
             {
+#ifdef ARENA_ALLOCATOR_LOG
+                std::cout << "Found block at " << (void*)&header << std::endl;
+#endif
                 dead_bytes += total_block_size;
             }
 
@@ -1075,6 +1078,66 @@ public:
     {
         buffer.clear();
         current_offset = 0;
+    }
+
+    /**
+     * @brief Counts how many currently alive allocations belong to the specific type T.
+     *
+     * @tparam T The type to query.
+     * @return std::size_t Number of alive instances of type T.
+     */
+    template <typename T>
+    std::size_t get_allocation_count() const
+    {
+        // Safety check: Type tracking must be active for this operation
+        static_assert(StoreTypeInfo, "ArenaAllocator: get_allocation_count requires StoreTypeInfo to be enabled.");
+
+        std::size_t count = 0;
+        std::size_t offset = 0;
+
+        while (offset < current_offset)
+        {
+            const AllocationHeader& header = get_header(offset);
+
+            // Check if the block is alive and matches the exact type information
+            if (header.is_alive && header.type_info && *header.type_info == typeid(T))
+            {
+                // If it's an array allocation, we deduce the element count, otherwise it's 1
+                std::size_t elements = header.size / sizeof(T);
+                count += (elements > 0) ? elements : 1;
+            }
+
+            offset += HEADER_SIZE + header.size;
+        }
+        return count;
+    }
+
+    /**
+     * @brief Calculates the total payload bytes consumed by alive allocations of type T.
+     *
+     * @tparam T The type to query.
+     * @return std::size_t Total bytes utilized by alive objects of type T (excluding headers).
+     */
+    template <typename T>
+    std::size_t get_total_bytes_for_type() const
+    {
+        static_assert(StoreTypeInfo, "ArenaAllocator: get_total_bytes_for_type requires StoreTypeInfo to be enabled.");
+
+        std::size_t total_bytes = 0;
+        std::size_t offset = 0;
+
+        while (offset < current_offset)
+        {
+            const AllocationHeader& header = get_header(offset);
+
+            if (header.is_alive && header.type_info && *header.type_info == typeid(T))
+            {
+                total_bytes += header.size;
+            }
+
+            offset += HEADER_SIZE + header.size;
+        }
+        return total_bytes;
     }
 
     /**
