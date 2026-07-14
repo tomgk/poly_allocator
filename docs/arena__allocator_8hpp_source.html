@@ -1391,12 +1391,24 @@ $(document).ready(function(){initNavTree('arena__allocator_8hpp_source.html','')
 </div>
 <div class="line"><a id="l01213" name="l01213"></a><span class="lineno"> 1213</span>};</div>
 </div>
-<div class="line"><a id="l01214" name="l01214"></a><span class="lineno"> 1214</span> </div>
-<div class="line"><a id="l01215" name="l01215"></a><span class="lineno"> 1215</span><span class="keyword">using </span><a class="code hl_class" href="classArenaAllocator.html">PlainArenaAllocator</a> = <a class="code hl_class" href="classArenaAllocator.html">ArenaAllocator&lt;ArenaMode::Standard&gt;</a>;</div>
-<div class="line"><a id="l01216" name="l01216"></a><span class="lineno"> 1216</span><span class="keyword">using </span><a class="code hl_class" href="classArenaAllocator.html">TypeAwareArenaAllocator</a> = <a class="code hl_class" href="classArenaAllocator.html">ArenaAllocator&lt;ArenaMode::TypeAware&gt;</a>;</div>
-<div class="line"><a id="l01217" name="l01217"></a><span class="lineno"> 1217</span><span class="keyword">using </span><a class="code hl_class" href="classArenaAllocator.html">LightweightArenaAllocator</a> = <a class="code hl_class" href="classArenaAllocator.html">ArenaAllocator&lt;ArenaMode::Lightweight&gt;</a>;</div>
-<div class="line"><a id="l01218" name="l01218"></a><span class="lineno"> 1218</span> </div>
-<div class="line"><a id="l01219" name="l01219"></a><span class="lineno"> 1219</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l01214" name="l01214"></a><span class="lineno"> 1214</span><span class="comment"></span> </div>
+<div class="line"><a id="l01215" name="l01215"></a><span class="lineno"> 1215</span><span class="comment">/**</span></div>
+<div class="line"><a id="l01216" name="l01216"></a><span class="lineno"> 1216</span><span class="comment"> * \brief ArenaAllocator who supports any type but doesn&#39;t keep track of type it is</span></div>
+<div class="line"><a id="l01217" name="l01217"></a><span class="lineno"> 1217</span><span class="comment"> */</span></div>
+<div class="line"><a id="l01218" name="l01218"></a><span class="lineno"> 1218</span><span class="keyword">using </span><a class="code hl_class" href="classArenaAllocator.html">PlainArenaAllocator</a> = <a class="code hl_class" href="classArenaAllocator.html">ArenaAllocator&lt;ArenaMode::Standard&gt;</a>;</div>
+<div class="line"><a id="l01219" name="l01219"></a><span class="lineno"> 1219</span><span class="comment"></span> </div>
+<div class="line"><a id="l01220" name="l01220"></a><span class="lineno"> 1220</span><span class="comment">/**</span></div>
+<div class="line"><a id="l01221" name="l01221"></a><span class="lineno"> 1221</span><span class="comment"> * \brief ArenaAllocator who supports any type and doesn&#39;t keep track of type it is</span></div>
+<div class="line"><a id="l01222" name="l01222"></a><span class="lineno"> 1222</span><span class="comment"> */</span></div>
+<div class="line"><a id="l01223" name="l01223"></a><span class="lineno"> 1223</span><span class="keyword">using </span><a class="code hl_class" href="classArenaAllocator.html">TypeAwareArenaAllocator</a> = <a class="code hl_class" href="classArenaAllocator.html">ArenaAllocator&lt;ArenaMode::TypeAware&gt;</a>;</div>
+<div class="line"><a id="l01224" name="l01224"></a><span class="lineno"> 1224</span><span class="comment"></span> </div>
+<div class="line"><a id="l01225" name="l01225"></a><span class="lineno"> 1225</span><span class="comment">/**</span></div>
+<div class="line"><a id="l01226" name="l01226"></a><span class="lineno"> 1226</span><span class="comment"> * \brief ArenaAllocator that just allocates raw bytes</span></div>
+<div class="line"><a id="l01227" name="l01227"></a><span class="lineno"> 1227</span><span class="comment"> * \warning do not use with any type that can&#39;t deal with std::memcpy</span></div>
+<div class="line"><a id="l01228" name="l01228"></a><span class="lineno"> 1228</span><span class="comment"> */</span></div>
+<div class="line"><a id="l01229" name="l01229"></a><span class="lineno"> 1229</span><span class="keyword">using </span><a class="code hl_class" href="classArenaAllocator.html">LightweightArenaAllocator</a> = <a class="code hl_class" href="classArenaAllocator.html">ArenaAllocator&lt;ArenaMode::Lightweight&gt;</a>;</div>
+<div class="line"><a id="l01230" name="l01230"></a><span class="lineno"> 1230</span> </div>
+<div class="line"><a id="l01231" name="l01231"></a><span class="lineno"> 1231</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassArenaAllocator_1_1Entry_html"><div class="ttname"><a href="classArenaAllocator_1_1Entry.html">ArenaAllocator::Entry</a></div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00073">arena_allocator.hpp:74</a></div></div>
 <div class="ttc" id="aclassArenaAllocator_1_1IteratorImpl_html"><div class="ttname"><a href="classArenaAllocator_1_1IteratorImpl.html">ArenaAllocator::IteratorImpl</a></div><div class="ttdoc">Forward iterator for traversing alive allocations in the arena.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00124">arena_allocator.hpp:125</a></div></div>
 <div class="ttc" id="aclassArenaAllocator_1_1IteratorImpl_html_a165ab313c0e2355c5568ab5622251f5e"><div class="ttname"><a href="classArenaAllocator_1_1IteratorImpl.html#a165ab313c0e2355c5568ab5622251f5e">ArenaAllocator::IteratorImpl::get_header</a></div><div class="ttdeci">const AllocationHeader &amp; get_header() const</div><div class="ttdoc">Get the allocation header for the current object.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00244">arena_allocator.hpp:244</a></div></div>
