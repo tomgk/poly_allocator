@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['allocate_0',['allocate',['../classArenaAllocator.html#a1011c02ffa8636083de4c09ee97fb5a6',1,'ArenaAllocator']]],
-  ['allocatearray_1',['allocatearray',['../classArenaAllocator.html#a046d08b0950e02a532194a98c3c7aa77',1,'ArenaAllocator::allocateArray(std::size_t count, bool zero_initialize=false)'],['../classArenaAllocator.html#ae9008faa21b78496f09baffa02405579',1,'ArenaAllocator::allocateArray(std::size_t count, const T &amp;value)']]],
-  ['allocateraw_2',['allocateRaw',['../classArenaAllocator.html#aca7250a5e890971bb78b46a2444a95a3',1,'ArenaAllocator']]],
-  ['allocatewithnooffset_3',['allocateWithNoOffset',['../classArenaAllocator.html#abbd696e0be51530d77fbb7e82c1511f7',1,'ArenaAllocator']]],
-  ['arenaallocator_4',['ArenaAllocator',['../classArenaAllocator.html#a30331f7e068005dc0b7a6f02f6c9f967',1,'ArenaAllocator']]]
+  ['allocate_0',['allocate',['../classArenaAllocator.html#a410cfc5048f4b44fbe48f7d9eba681b5',1,'ArenaAllocator']]],
+  ['allocatearray_1',['allocatearray',['../classArenaAllocator.html#a6546d9f15c1549fabf7b0ab3c7028c17',1,'ArenaAllocator::allocateArray(std::size_t count, bool zero_initialize=false)'],['../classArenaAllocator.html#adcbf7165623c74e5704c3925cc31ca28',1,'ArenaAllocator::allocateArray(std::size_t count, const T &amp;value)']]],
+  ['allocateraw_2',['allocateRaw',['../classArenaAllocator.html#a968dfae6fd767db0f92da1ecb92bb134',1,'ArenaAllocator']]],
+  ['allocatewithnooffset_3',['allocateWithNoOffset',['../classArenaAllocator.html#a6a0185726ed5df195a9a6a744b316d34',1,'ArenaAllocator']]],
+  ['arenaallocator_4',['ArenaAllocator',['../classArenaAllocator.html#a0efe6260d43fae78d06ab91a61fb2115',1,'ArenaAllocator']]]
 ];

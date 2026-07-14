@@ -1,5 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classArenaAllocator_1_1Entry.html" title=" " alt="" coords="5,5,161,45"/>
-<area shape="rect" id="Node000001" href="$classArenaAllocator_1_1IteratorImpl.html" title="Forward iterator for traversing alive allocations in the arena." alt="" coords="209,5,365,45"/>
-<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="175,23,209,23,209,28,175,28"/>
+<area shape="rect" id="Node000000" href="$classArenaAllocator_1_1Entry.html" title=" " alt="" coords="5,5,165,45"/>
+<area shape="rect" id="Node000001" href="$classArenaAllocator_1_1IteratorImpl.html" title="Forward iterator for traversing alive allocations in the arena." alt="" coords="213,5,373,45"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="179,23,213,23,213,28,179,28"/>
 </map>

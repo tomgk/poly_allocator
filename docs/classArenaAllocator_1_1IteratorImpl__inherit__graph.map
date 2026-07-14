@@ -1,5 +1,5 @@
-<map id="ArenaAllocator&lt; S &gt;::IteratorImpl&lt; C &gt;" name="ArenaAllocator&lt; S &gt;::IteratorImpl&lt; C &gt;">
-<area shape="rect" id="Node000001" title="Forward iterator for traversing alive allocations in the arena." alt="" coords="5,93,161,133"/>
-<area shape="rect" id="Node000002" href="$classArenaAllocator_1_1Entry.html" title=" " alt="" coords="5,5,161,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,59,86,93,81,93,81,59"/>
+<map id="ArenaAllocator&lt; M &gt;::IteratorImpl&lt; C &gt;" name="ArenaAllocator&lt; M &gt;::IteratorImpl&lt; C &gt;">
+<area shape="rect" id="Node000001" title="Forward iterator for traversing alive allocations in the arena." alt="" coords="5,93,165,133"/>
+<area shape="rect" id="Node000002" href="$classArenaAllocator_1_1Entry.html" title=" " alt="" coords="5,5,165,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,59,88,93,83,93,83,59"/>
 </map>
