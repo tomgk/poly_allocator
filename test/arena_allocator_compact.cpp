@@ -6,7 +6,7 @@
 class ArenaCompactTest : public ::testing::Test
 {
 protected:
-    using AllocatorType = ArenaAllocator<StoreTypeInfoType::no>;
+    using AllocatorType = PlainArenaAllocator;
     AllocatorType arena;
 };
 

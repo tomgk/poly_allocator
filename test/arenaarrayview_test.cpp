@@ -7,7 +7,7 @@
 class ArenaArrayViewTest : public ::testing::Test
 {
 protected:
-    ArenaAllocator<StoreTypeInfoType::no> arena;
+    PlainArenaAllocator arena;
 };
 
 TEST_F(ArenaArrayViewTest, ContainerInterfaceVerificationTest)
@@ -67,7 +67,7 @@ struct ElementTracker
 class ArenaArrayViewAdvancedTest : public ::testing::Test
 {
 protected:
-    ArenaAllocator<StoreTypeInfoType::no> arena;
+    PlainArenaAllocator arena;
 };
 
 // 1. Test: Verifies that ArenaArrayView works flawlessly with standard STL algorithms
@@ -176,7 +176,7 @@ TEST_F(ArenaArrayViewAdvancedTest, ViewValidityBeforeReallocationTest)
 class ArenaAllocatorReserveTest : public ::testing::Test
 {
 protected:
-    ArenaAllocator<StoreTypeInfoType::no> arena;
+    PlainArenaAllocator arena;
 };
 
 // Verifies that reserving capacity works and prevents further internal reallocations
@@ -225,7 +225,7 @@ TEST_F(ArenaAllocatorReserveTest, ReserveSmallerThanCurrentHasNoEffectTest)
 class ArenaUtilityMethodsTest : public ::testing::Test
 {
 protected:
-    ArenaAllocator<StoreTypeInfoType::no> arena;
+    PlainArenaAllocator arena;
 };
 
 // Verifies that contains() accurately identifies pointers inside and outside the arena
@@ -261,7 +261,7 @@ TEST_F(ArenaUtilityMethodsTest, DISABLED_DeadBytesTrackingTest)
     arena.deallocate(item_1);
 
     // Assert: Dead bytes must now equal the size of item_1 plus its header size
-    std::size_t expected_dead_space = sizeof(int) + ArenaAllocator<StoreTypeInfoType::no>::HEADER_SIZE;
+    std::size_t expected_dead_space = sizeof(int) + PlainArenaAllocator::HEADER_SIZE;
     EXPECT_EQ(arena.get_dead_bytes(), expected_dead_space);
 
     // Act 3: Deallocate the second item

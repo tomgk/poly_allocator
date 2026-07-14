@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include<iostream>
+
 std::string LONG_STRING = []{
     std::string str;
 
@@ -10,7 +12,7 @@ std::string LONG_STRING = []{
 }();
 
 
-void dump0(const ArenaAllocator<StoreTypeInfoType::yes> &a)
+void dump0(const TypeAwareArenaAllocator &a)
 {
     for(auto iter=a.begin();iter!=a.end();++iter)
     {

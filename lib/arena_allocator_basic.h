@@ -1,13 +1,10 @@
 #ifndef ARENA_ALLOCATOR_BASIC_H
 #define ARENA_ALLOCATOR_BASIC_H
 
-#include<vector>
 #include<cstring>
 #include<cassert>
 #include<typeinfo>
-#include<iterator>
-#include<variant>
-#include<iostream>
+#include<string>
 
 #ifdef ARENA_ALLOCATOR_LOG
 #include<iostream>
@@ -15,9 +12,11 @@
 
 std::string getTypeName(const std::type_info &type);
 
-enum class StoreTypeInfoType : bool
+enum class ArenaMode
 {
-    no, yes
+    Lightweight,  // No TypeInfo, no Copy/Destructor function pointers (Trivial types only)
+    Standard,     // No TypeInfo, keeps Copy/Destructor function pointers
+    TypeAware     // Stores TypeInfo and keeps Copy/Destructor function pointers
 };
 
 enum class EntryConstness : bool

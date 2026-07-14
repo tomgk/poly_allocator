@@ -96,7 +96,7 @@ struct Tracker
 class ArenaAllocatorTest : public ::testing::Test
 {
 protected:
-    ArenaAllocator<StoreTypeInfoType::no> arena;
+    PlainArenaAllocator arena;
 };
 
 // Test to verify that every element in the allocated array is an independent copy

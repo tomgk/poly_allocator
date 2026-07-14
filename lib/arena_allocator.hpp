@@ -3,6 +3,9 @@
 //#pragma once
 
 #include<functional>
+#include<vector>
+#include<iterator>
+#include<variant>
 
 #include "arena_allocator_basic.h"
 #include "callback.h"
@@ -26,42 +29,44 @@
  * 
  * @note When StoreTypeInfo is false, no runtime overhead is incurred for type tracking.
  */
-template <StoreTypeInfoType S = StoreTypeInfoType::no>
+template <ArenaMode M = ArenaMode::Standard>
 class ArenaAllocator
 {
-    static constexpr bool StoreTypeInfo = (bool)S;
+    static constexpr bool StoreTypeInfo = (M == ArenaMode::TypeAware);
+    static constexpr bool IsLightweight = (M == ArenaMode::Lightweight);
 
     using CopyFunction = void (*)(void *src, void *dst, std::ptrdiff_t offset);
     using DestructorFunction = void (*)(void*);
 
+    // Conditional types for the header function pointers
+    using CopyPtr = std::conditional_t<IsLightweight, std::monostate, CopyFunction>;
+    using DestructPtr = std::conditional_t<IsLightweight, std::monostate, DestructorFunction>;
+
 private:
-    /**
-     * @brief Metadata stored before each allocation.
-     */
     struct AllocationHeader
     {
         using TypeInfo = std::conditional_t<StoreTypeInfo, const std::type_info*, std::monostate>;
 
-        std::size_t size;                           ///< Size of the actual object (excluding header)
-        bool is_alive;                              ///< Flag indicating if object is still alive
-        CopyFunction copy;                          ///< Function pointer to object's copy constructor
-        DestructorFunction destructor;              ///< Function pointer to object's destructor
-        /**
-         * @brief Optional: RTTI information
-         *
-         * Only available if type info is enabled
-         */
-        [[no_unique_address]]
-        TypeInfo type_info;
+        std::size_t size;
+        bool is_alive;
 
-        AllocationHeader() : size(0), is_alive(false), copy(nullptr), destructor(nullptr)
+        // Force zero overhead in Lightweight mode using [[no_unique_address]]
+        [[no_unique_address]] CopyPtr copy;
+        [[no_unique_address]] DestructPtr destructor;
+        [[no_unique_address]] TypeInfo type_info;
+
+        AllocationHeader() : size(0), is_alive(false)
         {
-            if constexpr (StoreTypeInfo)
-            {
+            if constexpr (!IsLightweight) {
+                copy = nullptr;
+                destructor = nullptr;
+            }
+            if constexpr (StoreTypeInfo) {
                 type_info = nullptr;
             }
         }
     };
+
 public:
 
     template<EntryConstness C>
@@ -400,11 +405,14 @@ private:
             auto& header = *reinterpret_cast<AllocationHeader*>(data_ptr + offset);
             std::size_t object_size = header.size;
 
-            if (header.is_alive && header.destructor)
+            if constexpr(!IsLightweight)
             {
-                // Objekt-Pointer relativ zum übergebenen data_ptr berechnen
-                void* object_ptr = data_ptr + offset + HEADER_SIZE;
-                header.destructor(object_ptr);
+                if (header.is_alive && header.destructor)
+                {
+                    // Objekt-Pointer relativ zum übergebenen data_ptr berechnen
+                    void* object_ptr = data_ptr + offset + HEADER_SIZE;
+                    header.destructor(object_ptr);
+                }
             }
 
             offset += HEADER_SIZE + object_size;
@@ -478,7 +486,16 @@ public:
                     void *dst = new_buffer.data() + aligned_new_offset + HEADER_SIZE;
                     void *src = get_object_pointer(old_offset);
 
-                    new_header.copy(src, dst, memoryRelocationOffset);
+                    if constexpr (IsLightweight)
+                    {
+                        // Blazing fast direct memory migration without overhead
+                        std::memcpy(dst, src, old_header.size);
+                    }
+                    else
+                    {
+                        //std::ptrdiff_t exactObjectOffset = reinterpret_cast<std::byte*>(dst) - reinterpret_cast<std::byte*>(src);
+                        new_header.copy(src, dst, memoryRelocationOffset);
+                    }
 
                     new_offset = aligned_new_offset + HEADER_SIZE + object_size;
                 }
@@ -660,6 +677,9 @@ public:
     template <ArenaAllocatorConstructable T, typename... Args>
     T* allocate(Args&&... args)
     {
+        if constexpr (IsLightweight)
+            static_assert(PlainObject<T>, "ArenaAllocator: Lightweight mode only supports PlainObjects (trivial/standard layout).");
+
         auto construct = [&](void *ptr){
             return new (ptr) T(std::forward<Args>(args)...);
         };
@@ -962,8 +982,13 @@ private:
         AllocationHeader& header = *reinterpret_cast<AllocationHeader*>(buffer.data() + header_offset);
         header.size = objectSize;
         header.is_alive = true;
-        header.copy = copy;
-        header.destructor = destruct;
+
+        //lightweight mode has no copy and destructor
+        if constexpr(!IsLightweight)
+        {
+            header.copy = copy;
+            header.destructor = destruct;
+        }
 
         if constexpr (StoreTypeInfo)
         {
@@ -997,15 +1022,16 @@ public:
     {
         if (!ptr) return;
 
-        // Direktzugriff auf den Header in O(1) statt linearer Suchschleife
         std::byte* header_ptr = reinterpret_cast<std::byte*>(ptr) - HEADER_SIZE;
         AllocationHeader& header = *reinterpret_cast<AllocationHeader*>(header_ptr);
 
-        // Aufruf des Destruktors, falls das Objekt noch lebt
-        if (header.is_alive && header.destructor)
+        if constexpr (!IsLightweight)
         {
-            header.destructor(ptr);
+            // call destructor if object is still alive
+            if (header.is_alive && header.destructor)
+                header.destructor(ptr);
         }
+
         header.is_alive = false;
     }
 
@@ -1188,7 +1214,8 @@ public:
     }
 };
 
-using PlainArenaAllocator = ArenaAllocator<StoreTypeInfoType::no>;
-using TypeAwareArenaAllocator = ArenaAllocator<StoreTypeInfoType::yes>;
+using PlainArenaAllocator = ArenaAllocator<ArenaMode::Standard>;
+using TypeAwareArenaAllocator = ArenaAllocator<ArenaMode::TypeAware>;
+using LightweightArenaAllocator = ArenaAllocator<ArenaMode::Lightweight>;
 
 #endif
