@@ -261,6 +261,7 @@ public:
 private:
     std::vector<std::byte> buffer;      ///< Raw byte buffer storing all allocations
     std::size_t current_offset = 0;     ///< Byte offset to end of last allocation
+    std::size_t m_max_capacity = 1024 * 1024; ///< Maximum allowed memory; Default limit: 1 MB
     std::function<void(std::size_t, std::size_t)> m_reallocation_callback = nullptr;
 
     /**
@@ -436,8 +437,8 @@ public:
             new_capacity *= 2;
         }
 
-        if (new_capacity > 1024 * 1024)
-            throw std::runtime_error("reached 1 MB");
+        if (new_capacity > m_max_capacity)
+            throw std::runtime_error("ArenaAllocator: reached maximum capacity limit");
 
         if (m_reallocation_callback)
         {
@@ -498,6 +499,26 @@ public:
         // Buffer austauschen
         buffer = std::move(new_buffer);
         current_offset = new_offset;
+    }
+
+    /**
+     * @brief Gets the current maximum capacity limit configured for this arena.
+     *
+     * @return std::size_t The maximum allowed capacity in bytes.
+     */
+    std::size_t get_max_capacity() const noexcept
+    {
+        return m_max_capacity;
+    }
+
+    /**
+     * @brief Sets a custom maximum capacity limit for the arena buffer.
+     *
+     * @param limit The maximum allowed capacity in bytes.
+     */
+    void set_max_capacity(std::size_t limit) noexcept
+    {
+        m_max_capacity = limit;
     }
 
     /**
