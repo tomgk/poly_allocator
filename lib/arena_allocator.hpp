@@ -991,9 +991,7 @@ private:
         }
 
         if constexpr (StoreTypeInfo)
-        {
             header.type_info = &typeid(T);
-        }
 
         T* obj = construct(buffer.data() + object_offset);
 
