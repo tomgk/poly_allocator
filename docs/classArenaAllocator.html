@@ -137,6 +137,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aabacf64e24d318133add36bb61d8ee12" id="r_aabacf64e24d318133add36bb61d8ee12"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#aabacf64e24d318133add36bb61d8ee12">reallocate</a> (std::size_t required_size)</td></tr>
 <tr class="memdesc:aabacf64e24d318133add36bb61d8ee12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reallocate to a larger buffer and move all alive objects.  <br /></td></tr>
 <tr class="separator:aabacf64e24d318133add36bb61d8ee12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17727e0a96806022db19328b7d84fd60" id="r_a17727e0a96806022db19328b7d84fd60"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a17727e0a96806022db19328b7d84fd60">get_max_capacity</a> () const noexcept</td></tr>
+<tr class="memdesc:a17727e0a96806022db19328b7d84fd60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current maximum capacity limit configured for this arena.  <br /></td></tr>
+<tr class="separator:a17727e0a96806022db19328b7d84fd60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf7c84efdce7e81728184d36f2cbcdd3" id="r_adf7c84efdce7e81728184d36f2cbcdd3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#adf7c84efdce7e81728184d36f2cbcdd3">set_max_capacity</a> (std::size_t limit) noexcept</td></tr>
+<tr class="memdesc:adf7c84efdce7e81728184d36f2cbcdd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a custom maximum capacity limit for the arena buffer.  <br /></td></tr>
+<tr class="separator:adf7c84efdce7e81728184d36f2cbcdd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a064aecc01ff00d47d2a4b98d391d62e1" id="r_a064aecc01ff00d47d2a4b98d391d62e1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a064aecc01ff00d47d2a4b98d391d62e1">on_reallocation</a> (std::function&lt; void(std::size_t old_cap, std::size_t new_cap)&gt; callback)</td></tr>
+<tr class="memdesc:a064aecc01ff00d47d2a4b98d391d62e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a callback function that is triggered whenever a physical reallocation occurs.  <br /></td></tr>
+<tr class="separator:a064aecc01ff00d47d2a4b98d391d62e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0859f787e08c37179e646512b16efa9c" id="r_a0859f787e08c37179e646512b16efa9c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a0859f787e08c37179e646512b16efa9c">compact</a> ()</td></tr>
 <tr class="memdesc:a0859f787e08c37179e646512b16efa9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compacts the arena in-place without allocating a new buffer vector.  <br /></td></tr>
 <tr class="separator:a0859f787e08c37179e646512b16efa9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -206,6 +215,14 @@ requires StoreTypeInfo</td></tr>
 <tr class="memitem:a7a6a3e7e3a7ea2e0001a525ad5a04a8c" id="r_a7a6a3e7e3a7ea2e0001a525ad5a04a8c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a7a6a3e7e3a7ea2e0001a525ad5a04a8c">clearWithoutDestruct</a> ()</td></tr>
 <tr class="memdesc:a7a6a3e7e3a7ea2e0001a525ad5a04a8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the arena but calls no destructors.  <br /></td></tr>
 <tr class="separator:a7a6a3e7e3a7ea2e0001a525ad5a04a8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9077cc20db2f4dcf089e6f7f68eea91f" id="r_a9077cc20db2f4dcf089e6f7f68eea91f"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a9077cc20db2f4dcf089e6f7f68eea91f"><td class="memTemplItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a9077cc20db2f4dcf089e6f7f68eea91f">get_allocation_count</a> () const</td></tr>
+<tr class="memdesc:a9077cc20db2f4dcf089e6f7f68eea91f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Counts how many currently alive allocations belong to the specific type T.  <br /></td></tr>
+<tr class="separator:a9077cc20db2f4dcf089e6f7f68eea91f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f7944b5d0e24e9ab7fbc97de79e38dc" id="r_a6f7944b5d0e24e9ab7fbc97de79e38dc"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a6f7944b5d0e24e9ab7fbc97de79e38dc"><td class="memTemplItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#a6f7944b5d0e24e9ab7fbc97de79e38dc">get_total_bytes_for_type</a> () const</td></tr>
+<tr class="memdesc:a6f7944b5d0e24e9ab7fbc97de79e38dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the total payload bytes consumed by alive allocations of type T.  <br /></td></tr>
+<tr class="separator:a6f7944b5d0e24e9ab7fbc97de79e38dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9aeae9e28ef1fbf9252e15fb65fd45a" id="r_ae9aeae9e28ef1fbf9252e15fb65fd45a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaAllocator.html#ae9aeae9e28ef1fbf9252e15fb65fd45a">~ArenaAllocator</a> ()</td></tr>
 <tr class="memdesc:ae9aeae9e28ef1fbf9252e15fb65fd45a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor that clears all allocations.  <br /></td></tr>
 <tr class="separator:ae9aeae9e28ef1fbf9252e15fb65fd45a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -236,7 +253,7 @@ class ArenaAllocator&lt; S &gt;</div><p>A growth-based arena allocator that stor
 </dl>
 <dl class="section note"><dt>Note</dt><dd>When StoreTypeInfo is false, no runtime overhead is incurred for type tracking. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00028">28</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00030">30</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a9fd19cc8c33131bb2d18b96ed44c53d8" name="a9fd19cc8c33131bb2d18b96ed44c53d8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9fd19cc8c33131bb2d18b96ed44c53d8">&#9670;&#160;</a></span>ConstIterator</h2>
@@ -252,7 +269,7 @@ template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00253">253</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00255">255</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -270,7 +287,7 @@ template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00252">252</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00254">254</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -302,7 +319,7 @@ template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 
 <p>Construct an empty arena allocator. </p>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00582">582</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00624">624</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -333,9 +350,9 @@ template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 
 <p>Destructor that clears all allocations. </p>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01083">1083</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01185">1185</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="arena__allocator_8hpp_source.html#l01064">ArenaAllocator&lt; S &gt;::clear()</a>.</p>
+<p class="reference">References <a class="el" href="arena__allocator_8hpp_source.html#l01106">ArenaAllocator&lt; S &gt;::clear()</a>.</p>
 
 </div>
 </div>
@@ -386,7 +403,7 @@ template&lt;<a class="el" href="conceptArenaAllocatorConstructable.html">ArenaAl
 <dl class="section return"><dt>Returns</dt><dd>Pointer to the newly constructed object</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>The returned pointer is valid until the next reallocation </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00619">619</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00661">661</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -445,7 +462,7 @@ requires std::is_default_constructible_v&lt;T&gt;</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to the first element of the newly created array </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00764">764</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00806">806</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -504,7 +521,7 @@ requires std::is_copy_constructible_v&lt;T&gt;</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to the first element of the newly created array </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00824">824</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00866">866</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -555,7 +572,7 @@ template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void* Pointer to the newly allocated uninitialized memory block. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00662">662</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00704">704</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -597,7 +614,7 @@ template&lt;typename T , typename... Args&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00640">640</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00682">682</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -629,7 +646,7 @@ template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 <p>Get an iterator to the first alive allocation. </p>
 <dl class="section return"><dt>Returns</dt><dd>Iterator positioned at the first alive allocation </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01005">1005</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01047">1047</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -661,7 +678,7 @@ template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 <p>Get an iterator to the first alive allocation. </p>
 <dl class="section return"><dt>Returns</dt><dd>Iterator positioned at the first alive allocation </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01023">1023</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01065">1065</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -690,7 +707,7 @@ template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00587">587</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00629">629</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -722,11 +739,11 @@ template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 <p>Clear the arena and destroy all alive objects. </p>
 <p>Calls destructors for all alive objects and resets the allocator to empty state. The buffer is cleared but not deallocated (capacity is reset). </p>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01064">1064</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01106">1106</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="arena__allocator_8hpp_source.html#l01074">ArenaAllocator&lt; S &gt;::clearWithoutDestruct()</a>.</p>
+<p class="reference">References <a class="el" href="arena__allocator_8hpp_source.html#l01116">ArenaAllocator&lt; S &gt;::clearWithoutDestruct()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="arena__allocator_8hpp_source.html#l01083">ArenaAllocator&lt; S &gt;::~ArenaAllocator()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="arena__allocator_8hpp_source.html#l01185">ArenaAllocator&lt; S &gt;::~ArenaAllocator()</a>.</p>
 
 </div>
 </div>
@@ -758,9 +775,9 @@ template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 <p>Clears the arena but calls no destructors. </p>
 <dl class="section warning"><dt>Warning</dt><dd>This function is only supposed to be called when no type with a destructor has been allocated </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01074">1074</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01116">1116</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="arena__allocator_8hpp_source.html#l01064">ArenaAllocator&lt; S &gt;::clear()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="arena__allocator_8hpp_source.html#l01106">ArenaAllocator&lt; S &gt;::clear()</a>.</p>
 
 </div>
 </div>
@@ -792,9 +809,9 @@ template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 <p>Compacts the arena in-place without allocating a new buffer vector. </p>
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>make it actually work </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00496">496</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00538">538</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="arena__allocator_8hpp_source.html#l00335">ArenaAllocator&lt; S &gt;::get_dead_bytes()</a>.</p>
+<p class="reference">References <a class="el" href="arena__allocator_8hpp_source.html#l00339">ArenaAllocator&lt; S &gt;::get_dead_bytes()</a>.</p>
 
 </div>
 </div>
@@ -833,7 +850,7 @@ template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true if the pointer belongs to this arena, false otherwise </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00321">321</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00325">325</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -881,7 +898,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>Must be called with a pointer returned by <a class="el" href="classArenaAllocator.html#a1011c02ffa8636083de4c09ee97fb5a6" title="Allocate memory for an object of type T and construct it.">allocate()</a> on this allocator </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00954">954</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00996">996</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -913,7 +930,7 @@ template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 <p>Get an iterator past the last allocation. </p>
 <dl class="section return"><dt>Returns</dt><dd>Iterator positioned at current_offset (end sentinel) </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01014">1014</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01056">1056</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -945,7 +962,7 @@ template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 <p>Get an iterator past the last allocation. </p>
 <dl class="section return"><dt>Returns</dt><dd>Iterator positioned at current_offset (end sentinel) </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01032">1032</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01074">1074</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -976,9 +993,49 @@ template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 
 <p>forces a reallocating which will trigger moving objects </p>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00409">409</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00416">416</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="arena__allocator_8hpp_source.html#l00422">ArenaAllocator&lt; S &gt;::reallocate()</a>.</p>
+<p class="reference">References <a class="el" href="arena__allocator_8hpp_source.html#l00429">ArenaAllocator&lt; S &gt;::reallocate()</a>.</p>
+
+</div>
+</div>
+<a id="a9077cc20db2f4dcf089e6f7f68eea91f" name="a9077cc20db2f4dcf089e6f7f68eea91f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9077cc20db2f4dcf089e6f7f68eea91f">&#9670;&#160;</a></span>get_allocation_count()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::get_allocation_count </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Counts how many currently alive allocations belong to the specific type T. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The type to query. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::size_t Number of alive instances of type T. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01129">1129</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -1010,7 +1067,7 @@ template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 <p>Get the current buffer capacity in bytes. </p>
 <dl class="section return"><dt>Returns</dt><dd>Total capacity of the underlying buffer </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01053">1053</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01095">1095</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -1042,9 +1099,9 @@ template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 <p>Calculates the total memory wasted by dead allocations. </p>
 <dl class="section return"><dt>Returns</dt><dd>Total number of dead bytes within the buffer range </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00335">335</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00339">339</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="arena__allocator_8hpp_source.html#l00496">ArenaAllocator&lt; S &gt;::compact()</a>, and <a class="el" href="arena__allocator_8hpp_source.html#l00372">ArenaAllocator&lt; S &gt;::get_fragmentation_ratio()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="arena__allocator_8hpp_source.html#l00538">ArenaAllocator&lt; S &gt;::compact()</a>, and <a class="el" href="arena__allocator_8hpp_source.html#l00379">ArenaAllocator&lt; S &gt;::get_fragmentation_ratio()</a>.</p>
 
 </div>
 </div>
@@ -1077,9 +1134,81 @@ template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 <p>The ratio is determined by dividing the bytes wasted by dead allocations by the total active buffer offset.</p>
 <dl class="section return"><dt>Returns</dt><dd>double A value between 0.0 (no fragmentation) and 1.0 (completely fragmented). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00372">372</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00379">379</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="arena__allocator_8hpp_source.html#l00335">ArenaAllocator&lt; S &gt;::get_dead_bytes()</a>.</p>
+<p class="reference">References <a class="el" href="arena__allocator_8hpp_source.html#l00339">ArenaAllocator&lt; S &gt;::get_dead_bytes()</a>.</p>
+
+</div>
+</div>
+<a id="a17727e0a96806022db19328b7d84fd60" name="a17727e0a96806022db19328b7d84fd60"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17727e0a96806022db19328b7d84fd60">&#9670;&#160;</a></span>get_max_capacity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::get_max_capacity </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the current maximum capacity limit configured for this arena. </p>
+<dl class="section return"><dt>Returns</dt><dd>std::size_t The maximum allowed capacity in bytes. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00509">509</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a6f7944b5d0e24e9ab7fbc97de79e38dc" name="a6f7944b5d0e24e9ab7fbc97de79e38dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f7944b5d0e24e9ab7fbc97de79e38dc">&#9670;&#160;</a></span>get_total_bytes_for_type()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::get_total_bytes_for_type </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Calculates the total payload bytes consumed by alive allocations of type T. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The type to query. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::size_t Total bytes utilized by alive objects of type T (excluding headers). </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01161">1161</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -1128,7 +1257,7 @@ requires StoreTypeInfo</div>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to std::type_info for the allocated object, or nullptr if not found</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>This method is only available if StoreTypeInfo template parameter is true </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00980">980</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01022">1022</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -1161,7 +1290,7 @@ template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 <p>Includes space used by alive and dead allocations, plus headers and padding.</p>
 <dl class="section return"><dt>Returns</dt><dd>Number of bytes currently used in the buffer </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01044">1044</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l01086">1086</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -1210,7 +1339,45 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>number of elements or 0 if nullptr gets passed </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00871">871</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00913">913</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a064aecc01ff00d47d2a4b98d391d62e1" name="a064aecc01ff00d47d2a4b98d391d62e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a064aecc01ff00d47d2a4b98d391d62e1">&#9670;&#160;</a></span>on_reallocation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::on_reallocation </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; void(std::size_t old_cap, std::size_t new_cap)&gt;&#160;</td>
+          <td class="paramname"><em>callback</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Registers a callback function that is triggered whenever a physical reallocation occurs. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">callback</td><td>The function to invoke, receiving the old and new capacity in bytes. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00529">529</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -1249,9 +1416,9 @@ template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00422">422</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00429">429</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="arena__allocator_8hpp_source.html#l00409">ArenaAllocator&lt; S &gt;::forceReallocate()</a>, and <a class="el" href="arena__allocator_8hpp_source.html#l00564">ArenaAllocator&lt; S &gt;::reserve()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="arena__allocator_8hpp_source.html#l00416">ArenaAllocator&lt; S &gt;::forceReallocate()</a>, and <a class="el" href="arena__allocator_8hpp_source.html#l00606">ArenaAllocator&lt; S &gt;::reserve()</a>.</p>
 
 </div>
 </div>
@@ -1290,9 +1457,47 @@ template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00564">564</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00606">606</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="arena__allocator_8hpp_source.html#l00422">ArenaAllocator&lt; S &gt;::reallocate()</a>.</p>
+<p class="reference">References <a class="el" href="arena__allocator_8hpp_source.html#l00429">ArenaAllocator&lt; S &gt;::reallocate()</a>.</p>
+
+</div>
+</div>
+<a id="adf7c84efdce7e81728184d36f2cbcdd3" name="adf7c84efdce7e81728184d36f2cbcdd3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf7c84efdce7e81728184d36f2cbcdd3">&#9670;&#160;</a></span>set_max_capacity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; S &gt;::set_max_capacity </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>limit</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets a custom maximum capacity limit for the arena buffer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">limit</td><td>The maximum allowed capacity in bytes. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00519">519</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -1319,7 +1524,7 @@ template&lt;StoreTypeInfoType S = StoreTypeInfoType::no&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00258">258</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00260">260</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>

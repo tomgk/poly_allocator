@@ -19,12 +19,17 @@ var classArenaAllocator =
     [ "end", "classArenaAllocator.html#a289b77c251f1e4f5426de628eb80430e", null ],
     [ "end", "classArenaAllocator.html#ab216d91db57c34866be1196f49bc3dd6", null ],
     [ "forceReallocate", "classArenaAllocator.html#a221ec30886adf80609635d0af2e9f47b", null ],
+    [ "get_allocation_count", "classArenaAllocator.html#a9077cc20db2f4dcf089e6f7f68eea91f", null ],
     [ "get_capacity", "classArenaAllocator.html#a0c2ee803d7e32389dcb4023995f3a07c", null ],
     [ "get_dead_bytes", "classArenaAllocator.html#a1a5cc34ddf5d3fe7286fdae8e1976d39", null ],
     [ "get_fragmentation_ratio", "classArenaAllocator.html#ac5e1a14a4daa01f42044c7af4f1d00bf", null ],
+    [ "get_max_capacity", "classArenaAllocator.html#a17727e0a96806022db19328b7d84fd60", null ],
+    [ "get_total_bytes_for_type", "classArenaAllocator.html#a6f7944b5d0e24e9ab7fbc97de79e38dc", null ],
     [ "get_type_info", "classArenaAllocator.html#a0f056716b600807495dd51c53d3b0ec2", null ],
     [ "get_used_bytes", "classArenaAllocator.html#aaac8564f05bdbe0fe389aa9490541cc7", null ],
     [ "getArrayCount", "classArenaAllocator.html#a8578f17c8f462220a3062dda8169317c", null ],
+    [ "on_reallocation", "classArenaAllocator.html#a064aecc01ff00d47d2a4b98d391d62e1", null ],
     [ "reallocate", "classArenaAllocator.html#aabacf64e24d318133add36bb61d8ee12", null ],
-    [ "reserve", "classArenaAllocator.html#a8ab367040b671abbcd24dd0271f2a699", null ]
+    [ "reserve", "classArenaAllocator.html#a8ab367040b671abbcd24dd0271f2a699", null ],
+    [ "set_max_capacity", "classArenaAllocator.html#adf7c84efdce7e81728184d36f2cbcdd3", null ]
 ];

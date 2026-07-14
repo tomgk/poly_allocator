@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['_7earenaallocator_0',['~ArenaAllocator',['../classArenaAllocator.html#ae9aeae9e28ef1fbf9252e15fb65fd45a',1,'ArenaAllocator']]]
+  ['set_5fmax_5fcapacity_0',['set_max_capacity',['../classArenaAllocator.html#adf7c84efdce7e81728184d36f2cbcdd3',1,'ArenaAllocator']]]
 ];
