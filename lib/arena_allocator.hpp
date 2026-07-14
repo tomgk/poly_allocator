@@ -2,6 +2,8 @@
 #define ARENA_ALLOCATOR_H
 //#pragma once
 
+#include<functional>
+
 #include "arena_allocator_basic.h"
 #include "callback.h"
 
@@ -259,6 +261,7 @@ public:
 private:
     std::vector<std::byte> buffer;      ///< Raw byte buffer storing all allocations
     std::size_t current_offset = 0;     ///< Byte offset to end of last allocation
+    std::function<void(std::size_t, std::size_t)> m_reallocation_callback = nullptr;
 
     /**
      * @brief Align an offset to the required alignment boundary.
@@ -424,6 +427,7 @@ public:
      */
     void reallocate(std::size_t required_size)
     {
+        std::size_t old_capacity = buffer.capacity();
         std::size_t new_capacity = buffer.capacity();
         if (new_capacity == 0) new_capacity = INITIAL_CAPACITY;
 
@@ -435,6 +439,10 @@ public:
         if (new_capacity > 1024 * 1024)
             throw std::runtime_error("reached 1 MB");
 
+        if (m_reallocation_callback)
+        {
+            m_reallocation_callback(old_capacity, new_capacity);
+        }
 #ifdef ARENA_ALLOCATOR_LOG
         std::cout << "reallocate: " << buffer.capacity() << " -> " << new_capacity << std::endl;
 #endif
@@ -490,6 +498,16 @@ public:
         // Buffer austauschen
         buffer = std::move(new_buffer);
         current_offset = new_offset;
+    }
+
+    /**
+     * @brief Registers a callback function that is triggered whenever a physical reallocation occurs.
+     *
+     * @param callback The function to invoke, receiving the old and new capacity in bytes.
+     */
+    void on_reallocation(std::function<void(std::size_t old_cap, std::size_t new_cap)> callback)
+    {
+        m_reallocation_callback = std::move(callback);
     }
 
     ///\todo make it actually work
