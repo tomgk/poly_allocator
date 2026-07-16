@@ -1,6 +1,6 @@
 var classArenaAllocator =
 [
-    [ "Entry", "classArenaAllocator_1_1Entry.html", null ],
+    [ "Entry", "classArenaAllocator_1_1Entry.html", "classArenaAllocator_1_1Entry" ],
     [ "IteratorImpl", "classArenaAllocator_1_1IteratorImpl.html", "classArenaAllocator_1_1IteratorImpl" ],
     [ "ArenaAllocator", "classArenaAllocator.html#a0efe6260d43fae78d06ab91a61fb2115", null ],
     [ "~ArenaAllocator", "classArenaAllocator.html#a18956dd419b2c7c5a80c5fb4fa0eb078", null ],
