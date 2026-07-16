@@ -133,3 +133,97 @@ TEST(ArenaAllocatorIteratorTest, ArrayAllocationTraversal)
     ++it;
     EXPECT_EQ(it, arena.end());
 }
+
+TEST(ArenaAllocatorRangeBasedForTest, ConstRangeLoopReadingValues)
+{
+    TypeAwareArenaAllocator arena;
+    arena.allocate<int>(5);
+    arena.allocate<int>(10);
+    arena.allocate<int>(15);
+
+    // Enforce a const context to trigger ConstIterator implicitly
+    const TypeAwareArenaAllocator& const_arena = arena;
+
+    std::vector<int> extracted_values;
+
+    // Modern C++ range-based for loop over const reference
+    // 'entry' becomes a copy of the temporary Proxy-Entry returned by operator*
+    for (const auto entry : const_arena)
+    {
+        extracted_values.push_back(entry.template get<int>());
+    }
+
+    ASSERT_EQ(extracted_values.size(), 3);
+    EXPECT_EQ(extracted_values[0], 5);
+    EXPECT_EQ(extracted_values[1], 10);
+    EXPECT_EQ(extracted_values[2], 15);
+}
+
+TEST(ArenaAllocatorRangeBasedForTest, NonConstRangeLoopModifyingObjects)
+{
+    TypeAwareArenaAllocator arena;
+
+    // Allocate raw data structures
+    int* p1 = arena.allocate<int>(100);
+    int* p2 = arena.allocate<int>(200);
+
+    // Iterate through a non-const arena using a range-based for loop.
+    // We fetch the internal object reference and modify its underlying value.
+    for (auto entry : arena)
+    {
+        // Get a mutable reference to the object inside the arena memory
+        int& val = entry.template get<int>();
+        val += 50; // Modify the object in place
+    }
+
+    // Verify that the memory inside the arena was permanently altered
+    EXPECT_EQ(*p1, 150);
+    EXPECT_EQ(*p2, 250);
+}
+
+TEST(ArenaAllocatorRangeBasedForTest, RangeLoopSkipsIntermittentDeadSpaces)
+{
+    TypeAwareArenaAllocator arena;
+
+    // Setup a fragmented memory pattern
+    int* a = arena.allocate<int>(1);
+    int* b = arena.allocate<int>(2); // Will be deleted
+    int* c = arena.allocate<int>(3); // Will be deleted
+    int* d = arena.allocate<int>(4);
+
+    arena.deallocate(b);
+    arena.deallocate(c);
+
+    std::vector<int> active_elements;
+
+    // The range loop must cleanly skip 'b' and 'c' via advance_to_next_alive()
+    for (auto entry : arena)
+    {
+        active_elements.push_back(entry.template get<int>());
+    }
+
+    ASSERT_EQ(active_elements.size(), 2);
+    EXPECT_EQ(active_elements[0], 1);
+    EXPECT_EQ(active_elements[1], 4);
+}
+
+TEST(ArenaAllocatorRangeBasedForTest, LightweightModeRangeLoop)
+{
+    // Ensure that our brand new ArenaMode::Lightweight works perfectly with range loops too
+    LightweightArenaAllocator arena;
+
+    struct Point { int x; int y; };
+    arena.allocate<Point>(10, 20);
+    arena.allocate<Point>(30, 40);
+
+    std::size_t counter = 0;
+    for (auto entry : arena)
+    {
+        // Lightweight mode has no StoreTypeInfo (so no typeid check available),
+        // but it tracks blocks and sizes seamlessly.
+        EXPECT_EQ(entry.get_size(), sizeof(Point));
+        counter++;
+    }
+
+    EXPECT_EQ(counter, 2);
+}
