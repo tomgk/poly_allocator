@@ -121,6 +121,9 @@ class ArenaAllocator
     using CopyPtr = std::conditional_t<IsLightweight, std::monostate, CopyFunction>;
     using DestructPtr = std::conditional_t<IsLightweight, std::monostate, DestructorFunction>;
 
+    template <ArenaMode Mode>
+    friend class ArenaBufferHandle;
+
 private:
     struct AllocationHeader
     {
@@ -794,34 +797,50 @@ public:
 
     /**
      * @brief Allocates raw, uninitialized memory of a specific size and alignment.
-     *
-     * This function bypasses construction and destruction tracking. It is ideal
-     * for custom low-level storage or buffer allocations within the arena.
+     *        Returns a reallocation-safe STL-like handle.
      *
      * @param size The number of bytes to allocate.
-     * @param alignment The required alignment for the allocated memory boundary.
-     * @return void* Pointer to the newly allocated uninitialized memory block.
+     * @param alignment The required alignment boundary.
+     * @return ArenaBufferHandle<M> An STL-compatible container view that survives arena reallocation.
      */
-    void* allocateRaw(std::size_t size, std::size_t alignment)
+    ArenaBufferHandle<M> allocateRaw(std::size_t size, std::size_t alignment)
     {
-        if (size == 0) return nullptr;
+        // 1. Safety check for empty allocations
+        if (size == 0) return ArenaBufferHandle<M>();
 
-        auto construct = [](void* ptr)
-        {
-            return ptr;
+        // 2. Trivial constructor lambda with safe type conversion to prevent compiler errors
+        auto construct = [](void* ptr) {
+            return static_cast<std::byte*>(ptr);
         };
 
-        CopyFunction copy = [](void* src, void* dst, std::ptrdiff_t offset)
-        {
-            // To safely copy during reallocate, we extract the size from the header
+        // 3. Fast bitwise memory copy for reallocation
+        CopyFunction copy = [](void* src, void* dst, std::ptrdiff_t offset) {
             std::byte* header_ptr = reinterpret_cast<std::byte*>(src) - sizeof(AllocationHeader);
             AllocationHeader* header = reinterpret_cast<AllocationHeader*>(header_ptr);
             std::memcpy(dst, src, header->size);
         };
-        DestructorFunction destruct = [](void* ptr){};
 
-        return allocate0<std::byte>(construct, alignment, size, copy, destruct);
+        // 4. No-op destructor (raw bytes don't need destruction)
+        DestructorFunction destruct = [](void* ptr) {};
+
+        // 5. Upfront capacity projection to prevent mid-flight stack crashes
+        std::size_t estimated_header_offset = current_offset;
+        std::size_t estimated_object_offset = align_offset(estimated_header_offset + HEADER_SIZE, alignment);
+        std::size_t required_size = estimated_object_offset - estimated_header_offset + size;
+
+        if (current_offset + required_size > buffer.capacity())
+        {
+            reallocate(required_size);
+            estimated_header_offset = current_offset;
+        }
+
+        // 6. Allocate using your core 5-parameter template engine
+        allocate0<std::byte>(construct, alignment, size, copy, destruct);
+
+        // 7. Return the stable handle pointing to this exact offset block
+        return ArenaBufferHandle<M>(this, estimated_header_offset, size);
     }
+
 
 private:
     template<typename T>
@@ -1308,5 +1327,10 @@ using TypeAwareArenaAllocator = ArenaAllocator<ArenaMode::TypeAware>;
  * \warning do not use with any type that can't deal with std::memcpy
  */
 using LightweightArenaAllocator = ArenaAllocator<ArenaMode::Lightweight>;
+
+// Corresponding handles matching your existing arena aliases
+using PlainArenaBufferHandle       = ArenaBufferHandle<ArenaMode::Standard>;
+using TypeAwareArenaBufferHandle   = ArenaBufferHandle<ArenaMode::TypeAware>;
+using LightweightArenaBufferHandle = ArenaBufferHandle<ArenaMode::Lightweight>;
 
 #endif
