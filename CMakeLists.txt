@@ -47,6 +47,7 @@ add_executable(poly-allocator-test
   test/arena_allocator_reallocate_callback_test.cpp
   test/arena_allocator_max_capacity_test.cpp
   test/arena_allocator_mode_test.cpp
+  test/arena_allocator_iterator_test.cpp
 )
 target_include_directories(poly-allocator-test PUBLIC test)
 target_link_libraries(poly-allocator-test poly-allocator GTest::gtest_main)

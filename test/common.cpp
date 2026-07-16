@@ -21,11 +21,11 @@ void dump0(const TypeAwareArenaAllocator &a)
 
         if(typeid(std::string) == type)
         {
-            std::cout << "STR " << iter.get<std::string>();
+            std::cout << "STR " << iter->get<std::string>();
         }
         else if(typeid(int) == type)
         {
-            std::cout << "INT " << iter.get<int>();
+            std::cout << "INT " << iter->get<int>();
         }
 
         std::cout << std::endl;

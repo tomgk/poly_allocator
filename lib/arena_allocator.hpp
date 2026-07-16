@@ -110,6 +110,15 @@ public:
 
             return *reinterpret_cast<const T*>(arena->get_object_pointer(offset));
         }
+
+        /**
+         * @brief Get the size of the current allocation.
+         * @return Size of the allocated object in bytes
+         */
+        std::size_t get_size() const
+        {
+            return arena->get_header(offset).size;
+        }
     };
 
     /**
@@ -131,7 +140,7 @@ public:
         using reference = parent&;
         using iterator_category = std::forward_iterator_tag;
 
-        using Entry<C>::get;
+        //using Entry<C>::get;
 
     private:
 
@@ -238,6 +247,11 @@ public:
             return temp;
         }
 
+        Entry<C>* operator->()
+        {
+            return this;
+        }
+
         /**
          * @brief Get the allocation header for the current object.
          * @return Reference to the AllocationHeader
@@ -245,15 +259,6 @@ public:
         const AllocationHeader& get_header() const
         {
             return parent::arena->get_header(parent::offset);
-        }
-
-        /**
-         * @brief Get the size of the current allocation.
-         * @return Size of the allocated object in bytes
-         */
-        std::size_t get_size() const
-        {
-            return parent::arena->get_header(parent::offset).size;
         }
     };
 
