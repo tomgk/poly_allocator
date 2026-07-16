@@ -120,8 +120,7 @@ public:
      * during iteration.
      */
     template<EntryConstness C>
-    //TODO: make inheritance private
-    class IteratorImpl : public Entry<C>
+    class IteratorImpl : private Entry<C>
     {
         static constexpr bool Const = (bool)C;
         using parent = Entry<C>;
@@ -131,6 +130,8 @@ public:
         using pointer = parent*;
         using reference = parent&;
         using iterator_category = std::forward_iterator_tag;
+
+        using Entry<C>::get;
 
     private:
 
