@@ -209,16 +209,17 @@ public:
         }
 
         /**
-         * @brief Dereference iterator to get void pointer to current allocation.
-         * @return Pointer to the allocated object, or nullptr if at end
+         * @brief Dereference iterator to get void pointer to current Entry.
+         * @return Pointer to the Entry
          */
         const Entry<C>& operator*() const
         {
             return *this;
-            /*
-            if (parent::offset >= parent::arena->current_offset) return nullptr;
-            return reinterpret_cast<void*>(parent::arena->get_object_pointer(parent::offset));
-            */
+        }
+
+        Entry<C>* operator->()
+        {
+            return this;
         }
 
         /**
@@ -245,11 +246,6 @@ public:
             IteratorImpl temp = *this;
             ++(*this);
             return temp;
-        }
-
-        Entry<C>* operator->()
-        {
-            return this;
         }
 
         /**
