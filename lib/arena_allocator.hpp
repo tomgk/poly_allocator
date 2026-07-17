@@ -23,24 +23,24 @@ private:
     std::size_t m_offset;
     std::size_t m_size; // Stores the size in raw bytes
 
-public:
-    using value_type = std::byte;
-private:
     // Resolves the pointer freshly on-demand via the strongly-typed arena pointer
-    value_type* get_ptr() const noexcept
+    std::byte* get_ptr() const noexcept
     {
         if (!m_arena) return nullptr;
         return m_arena->get_object_pointer(m_offset);
     }
+
 public:
+    // STL Container Type Definitions strictly using std::byte
+    using value_type = std::byte;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
-    using reference = value_type&;
-    using const_reference = const value_type&;
-    using pointer = value_type*;
-    using const_pointer = const value_type*;
-    using iterator = value_type*;
-    using const_iterator = const value_type*;
+    using reference = std::byte&;
+    using const_reference = const std::byte&;
+    using pointer = std::byte*;
+    using const_pointer = const std::byte*;
+    using iterator = std::byte*;
+    using const_iterator = const std::byte*;
 
     // Strongly-typed constructor used by the allocator
     ArenaBufferHandle(ArenaAllocator<M>* arena, std::size_t offset, std::size_t size)
