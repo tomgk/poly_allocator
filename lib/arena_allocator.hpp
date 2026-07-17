@@ -14,33 +14,33 @@
 template <ArenaMode M>
 class ArenaAllocator;
 
-template <ArenaMode M = ArenaMode::Standard>
+template <ArenaMode M = ArenaMode::Standard, typename ValueType = std::byte>
 class ArenaBufferHandle
 {
 private:
     // Strongly-typed pointer to your actual allocator
     ArenaAllocator<M>* m_arena;
     std::size_t m_offset;
-    std::size_t m_size; // Stores the size in raw bytes
+    std::size_t m_size; // Stores the size in elements (for typed) or bytes (for std::byte)
 
     // Resolves the pointer freshly on-demand via the strongly-typed arena pointer
-    std::byte* get_ptr() const noexcept
+    ValueType* get_ptr() const noexcept
     {
         if (!m_arena) return nullptr;
-        return m_arena->get_object_pointer(m_offset);
+        return reinterpret_cast<ValueType*>(m_arena->get_object_pointer(m_offset));
     }
 
 public:
-    // STL Container Type Definitions strictly using std::byte
-    using value_type = std::byte;
+    // STL Container Type Definitions
+    using value_type = ValueType;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
-    using reference = std::byte&;
-    using const_reference = const std::byte&;
-    using pointer = std::byte*;
-    using const_pointer = const std::byte*;
-    using iterator = std::byte*;
-    using const_iterator = const std::byte*;
+    using reference = ValueType&;
+    using const_reference = const ValueType&;
+    using pointer = ValueType*;
+    using const_pointer = const ValueType*;
+    using iterator = ValueType*;
+    using const_iterator = const ValueType*;
 
     // Strongly-typed constructor used by the allocator
     ArenaBufferHandle(ArenaAllocator<M>* arena, std::size_t offset, std::size_t size)
@@ -121,7 +121,7 @@ class ArenaAllocator
     using CopyPtr = std::conditional_t<IsLightweight, std::monostate, CopyFunction>;
     using DestructPtr = std::conditional_t<IsLightweight, std::monostate, DestructorFunction>;
 
-    template <ArenaMode Mode>
+    template <ArenaMode Mode, typename ValueType>
     friend class ArenaBufferHandle;
 
 private:
@@ -801,12 +801,12 @@ public:
      *
      * @param size The number of bytes to allocate.
      * @param alignment The required alignment boundary.
-     * @return ArenaBufferHandle<M> An STL-compatible container view that survives arena reallocation.
+     * @return ArenaBufferHandle<M, std::byte> An STL-compatible container view that survives arena reallocation.
      */
-    ArenaBufferHandle<M> allocateRaw(std::size_t size, std::size_t alignment)
+    ArenaBufferHandle<M, std::byte> allocateRaw(std::size_t size, std::size_t alignment)
     {
         // 1. Safety check for empty allocations
-        if (size == 0) return ArenaBufferHandle<M>();
+        if (size == 0) return ArenaBufferHandle<M, std::byte>();
 
         // 2. Trivial constructor lambda with safe type conversion to prevent compiler errors
         auto construct = [](void* ptr) {
@@ -838,7 +838,7 @@ public:
         allocate0<std::byte>(construct, alignment, size, copy, destruct);
 
         // 7. Return the stable handle pointing to this exact offset block
-        return ArenaBufferHandle<M>(this, estimated_header_offset, size);
+        return ArenaBufferHandle<M, std::byte>(this, estimated_header_offset, size);
     }
 
 
@@ -920,13 +920,13 @@ public:
      * @param count Number of elements in the array
      * @param zero_initialize If true and T is a primitive/trivial type, the memory will be filled with zeros.
      *                        For custom objects, they are always default-constructed.
-     * @return Pointer to the first element of the newly created array
+     * @return ArenaBufferHandle<M, T> A reallocation-safe container view of the array
      */
     template <ArenaAllocatorConstructable T>
-    ArenaArrayResult<T> allocateArray(std::size_t count, bool zero_initialize = false) requires std::is_default_constructible_v<T>
+    ArenaBufferHandle<M, T> allocateArray(std::size_t count, bool zero_initialize = false) requires std::is_default_constructible_v<T>
     {
         if (count == 0)
-            return ArenaArrayResult<T>();
+            return ArenaBufferHandle<M, T>();
 
         std::size_t objectSize = count * sizeof(T);
 
@@ -970,8 +970,9 @@ public:
         CopyFunction copy = Callback_CopyArray<T>;
         DestructorFunction destruct = Callback_DestructArray<T>;
 
+        std::size_t header_offset = current_offset;
         T* raw_ptr = allocate0<T>(construct, alignof(T), objectSize, copy, destruct);
-        return ArenaArrayResult<T>(raw_ptr, count);
+        return ArenaBufferHandle<M, T>(this, header_offset, count);
     }
 
     /**
@@ -980,13 +981,13 @@ public:
      * @tparam T Type of the array elements (Must be copy-constructible)
      * @param count Number of elements in the array
      * @param value The object to copy into every element of the array
-     * @return Pointer to the first element of the newly created array
+     * @return ArenaBufferHandle<M, T> A reallocation-safe container view of the array
      */
     template <ArenaAllocatorConstructable T>
-    ArenaArrayResult<T> allocateArray(std::size_t count, const T& value) requires std::is_copy_constructible_v<T>
+    ArenaBufferHandle<M, T> allocateArray(std::size_t count, const T& value) requires std::is_copy_constructible_v<T>
     {
         if (count == 0)
-            return ArenaArrayResult<T>();
+            return ArenaBufferHandle<M, T>();
 
         std::size_t objectSize = count * sizeof(T);
 
@@ -1014,11 +1015,13 @@ public:
             return array_start;
         };
         CopyFunction copy = Callback_CopyArray<T>;
-        DestructorFunction destruct = Callback_Destruct<T>;
+        DestructorFunction destruct = Callback_DestructArray<T>;
 
+        std::size_t header_offset = current_offset;
         T* raw_ptr = allocate0<T>(construct, alignof(T), objectSize, copy, destruct);
-        return ArenaArrayResult<T>(raw_ptr, count);
+        return ArenaBufferHandle<M, T>(this, header_offset, count);
     }
+
     /**
      * @brief Returns the number of elements in the array
      *
@@ -1329,8 +1332,8 @@ using TypeAwareArenaAllocator = ArenaAllocator<ArenaMode::TypeAware>;
 using LightweightArenaAllocator = ArenaAllocator<ArenaMode::Lightweight>;
 
 // Corresponding handles matching your existing arena aliases
-using PlainArenaBufferHandle       = ArenaBufferHandle<ArenaMode::Standard>;
-using TypeAwareArenaBufferHandle   = ArenaBufferHandle<ArenaMode::TypeAware>;
-using LightweightArenaBufferHandle = ArenaBufferHandle<ArenaMode::Lightweight>;
+using PlainArenaBufferHandle       = ArenaBufferHandle<ArenaMode::Standard, std::byte>;
+using TypeAwareArenaBufferHandle   = ArenaBufferHandle<ArenaMode::TypeAware, std::byte>;
+using LightweightArenaBufferHandle = ArenaBufferHandle<ArenaMode::Lightweight, std::byte>;
 
 #endif
