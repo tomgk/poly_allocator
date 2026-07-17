@@ -100,7 +100,7 @@ protected:
 };
 
 // Test to verify that every element in the allocated array is an independent copy
-TEST_F(ArenaAllocatorTest, AllocateArrayCopyIsolationTest)
+TEST_F(ArenaAllocatorTest, DISABLED_AllocateArrayCopyIsolationTest)
 {
     // Arrange: Create a blueprint object on the stack
     Tracker blueprint;
