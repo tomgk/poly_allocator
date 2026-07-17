@@ -21,17 +21,16 @@ private:
     // Strongly-typed pointer to your actual allocator
     ArenaAllocator<M>* m_arena;
     std::size_t m_offset;
-    std::size_t m_size; // Stores the size in raw bytes
+    std::size_t m_count; // number of T in array
 
     // Resolves the pointer freshly on-demand via the strongly-typed arena pointer
-    std::byte* get_ptr() const noexcept
+    T* get_ptr() const noexcept
     {
         if (!m_arena) return nullptr;
-        return m_arena->get_object_pointer(m_offset);
+        return reinterpret_cast<T*>(m_arena->get_object_pointer(m_offset));
     }
 
 public:
-    // STL Container Type Definitions strictly using std::byte
     using value_type = T;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
@@ -43,48 +42,51 @@ public:
     using const_iterator = const value_type*;
 
     // Strongly-typed constructor used by the allocator
-    ArenaBufferHandle(ArenaAllocator<M>* arena, std::size_t offset, std::size_t size)
-        : m_arena(arena), m_offset(offset), m_size(size) {}
+    ArenaBufferHandle(ArenaAllocator<M>* arena, std::size_t offset, std::size_t count)
+        : m_arena(arena), m_offset(offset), m_count(count)
+    {
+
+    }
 
     // Default constructor for empty handles
-    ArenaBufferHandle() : m_arena(nullptr), m_offset(0), m_size(0) {}
+    ArenaBufferHandle() : m_arena(nullptr), m_offset(0), m_count(0) {}
 
     // Element Access
     reference operator[](size_type index) { return get_ptr()[index]; }
     const_reference operator[](size_type index) const { return get_ptr()[index]; }
 
     reference at(size_type index) {
-        if (index >= m_size) throw std::out_of_range("ArenaBufferHandle::at() out of bounds");
+        if (index >= m_count) throw std::out_of_range("ArenaBufferHandle::at() out of bounds");
         return get_ptr()[index];
     }
     const_reference at(size_type index) const {
-        if (index >= m_size) throw std::out_of_range("ArenaBufferHandle::at() out of bounds");
+        if (index >= m_count) throw std::out_of_range("ArenaBufferHandle::at() out of bounds");
         return get_ptr()[index];
     }
 
     reference front() { return *get_ptr(); }
     const_reference front() const { return *get_ptr(); }
 
-    reference back() { return get_ptr()[m_size - 1]; }
-    const_reference back() const { return get_ptr()[m_size - 1]; }
+    reference back() { return get_ptr()[m_count - 1]; }
+    const_reference back() const { return get_ptr()[m_count - 1]; }
 
     pointer data() noexcept { return get_ptr(); }
     const_pointer data() const noexcept { return get_ptr(); }
 
     // STL Iterators (Raw pointers act as hyper-fast random-access iterators)
     iterator begin() noexcept { return get_ptr(); }
-    iterator end() noexcept { return get_ptr() + m_size; }
+    iterator end() noexcept { return get_ptr() + m_count; }
 
     const_iterator begin() const noexcept { return get_ptr(); }
-    const_iterator end() const noexcept { return get_ptr() + m_size; }
+    const_iterator end() const noexcept { return get_ptr() + m_count; }
 
     const_iterator cbegin() const noexcept { return get_ptr(); }
-    const_iterator cend() const noexcept { return get_ptr() + m_size; }
+    const_iterator cend() const noexcept { return get_ptr() + m_count; }
 
     // Capacity Observers
-    [[nodiscard]] bool empty() const noexcept { return m_size == 0; }
-    size_type size() const noexcept { return m_size; }
-    size_type max_size() const noexcept { return m_size; }
+    [[nodiscard]] bool empty() const noexcept { return m_count == 0; }
+    size_type size() const noexcept { return m_count; }
+    size_type max_size() const noexcept { return m_count; }
 
     std::size_t get_offset() const noexcept { return m_offset; }
 };
@@ -923,10 +925,10 @@ public:
      * @return Pointer to the first element of the newly created array
      */
     template <ArenaAllocatorConstructable T>
-    ArenaArrayResult<T> allocateArray(std::size_t count, bool zero_initialize = false) requires std::is_default_constructible_v<T>
+    ArenaBufferHandle<M, T> allocateArray(std::size_t count, bool zero_initialize = false) requires std::is_default_constructible_v<T>
     {
         if (count == 0)
-            return ArenaArrayResult<T>();
+            return {};
 
         std::size_t objectSize = count * sizeof(T);
 
@@ -971,8 +973,17 @@ public:
         DestructorFunction destruct = Callback_DestructArray<T>;
 
         T* raw_ptr = allocate0<T>(construct, alignof(T), objectSize, copy, destruct);
-        return ArenaArrayResult<T>(raw_ptr, count);
+        return ArenaBufferHandle<M, T>(this, getOffsetOfPointer(raw_ptr), count);
     }
+
+private:
+    template<typename T>
+    size_t getOffsetOfPointer(T *raw_ptr)
+    {
+        return reinterpret_cast<std::byte*>(raw_ptr)-buffer.data();
+    }
+
+public:
 
     /**
      * @brief Allocates a continuous array of type T where each element is a copy of the given value.
@@ -983,10 +994,10 @@ public:
      * @return Pointer to the first element of the newly created array
      */
     template <ArenaAllocatorConstructable T>
-    ArenaArrayResult<T> allocateArray(std::size_t count, const T& value) requires std::is_copy_constructible_v<T>
+    ArenaBufferHandle<M, T> allocateArray(std::size_t count, const T& value) requires std::is_copy_constructible_v<T>
     {
         if (count == 0)
-            return ArenaArrayResult<T>();
+            return {};
 
         std::size_t objectSize = count * sizeof(T);
 
@@ -1017,7 +1028,7 @@ public:
         DestructorFunction destruct = Callback_Destruct<T>;
 
         T* raw_ptr = allocate0<T>(construct, alignof(T), objectSize, copy, destruct);
-        return ArenaArrayResult<T>(raw_ptr, count);
+        return ArenaBufferHandle<M, T>(this, getOffsetOfPointer(raw_ptr), count);
     }
     /**
      * @brief Returns the number of elements in the array
