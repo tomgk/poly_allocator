@@ -100,7 +100,7 @@ void installExceptionHandlers()
 
     AddVectoredExceptionHandler(1, vectoredCrashCallback);
 }
-#else
+#elif defined(__linux__)
 // ==========================================
 // LINUX / POSIX IMPLEMENTATION
 // ==========================================
@@ -145,4 +145,9 @@ void installExceptionHandlers()
     std::signal(SIGILL, linuxSignalHandler);
     std::signal(SIGABRT, linuxSignalHandler);
 }
+#else
+// ==========================================
+// UNSUPPORTED PLATFORM ERROR
+// ==========================================
+#error "Unsupported platform! This project currently only supports Windows and Linux."
 #endif
