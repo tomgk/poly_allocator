@@ -6,6 +6,7 @@
 #include<vector>
 #include<iterator>
 #include<variant>
+#include<stdexcept>
 
 #include "arena_allocator_basic.h"
 #include "callback.h"
