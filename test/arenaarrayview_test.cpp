@@ -1,6 +1,7 @@
 #define ARENA_ALLOCATOR_LOG
 #include "arena_allocator.hpp"
 
+#include <algorithm>
 #include <gtest/gtest.h>
 #include <numeric>
 

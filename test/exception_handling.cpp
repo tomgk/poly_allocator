@@ -1,5 +1,6 @@
 #include "exception_handling.h"
 
+#include <string>
 #include<iostream>
 #include<unordered_map>
 #include<windows.h>
