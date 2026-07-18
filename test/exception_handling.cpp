@@ -3,6 +3,8 @@
 #include <string>
 #include<iostream>
 #include<unordered_map>
+
+#ifdef _WIN32
 #include<windows.h>
 
 //THIS DIDN'T DO ANYTHING SO FAR
@@ -95,3 +97,9 @@ void installExceptionHandlers()
 
     AddVectoredExceptionHandler(1, vectoredCrashCallback);
 }
+#else
+void installExceptionHandlers()
+{
+    //nothing so far
+}
+#endif
