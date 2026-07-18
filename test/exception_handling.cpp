@@ -5,6 +5,9 @@
 #include<unordered_map>
 
 #ifdef _WIN32
+// ==========================================
+// WINDOWS IMPLEMENTATION
+// ==========================================
 #include<windows.h>
 
 //THIS DIDN'T DO ANYTHING SO FAR
@@ -98,8 +101,48 @@ void installExceptionHandlers()
     AddVectoredExceptionHandler(1, vectoredCrashCallback);
 }
 #else
+// ==========================================
+// LINUX / POSIX IMPLEMENTATION
+// ==========================================
+#include <csignal>
+#include <cstdlib>
+
+void linuxSignalHandler(int signalNumber)
+{
+    std::cerr << "\n=========================================\n";
+    std::cerr << "CRASH DETECTED BY LINUX SIGNAL HANDLER!\n";
+    std::cerr << "Signal Number: " << signalNumber << "\n";
+
+    switch (signalNumber)
+    {
+    case SIGSEGV:
+        std::cerr << "Meaning: Segmentation Fault (Access Violation / Bad pointer / Nullptr)\n";
+        break;
+    case SIGFPE:
+        std::cerr << "Meaning: Floating Point Exception (e.g., Integer Divide by Zero)\n";
+        break;
+    case SIGILL:
+        std::cerr << "Meaning: Illegal Instruction (Corrupted binary or invalid execution path)\n";
+        break;
+    case SIGABRT:
+        std::cerr << "Meaning: Abort Signal (std::terminate or failed assert)\n";
+        break;
+    default:
+        std::cerr << "Meaning: Other unhandled POSIX signal.\n";
+        break;
+    }
+    std::cerr << "=========================================\n";
+
+    // Exit immediately to mimic standard crash behavior
+    std::exit(signalNumber);
+}
+
 void installExceptionHandlers()
 {
-    //nothing so far
+    // Register the handler for the most common crash signals on Linux
+    std::signal(SIGSEGV, linuxSignalHandler);
+    std::signal(SIGFPE, linuxSignalHandler);
+    std::signal(SIGILL, linuxSignalHandler);
+    std::signal(SIGABRT, linuxSignalHandler);
 }
 #endif
