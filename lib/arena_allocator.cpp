@@ -28,3 +28,13 @@ std::string getTypeName(const std::type_info &type)
     return type.name();
 #endif
 }
+
+namespace
+{
+void test(TypeAwareArenaAllocator &a)
+{
+    auto arr = a.allocateArray<int>(10);
+    arr.data();
+    arr.size();
+}
+}
