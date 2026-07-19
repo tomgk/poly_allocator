@@ -913,6 +913,23 @@ private:
         }
         // Trivial types don't need their destructors called
     }
+
+    /**
+     * @brief turns a pointer within the buffer into an offset
+     * @param ptr the pointer
+     * @return the offset
+     */
+    template<typename T>
+    size_t getOffset(T* ptr)
+    {
+        auto bptr = reinterpret_cast<std::byte*>(ptr);
+
+        if(bptr < &buffer[0] || bptr> &buffer[buffer.size()-1])
+            throw std::invalid_argument("out of range");
+
+        return bptr - &buffer[0];
+    }
+
 public:
 
     /**
