@@ -7,7 +7,7 @@ var classArenaAllocator =
     [ "allocate", "classArenaAllocator.html#a410cfc5048f4b44fbe48f7d9eba681b5", null ],
     [ "allocateArray", "classArenaAllocator.html#a6546d9f15c1549fabf7b0ab3c7028c17", null ],
     [ "allocateArray", "classArenaAllocator.html#adcbf7165623c74e5704c3925cc31ca28", null ],
-    [ "allocateRaw", "classArenaAllocator.html#acea867302f449f866968b73a8dd9e2b4", null ],
+    [ "allocateRaw", "classArenaAllocator.html#a6eda4080c85aefa57ec03479908b1b88", null ],
     [ "allocateWithNoOffset", "classArenaAllocator.html#a6a0185726ed5df195a9a6a744b316d34", null ],
     [ "begin", "classArenaAllocator.html#a0461ef093c92fcd0970ff36ec1e46750", null ],
     [ "begin", "classArenaAllocator.html#a8a29d8cf63a8f4dbb5075a856a134acd", null ],

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>poly_allocator: ArenaBufferHandle&lt; M &gt; Class Template Reference</title>
+<title>poly_allocator: ArenaBufferHandle&lt; M, T &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -94,257 +94,257 @@ $(document).ready(function(){initNavTree('classArenaBufferHandle.html',''); init
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classArenaBufferHandle-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">ArenaBufferHandle&lt; M &gt; Class Template Reference</div></div>
+  <div class="headertitle"><div class="title">ArenaBufferHandle&lt; M, T &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:ad1bdfd1e0880eb74af59250cf264732a" id="r_ad1bdfd1e0880eb74af59250cf264732a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#ad1bdfd1e0880eb74af59250cf264732a">value_type</a> = std::byte</td></tr>
-<tr class="separator:ad1bdfd1e0880eb74af59250cf264732a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af2c6d5e0afb1e171d01bae8c6d2bf0f6" id="r_af2c6d5e0afb1e171d01bae8c6d2bf0f6"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#af2c6d5e0afb1e171d01bae8c6d2bf0f6">size_type</a> = std::size_t</td></tr>
-<tr class="separator:af2c6d5e0afb1e171d01bae8c6d2bf0f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8d810f9a03e8b0e9cbe469c27cea42b" id="r_ae8d810f9a03e8b0e9cbe469c27cea42b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#ae8d810f9a03e8b0e9cbe469c27cea42b">difference_type</a> = std::ptrdiff_t</td></tr>
-<tr class="separator:ae8d810f9a03e8b0e9cbe469c27cea42b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8313cd01757e22ee8488164b5543977a" id="r_a8313cd01757e22ee8488164b5543977a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a8313cd01757e22ee8488164b5543977a">reference</a> = std::byte &amp;</td></tr>
-<tr class="separator:a8313cd01757e22ee8488164b5543977a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b233c720bec4247cc658a3f2f865cf4" id="r_a9b233c720bec4247cc658a3f2f865cf4"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a9b233c720bec4247cc658a3f2f865cf4">const_reference</a> = const std::byte &amp;</td></tr>
-<tr class="separator:a9b233c720bec4247cc658a3f2f865cf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa08ee60c1b369d8b2d355e706af34907" id="r_aa08ee60c1b369d8b2d355e706af34907"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#aa08ee60c1b369d8b2d355e706af34907">pointer</a> = std::byte *</td></tr>
-<tr class="separator:aa08ee60c1b369d8b2d355e706af34907"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0cd96aff403919873a26c8037391dd7" id="r_aa0cd96aff403919873a26c8037391dd7"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#aa0cd96aff403919873a26c8037391dd7">const_pointer</a> = const std::byte *</td></tr>
-<tr class="separator:aa0cd96aff403919873a26c8037391dd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0744edcc9f4a672d2182b1176419dedb" id="r_a0744edcc9f4a672d2182b1176419dedb"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a0744edcc9f4a672d2182b1176419dedb">iterator</a> = std::byte *</td></tr>
-<tr class="separator:a0744edcc9f4a672d2182b1176419dedb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7438da0cabc07b4d5812083c20c2e498" id="r_a7438da0cabc07b4d5812083c20c2e498"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a7438da0cabc07b4d5812083c20c2e498">const_iterator</a> = const std::byte *</td></tr>
-<tr class="separator:a7438da0cabc07b4d5812083c20c2e498"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a992b5644cb8c042337e15b02eb35bec7" id="r_a992b5644cb8c042337e15b02eb35bec7"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a992b5644cb8c042337e15b02eb35bec7">value_type</a> = std::byte</td></tr>
+<tr class="separator:a992b5644cb8c042337e15b02eb35bec7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5349638f1b04efa66809ff69597905e6" id="r_a5349638f1b04efa66809ff69597905e6"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a5349638f1b04efa66809ff69597905e6">size_type</a> = std::size_t</td></tr>
+<tr class="separator:a5349638f1b04efa66809ff69597905e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3319b0f7f5bf0cf5545c9bacf9e6f893" id="r_a3319b0f7f5bf0cf5545c9bacf9e6f893"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a3319b0f7f5bf0cf5545c9bacf9e6f893">difference_type</a> = std::ptrdiff_t</td></tr>
+<tr class="separator:a3319b0f7f5bf0cf5545c9bacf9e6f893"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c77c026138a4e0ee6e43711984c9485" id="r_a9c77c026138a4e0ee6e43711984c9485"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a9c77c026138a4e0ee6e43711984c9485">reference</a> = value_type &amp;</td></tr>
+<tr class="separator:a9c77c026138a4e0ee6e43711984c9485"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a753525d94a8206e070f37e0f058f27ff" id="r_a753525d94a8206e070f37e0f058f27ff"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a753525d94a8206e070f37e0f058f27ff">const_reference</a> = const value_type &amp;</td></tr>
+<tr class="separator:a753525d94a8206e070f37e0f058f27ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3bbd73c3e366def684d9ec27104da2f3" id="r_a3bbd73c3e366def684d9ec27104da2f3"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a3bbd73c3e366def684d9ec27104da2f3">pointer</a> = value_type *</td></tr>
+<tr class="separator:a3bbd73c3e366def684d9ec27104da2f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7fdf5fc267d89a5f7cecb301304dbf9" id="r_aa7fdf5fc267d89a5f7cecb301304dbf9"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#aa7fdf5fc267d89a5f7cecb301304dbf9">const_pointer</a> = const value_type *</td></tr>
+<tr class="separator:aa7fdf5fc267d89a5f7cecb301304dbf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc986e322a0d9a6be756f7831078af49" id="r_abc986e322a0d9a6be756f7831078af49"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#abc986e322a0d9a6be756f7831078af49">iterator</a> = value_type *</td></tr>
+<tr class="separator:abc986e322a0d9a6be756f7831078af49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f52a650990a4bcfcf4f145423023bbd" id="r_a5f52a650990a4bcfcf4f145423023bbd"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a5f52a650990a4bcfcf4f145423023bbd">const_iterator</a> = const value_type *</td></tr>
+<tr class="separator:a5f52a650990a4bcfcf4f145423023bbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:adee282b537949f45c26dbcd5033d7556" id="r_adee282b537949f45c26dbcd5033d7556"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#adee282b537949f45c26dbcd5033d7556">ArenaBufferHandle</a> (<a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; M &gt; *arena, std::size_t offset, std::size_t size)</td></tr>
-<tr class="separator:adee282b537949f45c26dbcd5033d7556"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a277428526c5d39771e7286a283971a2e" id="r_a277428526c5d39771e7286a283971a2e"><td class="memItemLeft" align="right" valign="top">reference&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a277428526c5d39771e7286a283971a2e">operator[]</a> (size_type index)</td></tr>
-<tr class="separator:a277428526c5d39771e7286a283971a2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a190f076eeb386c7057818378d7da7486" id="r_a190f076eeb386c7057818378d7da7486"><td class="memItemLeft" align="right" valign="top">const_reference&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a190f076eeb386c7057818378d7da7486">operator[]</a> (size_type index) const</td></tr>
-<tr class="separator:a190f076eeb386c7057818378d7da7486"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a795274396c6e45087787be7a479a32ce" id="r_a795274396c6e45087787be7a479a32ce"><td class="memItemLeft" align="right" valign="top">reference&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a795274396c6e45087787be7a479a32ce">at</a> (size_type index)</td></tr>
-<tr class="separator:a795274396c6e45087787be7a479a32ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1fedd7b0b40a582fc86af65fbb0c7f19" id="r_a1fedd7b0b40a582fc86af65fbb0c7f19"><td class="memItemLeft" align="right" valign="top">const_reference&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a1fedd7b0b40a582fc86af65fbb0c7f19">at</a> (size_type index) const</td></tr>
-<tr class="separator:a1fedd7b0b40a582fc86af65fbb0c7f19"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a59eddc6a1e24f0b7d962f3deb878cba9" id="r_a59eddc6a1e24f0b7d962f3deb878cba9"><td class="memItemLeft" align="right" valign="top">reference&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a59eddc6a1e24f0b7d962f3deb878cba9">front</a> ()</td></tr>
-<tr class="separator:a59eddc6a1e24f0b7d962f3deb878cba9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21125751b693db541454aa39389da8f2" id="r_a21125751b693db541454aa39389da8f2"><td class="memItemLeft" align="right" valign="top">const_reference&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a21125751b693db541454aa39389da8f2">front</a> () const</td></tr>
-<tr class="separator:a21125751b693db541454aa39389da8f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72659e97f4db3512af9117aebda891f8" id="r_a72659e97f4db3512af9117aebda891f8"><td class="memItemLeft" align="right" valign="top">reference&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a72659e97f4db3512af9117aebda891f8">back</a> ()</td></tr>
-<tr class="separator:a72659e97f4db3512af9117aebda891f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a891d6a9042e0c65b9967bcd2b98f720c" id="r_a891d6a9042e0c65b9967bcd2b98f720c"><td class="memItemLeft" align="right" valign="top">const_reference&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a891d6a9042e0c65b9967bcd2b98f720c">back</a> () const</td></tr>
-<tr class="separator:a891d6a9042e0c65b9967bcd2b98f720c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2594ef2f176322df329bb40a6e55b8bc" id="r_a2594ef2f176322df329bb40a6e55b8bc"><td class="memItemLeft" align="right" valign="top">pointer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a2594ef2f176322df329bb40a6e55b8bc">data</a> () noexcept</td></tr>
-<tr class="separator:a2594ef2f176322df329bb40a6e55b8bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad75a07997b078ae8bf4ac7f969e291f6" id="r_ad75a07997b078ae8bf4ac7f969e291f6"><td class="memItemLeft" align="right" valign="top">const_pointer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#ad75a07997b078ae8bf4ac7f969e291f6">data</a> () const noexcept</td></tr>
-<tr class="separator:ad75a07997b078ae8bf4ac7f969e291f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3eacf99d4ab5a924cd4e5b9e7e1c254f" id="r_a3eacf99d4ab5a924cd4e5b9e7e1c254f"><td class="memItemLeft" align="right" valign="top">iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a3eacf99d4ab5a924cd4e5b9e7e1c254f">begin</a> () noexcept</td></tr>
-<tr class="separator:a3eacf99d4ab5a924cd4e5b9e7e1c254f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44e58ae23a91e4c39710c51125b9349c" id="r_a44e58ae23a91e4c39710c51125b9349c"><td class="memItemLeft" align="right" valign="top">iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a44e58ae23a91e4c39710c51125b9349c">end</a> () noexcept</td></tr>
-<tr class="separator:a44e58ae23a91e4c39710c51125b9349c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa8df82899d9a69d926b5d18220cb64d" id="r_aaa8df82899d9a69d926b5d18220cb64d"><td class="memItemLeft" align="right" valign="top">const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#aaa8df82899d9a69d926b5d18220cb64d">begin</a> () const noexcept</td></tr>
-<tr class="separator:aaa8df82899d9a69d926b5d18220cb64d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb12181bc83b4e59e9718cf22a5988b9" id="r_abb12181bc83b4e59e9718cf22a5988b9"><td class="memItemLeft" align="right" valign="top">const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#abb12181bc83b4e59e9718cf22a5988b9">end</a> () const noexcept</td></tr>
-<tr class="separator:abb12181bc83b4e59e9718cf22a5988b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab67382675c4153f454dab5bd2bf02f76" id="r_ab67382675c4153f454dab5bd2bf02f76"><td class="memItemLeft" align="right" valign="top">const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#ab67382675c4153f454dab5bd2bf02f76">cbegin</a> () const noexcept</td></tr>
-<tr class="separator:ab67382675c4153f454dab5bd2bf02f76"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a310789c3602459d567ccbef4cddc50bf" id="r_a310789c3602459d567ccbef4cddc50bf"><td class="memItemLeft" align="right" valign="top">const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a310789c3602459d567ccbef4cddc50bf">cend</a> () const noexcept</td></tr>
-<tr class="separator:a310789c3602459d567ccbef4cddc50bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b04279509015ea84a63fb073828ab6e" id="r_a6b04279509015ea84a63fb073828ab6e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a6b04279509015ea84a63fb073828ab6e">empty</a> () const noexcept</td></tr>
-<tr class="separator:a6b04279509015ea84a63fb073828ab6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ea325b729c81e434608b316e38ffb6c" id="r_a6ea325b729c81e434608b316e38ffb6c"><td class="memItemLeft" align="right" valign="top">size_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a6ea325b729c81e434608b316e38ffb6c">size</a> () const noexcept</td></tr>
-<tr class="separator:a6ea325b729c81e434608b316e38ffb6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada2c6080b899d5c038cb398fd392f797" id="r_ada2c6080b899d5c038cb398fd392f797"><td class="memItemLeft" align="right" valign="top">size_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#ada2c6080b899d5c038cb398fd392f797">max_size</a> () const noexcept</td></tr>
-<tr class="separator:ada2c6080b899d5c038cb398fd392f797"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b77b8013b15fef07e643ff4237922af" id="r_a2b77b8013b15fef07e643ff4237922af"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a2b77b8013b15fef07e643ff4237922af">get_offset</a> () const noexcept</td></tr>
-<tr class="separator:a2b77b8013b15fef07e643ff4237922af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29c06548d4db9dde02666aa0ab01a31f" id="r_a29c06548d4db9dde02666aa0ab01a31f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a29c06548d4db9dde02666aa0ab01a31f">ArenaBufferHandle</a> (<a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; M &gt; *arena, std::size_t offset, std::size_t size)</td></tr>
+<tr class="separator:a29c06548d4db9dde02666aa0ab01a31f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5c02ddc68352c1c62baded42df49247" id="r_af5c02ddc68352c1c62baded42df49247"><td class="memItemLeft" align="right" valign="top">reference&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#af5c02ddc68352c1c62baded42df49247">operator[]</a> (size_type index)</td></tr>
+<tr class="separator:af5c02ddc68352c1c62baded42df49247"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada02d0a14c82387a8b63b4f4441433fe" id="r_ada02d0a14c82387a8b63b4f4441433fe"><td class="memItemLeft" align="right" valign="top">const_reference&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#ada02d0a14c82387a8b63b4f4441433fe">operator[]</a> (size_type index) const</td></tr>
+<tr class="separator:ada02d0a14c82387a8b63b4f4441433fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3bf450351f4a3eaede8954e72b9f9e52" id="r_a3bf450351f4a3eaede8954e72b9f9e52"><td class="memItemLeft" align="right" valign="top">reference&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a3bf450351f4a3eaede8954e72b9f9e52">at</a> (size_type index)</td></tr>
+<tr class="separator:a3bf450351f4a3eaede8954e72b9f9e52"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1dd6d1e644d3a5dff966f32fd7a6b4c0" id="r_a1dd6d1e644d3a5dff966f32fd7a6b4c0"><td class="memItemLeft" align="right" valign="top">const_reference&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a1dd6d1e644d3a5dff966f32fd7a6b4c0">at</a> (size_type index) const</td></tr>
+<tr class="separator:a1dd6d1e644d3a5dff966f32fd7a6b4c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ae3e32dd2e6eccc5c1916dbff913df6" id="r_a7ae3e32dd2e6eccc5c1916dbff913df6"><td class="memItemLeft" align="right" valign="top">reference&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a7ae3e32dd2e6eccc5c1916dbff913df6">front</a> ()</td></tr>
+<tr class="separator:a7ae3e32dd2e6eccc5c1916dbff913df6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f6915ef843eafd159c2da46eb0481fa" id="r_a1f6915ef843eafd159c2da46eb0481fa"><td class="memItemLeft" align="right" valign="top">const_reference&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a1f6915ef843eafd159c2da46eb0481fa">front</a> () const</td></tr>
+<tr class="separator:a1f6915ef843eafd159c2da46eb0481fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1b319bbfe2101fcbe1c14e405d831e7" id="r_ad1b319bbfe2101fcbe1c14e405d831e7"><td class="memItemLeft" align="right" valign="top">reference&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#ad1b319bbfe2101fcbe1c14e405d831e7">back</a> ()</td></tr>
+<tr class="separator:ad1b319bbfe2101fcbe1c14e405d831e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c9584c5ee0b949ce19be4c99dc592d3" id="r_a5c9584c5ee0b949ce19be4c99dc592d3"><td class="memItemLeft" align="right" valign="top">const_reference&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a5c9584c5ee0b949ce19be4c99dc592d3">back</a> () const</td></tr>
+<tr class="separator:a5c9584c5ee0b949ce19be4c99dc592d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb9bc49a9e72827ae5db0fbab5261457" id="r_acb9bc49a9e72827ae5db0fbab5261457"><td class="memItemLeft" align="right" valign="top">pointer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#acb9bc49a9e72827ae5db0fbab5261457">data</a> () noexcept</td></tr>
+<tr class="separator:acb9bc49a9e72827ae5db0fbab5261457"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5debb2c295f2c53ab050f9740ce63aa" id="r_aa5debb2c295f2c53ab050f9740ce63aa"><td class="memItemLeft" align="right" valign="top">const_pointer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#aa5debb2c295f2c53ab050f9740ce63aa">data</a> () const noexcept</td></tr>
+<tr class="separator:aa5debb2c295f2c53ab050f9740ce63aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87f54eb85f8cd7cf22ee2bb847fc1f61" id="r_a87f54eb85f8cd7cf22ee2bb847fc1f61"><td class="memItemLeft" align="right" valign="top">iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a87f54eb85f8cd7cf22ee2bb847fc1f61">begin</a> () noexcept</td></tr>
+<tr class="separator:a87f54eb85f8cd7cf22ee2bb847fc1f61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ae7354f54ae64c0adc34e04a0ae2b47" id="r_a5ae7354f54ae64c0adc34e04a0ae2b47"><td class="memItemLeft" align="right" valign="top">iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a5ae7354f54ae64c0adc34e04a0ae2b47">end</a> () noexcept</td></tr>
+<tr class="separator:a5ae7354f54ae64c0adc34e04a0ae2b47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c2b49635c5fa5d19cc2429826a36c0d" id="r_a8c2b49635c5fa5d19cc2429826a36c0d"><td class="memItemLeft" align="right" valign="top">const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a8c2b49635c5fa5d19cc2429826a36c0d">begin</a> () const noexcept</td></tr>
+<tr class="separator:a8c2b49635c5fa5d19cc2429826a36c0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54a934cc2665ea8d53c0e44a98d5b360" id="r_a54a934cc2665ea8d53c0e44a98d5b360"><td class="memItemLeft" align="right" valign="top">const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a54a934cc2665ea8d53c0e44a98d5b360">end</a> () const noexcept</td></tr>
+<tr class="separator:a54a934cc2665ea8d53c0e44a98d5b360"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4790b79e0388402d93685598f472392d" id="r_a4790b79e0388402d93685598f472392d"><td class="memItemLeft" align="right" valign="top">const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a4790b79e0388402d93685598f472392d">cbegin</a> () const noexcept</td></tr>
+<tr class="separator:a4790b79e0388402d93685598f472392d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb3804f60c5a555c1aa4a100509ba574" id="r_abb3804f60c5a555c1aa4a100509ba574"><td class="memItemLeft" align="right" valign="top">const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#abb3804f60c5a555c1aa4a100509ba574">cend</a> () const noexcept</td></tr>
+<tr class="separator:abb3804f60c5a555c1aa4a100509ba574"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85b488bef2b0d4fb6651ef6b2dc57973" id="r_a85b488bef2b0d4fb6651ef6b2dc57973"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a85b488bef2b0d4fb6651ef6b2dc57973">empty</a> () const noexcept</td></tr>
+<tr class="separator:a85b488bef2b0d4fb6651ef6b2dc57973"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05605d6952761bd5995f5c535a947e9e" id="r_a05605d6952761bd5995f5c535a947e9e"><td class="memItemLeft" align="right" valign="top">size_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a05605d6952761bd5995f5c535a947e9e">size</a> () const noexcept</td></tr>
+<tr class="separator:a05605d6952761bd5995f5c535a947e9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47f72855c4adc9e85a51b4cd2aeafac2" id="r_a47f72855c4adc9e85a51b4cd2aeafac2"><td class="memItemLeft" align="right" valign="top">size_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a47f72855c4adc9e85a51b4cd2aeafac2">max_size</a> () const noexcept</td></tr>
+<tr class="separator:a47f72855c4adc9e85a51b4cd2aeafac2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63bf03153746e7c85e497935149046f9" id="r_a63bf03153746e7c85e497935149046f9"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArenaBufferHandle.html#a63bf03153746e7c85e497935149046f9">get_offset</a> () const noexcept</td></tr>
+<tr class="separator:a63bf03153746e7c85e497935149046f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;ArenaMode M = ArenaMode::Standard&gt;<br />
-class ArenaBufferHandle&lt; M &gt;</div>
+<div class="textblock"><div class="compoundTemplParams">template&lt;ArenaMode M, typename T&gt;<br />
+class ArenaBufferHandle&lt; M, T &gt;</div>
 <p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00019">19</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a id="a7438da0cabc07b4d5812083c20c2e498" name="a7438da0cabc07b4d5812083c20c2e498"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7438da0cabc07b4d5812083c20c2e498">&#9670;&#160;</a></span>const_iterator</h2>
+<a id="a5f52a650990a4bcfcf4f145423023bbd" name="a5f52a650990a4bcfcf4f145423023bbd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f52a650990a4bcfcf4f145423023bbd">&#9670;&#160;</a></span>const_iterator</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
+template&lt;ArenaMode M, typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::const_iterator =  const std::byte*</td>
+          <td class="memname">using <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::const_iterator =  const value_type*</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00044">44</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00031">31</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
-<a id="aa0cd96aff403919873a26c8037391dd7" name="aa0cd96aff403919873a26c8037391dd7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa0cd96aff403919873a26c8037391dd7">&#9670;&#160;</a></span>const_pointer</h2>
+<a id="aa7fdf5fc267d89a5f7cecb301304dbf9" name="aa7fdf5fc267d89a5f7cecb301304dbf9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7fdf5fc267d89a5f7cecb301304dbf9">&#9670;&#160;</a></span>const_pointer</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
+template&lt;ArenaMode M, typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::const_pointer =  const std::byte*</td>
+          <td class="memname">using <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::const_pointer =  const value_type*</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00042">42</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00029">29</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a9b233c720bec4247cc658a3f2f865cf4" name="a9b233c720bec4247cc658a3f2f865cf4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9b233c720bec4247cc658a3f2f865cf4">&#9670;&#160;</a></span>const_reference</h2>
+<a id="a753525d94a8206e070f37e0f058f27ff" name="a753525d94a8206e070f37e0f058f27ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a753525d94a8206e070f37e0f058f27ff">&#9670;&#160;</a></span>const_reference</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
+template&lt;ArenaMode M, typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::const_reference =  const std::byte&amp;</td>
+          <td class="memname">using <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::const_reference =  const value_type&amp;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00040">40</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00027">27</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ae8d810f9a03e8b0e9cbe469c27cea42b" name="ae8d810f9a03e8b0e9cbe469c27cea42b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae8d810f9a03e8b0e9cbe469c27cea42b">&#9670;&#160;</a></span>difference_type</h2>
+<a id="a3319b0f7f5bf0cf5545c9bacf9e6f893" name="a3319b0f7f5bf0cf5545c9bacf9e6f893"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3319b0f7f5bf0cf5545c9bacf9e6f893">&#9670;&#160;</a></span>difference_type</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
+template&lt;ArenaMode M, typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::difference_type =  std::ptrdiff_t</td>
+          <td class="memname">using <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::difference_type =  std::ptrdiff_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00038">38</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00025">25</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a0744edcc9f4a672d2182b1176419dedb" name="a0744edcc9f4a672d2182b1176419dedb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0744edcc9f4a672d2182b1176419dedb">&#9670;&#160;</a></span>iterator</h2>
+<a id="abc986e322a0d9a6be756f7831078af49" name="abc986e322a0d9a6be756f7831078af49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc986e322a0d9a6be756f7831078af49">&#9670;&#160;</a></span>iterator</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
+template&lt;ArenaMode M, typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::iterator =  std::byte*</td>
+          <td class="memname">using <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::iterator =  value_type*</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00043">43</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00030">30</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
-<a id="aa08ee60c1b369d8b2d355e706af34907" name="aa08ee60c1b369d8b2d355e706af34907"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa08ee60c1b369d8b2d355e706af34907">&#9670;&#160;</a></span>pointer</h2>
+<a id="a3bbd73c3e366def684d9ec27104da2f3" name="a3bbd73c3e366def684d9ec27104da2f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3bbd73c3e366def684d9ec27104da2f3">&#9670;&#160;</a></span>pointer</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
+template&lt;ArenaMode M, typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::pointer =  std::byte*</td>
+          <td class="memname">using <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::pointer =  value_type*</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00041">41</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00028">28</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a8313cd01757e22ee8488164b5543977a" name="a8313cd01757e22ee8488164b5543977a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8313cd01757e22ee8488164b5543977a">&#9670;&#160;</a></span>reference</h2>
+<a id="a9c77c026138a4e0ee6e43711984c9485" name="a9c77c026138a4e0ee6e43711984c9485"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c77c026138a4e0ee6e43711984c9485">&#9670;&#160;</a></span>reference</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
+template&lt;ArenaMode M, typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::reference =  std::byte&amp;</td>
+          <td class="memname">using <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::reference =  value_type&amp;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00039">39</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00026">26</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
-<a id="af2c6d5e0afb1e171d01bae8c6d2bf0f6" name="af2c6d5e0afb1e171d01bae8c6d2bf0f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af2c6d5e0afb1e171d01bae8c6d2bf0f6">&#9670;&#160;</a></span>size_type</h2>
+<a id="a5349638f1b04efa66809ff69597905e6" name="a5349638f1b04efa66809ff69597905e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5349638f1b04efa66809ff69597905e6">&#9670;&#160;</a></span>size_type</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
+template&lt;ArenaMode M, typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::size_type =  std::size_t</td>
+          <td class="memname">using <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::size_type =  std::size_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00037">37</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00024">24</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ad1bdfd1e0880eb74af59250cf264732a" name="ad1bdfd1e0880eb74af59250cf264732a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad1bdfd1e0880eb74af59250cf264732a">&#9670;&#160;</a></span>value_type</h2>
+<a id="a992b5644cb8c042337e15b02eb35bec7" name="a992b5644cb8c042337e15b02eb35bec7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a992b5644cb8c042337e15b02eb35bec7">&#9670;&#160;</a></span>value_type</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
+template&lt;ArenaMode M, typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::value_type =  std::byte</td>
+          <td class="memname">using <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::value_type =  std::byte</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00036">36</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00023">23</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="adee282b537949f45c26dbcd5033d7556" name="adee282b537949f45c26dbcd5033d7556"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adee282b537949f45c26dbcd5033d7556">&#9670;&#160;</a></span>ArenaBufferHandle() <span class="overload">[1/2]</span></h2>
+<a id="a29c06548d4db9dde02666aa0ab01a31f" name="a29c06548d4db9dde02666aa0ab01a31f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29c06548d4db9dde02666aa0ab01a31f">&#9670;&#160;</a></span>ArenaBufferHandle() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
+template&lt;ArenaMode M, typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;<a class="el" href="classArenaBufferHandle.html">::ArenaBufferHandle</a> </td>
+          <td class="memname"><a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;<a class="el" href="classArenaBufferHandle.html">::ArenaBufferHandle</a> </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classArenaAllocator.html">ArenaAllocator</a>&lt; M &gt; *&#160;</td>
           <td class="paramname"><em>arena</em>, </td>
@@ -374,23 +374,23 @@ template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00047">47</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00048">48</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a9d351822821954d1107c8de695ae6d9a" name="a9d351822821954d1107c8de695ae6d9a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9d351822821954d1107c8de695ae6d9a">&#9670;&#160;</a></span>ArenaBufferHandle() <span class="overload">[2/2]</span></h2>
+<a id="a3863daa1d5c22bb4167fe36da2e81fe1" name="a3863daa1d5c22bb4167fe36da2e81fe1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3863daa1d5c22bb4167fe36da2e81fe1">&#9670;&#160;</a></span>ArenaBufferHandle() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
+template&lt;ArenaMode M, typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;<a class="el" href="classArenaBufferHandle.html">::ArenaBufferHandle</a> </td>
+          <td class="memname"><a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;<a class="el" href="classArenaBufferHandle.html">::ArenaBufferHandle</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -403,24 +403,24 @@ template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00051">51</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00052">52</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a795274396c6e45087787be7a479a32ce" name="a795274396c6e45087787be7a479a32ce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a795274396c6e45087787be7a479a32ce">&#9670;&#160;</a></span>at() <span class="overload">[1/2]</span></h2>
+<a id="a3bf450351f4a3eaede8954e72b9f9e52" name="a3bf450351f4a3eaede8954e72b9f9e52"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3bf450351f4a3eaede8954e72b9f9e52">&#9670;&#160;</a></span>at() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
+template&lt;ArenaMode M, typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">reference <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::at </td>
+          <td class="memname">reference <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::at </td>
           <td>(</td>
           <td class="paramtype">size_type&#160;</td>
           <td class="paramname"><em>index</em></td><td>)</td>
@@ -434,23 +434,23 @@ template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00057">57</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00058">58</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a1fedd7b0b40a582fc86af65fbb0c7f19" name="a1fedd7b0b40a582fc86af65fbb0c7f19"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1fedd7b0b40a582fc86af65fbb0c7f19">&#9670;&#160;</a></span>at() <span class="overload">[2/2]</span></h2>
+<a id="a1dd6d1e644d3a5dff966f32fd7a6b4c0" name="a1dd6d1e644d3a5dff966f32fd7a6b4c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1dd6d1e644d3a5dff966f32fd7a6b4c0">&#9670;&#160;</a></span>at() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
+template&lt;ArenaMode M, typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const_reference <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::at </td>
+          <td class="memname">const_reference <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::at </td>
           <td>(</td>
           <td class="paramtype">size_type&#160;</td>
           <td class="paramname"><em>index</em></td><td>)</td>
@@ -464,55 +464,26 @@ template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00061">61</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00062">62</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a72659e97f4db3512af9117aebda891f8" name="a72659e97f4db3512af9117aebda891f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a72659e97f4db3512af9117aebda891f8">&#9670;&#160;</a></span>back() <span class="overload">[1/2]</span></h2>
+<a id="ad1b319bbfe2101fcbe1c14e405d831e7" name="ad1b319bbfe2101fcbe1c14e405d831e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1b319bbfe2101fcbe1c14e405d831e7">&#9670;&#160;</a></span>back() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
+template&lt;ArenaMode M, typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">reference <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::back </td>
+          <td class="memname">reference <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::back </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00069">69</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a891d6a9042e0c65b9967bcd2b98f720c" name="a891d6a9042e0c65b9967bcd2b98f720c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a891d6a9042e0c65b9967bcd2b98f720c">&#9670;&#160;</a></span>back() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const_reference <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::back </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
         </tr>
       </table>
   </td>
@@ -526,19 +497,19 @@ template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
 
 </div>
 </div>
-<a id="aaa8df82899d9a69d926b5d18220cb64d" name="aaa8df82899d9a69d926b5d18220cb64d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa8df82899d9a69d926b5d18220cb64d">&#9670;&#160;</a></span>begin() <span class="overload">[1/2]</span></h2>
+<a id="a5c9584c5ee0b949ce19be4c99dc592d3" name="a5c9584c5ee0b949ce19be4c99dc592d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c9584c5ee0b949ce19be4c99dc592d3">&#9670;&#160;</a></span>back() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
+template&lt;ArenaMode M, typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const_iterator <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::begin </td>
+          <td class="memname">const_reference <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::back </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -546,202 +517,28 @@ template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00079">79</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00071">71</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a3eacf99d4ab5a924cd4e5b9e7e1c254f" name="a3eacf99d4ab5a924cd4e5b9e7e1c254f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3eacf99d4ab5a924cd4e5b9e7e1c254f">&#9670;&#160;</a></span>begin() <span class="overload">[2/2]</span></h2>
+<a id="a8c2b49635c5fa5d19cc2429826a36c0d" name="a8c2b49635c5fa5d19cc2429826a36c0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c2b49635c5fa5d19cc2429826a36c0d">&#9670;&#160;</a></span>begin() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
+template&lt;ArenaMode M, typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">iterator <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::begin </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00076">76</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
-
-</div>
-</div>
-<a id="ab67382675c4153f454dab5bd2bf02f76" name="ab67382675c4153f454dab5bd2bf02f76"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab67382675c4153f454dab5bd2bf02f76">&#9670;&#160;</a></span>cbegin()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const_iterator <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::cbegin </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00082">82</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a310789c3602459d567ccbef4cddc50bf" name="a310789c3602459d567ccbef4cddc50bf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a310789c3602459d567ccbef4cddc50bf">&#9670;&#160;</a></span>cend()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const_iterator <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::cend </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00083">83</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
-
-</div>
-</div>
-<a id="ad75a07997b078ae8bf4ac7f969e291f6" name="ad75a07997b078ae8bf4ac7f969e291f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad75a07997b078ae8bf4ac7f969e291f6">&#9670;&#160;</a></span>data() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const_pointer <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::data </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00073">73</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a2594ef2f176322df329bb40a6e55b8bc" name="a2594ef2f176322df329bb40a6e55b8bc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2594ef2f176322df329bb40a6e55b8bc">&#9670;&#160;</a></span>data() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">pointer <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::data </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00072">72</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a6b04279509015ea84a63fb073828ab6e" name="a6b04279509015ea84a63fb073828ab6e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b04279509015ea84a63fb073828ab6e">&#9670;&#160;</a></span>empty()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::empty </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00086">86</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
-
-</div>
-</div>
-<a id="abb12181bc83b4e59e9718cf22a5988b9" name="abb12181bc83b4e59e9718cf22a5988b9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb12181bc83b4e59e9718cf22a5988b9">&#9670;&#160;</a></span>end() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const_iterator <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::end </td>
+          <td class="memname">const_iterator <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::begin </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -758,19 +555,19 @@ template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
 
 </div>
 </div>
-<a id="a44e58ae23a91e4c39710c51125b9349c" name="a44e58ae23a91e4c39710c51125b9349c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a44e58ae23a91e4c39710c51125b9349c">&#9670;&#160;</a></span>end() <span class="overload">[2/2]</span></h2>
+<a id="a87f54eb85f8cd7cf22ee2bb847fc1f61" name="a87f54eb85f8cd7cf22ee2bb847fc1f61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87f54eb85f8cd7cf22ee2bb847fc1f61">&#9670;&#160;</a></span>begin() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
+template&lt;ArenaMode M, typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">iterator <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::end </td>
+          <td class="memname">iterator <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::begin </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -787,77 +584,19 @@ template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
 
 </div>
 </div>
-<a id="a59eddc6a1e24f0b7d962f3deb878cba9" name="a59eddc6a1e24f0b7d962f3deb878cba9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a59eddc6a1e24f0b7d962f3deb878cba9">&#9670;&#160;</a></span>front() <span class="overload">[1/2]</span></h2>
+<a id="a4790b79e0388402d93685598f472392d" name="a4790b79e0388402d93685598f472392d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4790b79e0388402d93685598f472392d">&#9670;&#160;</a></span>cbegin()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
+template&lt;ArenaMode M, typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">reference <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::front </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00066">66</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a21125751b693db541454aa39389da8f2" name="a21125751b693db541454aa39389da8f2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a21125751b693db541454aa39389da8f2">&#9670;&#160;</a></span>front() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const_reference <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::front </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00067">67</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a2b77b8013b15fef07e643ff4237922af" name="a2b77b8013b15fef07e643ff4237922af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2b77b8013b15fef07e643ff4237922af">&#9670;&#160;</a></span>get_offset()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::size_t <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::get_offset </td>
+          <td class="memname">const_iterator <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::cbegin </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -870,23 +609,23 @@ template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00090">90</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00083">83</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ada2c6080b899d5c038cb398fd392f797" name="ada2c6080b899d5c038cb398fd392f797"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ada2c6080b899d5c038cb398fd392f797">&#9670;&#160;</a></span>max_size()</h2>
+<a id="abb3804f60c5a555c1aa4a100509ba574" name="abb3804f60c5a555c1aa4a100509ba574"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb3804f60c5a555c1aa4a100509ba574">&#9670;&#160;</a></span>cend()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
+template&lt;ArenaMode M, typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">size_type <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::max_size </td>
+          <td class="memname">const_iterator <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::cend </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -899,83 +638,81 @@ template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00088">88</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00084">84</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a277428526c5d39771e7286a283971a2e" name="a277428526c5d39771e7286a283971a2e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a277428526c5d39771e7286a283971a2e">&#9670;&#160;</a></span>operator[]() <span class="overload">[1/2]</span></h2>
+<a id="aa5debb2c295f2c53ab050f9740ce63aa" name="aa5debb2c295f2c53ab050f9740ce63aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5debb2c295f2c53ab050f9740ce63aa">&#9670;&#160;</a></span>data() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
+template&lt;ArenaMode M, typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">reference <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::operator[] </td>
+          <td class="memname">const_pointer <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::data </td>
           <td>(</td>
-          <td class="paramtype">size_type&#160;</td>
-          <td class="paramname"><em>index</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00054">54</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a190f076eeb386c7057818378d7da7486" name="a190f076eeb386c7057818378d7da7486"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a190f076eeb386c7057818378d7da7486">&#9670;&#160;</a></span>operator[]() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const_reference <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::operator[] </td>
-          <td>(</td>
-          <td class="paramtype">size_type&#160;</td>
-          <td class="paramname"><em>index</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00055">55</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00074">74</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a6ea325b729c81e434608b316e38ffb6c" name="a6ea325b729c81e434608b316e38ffb6c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6ea325b729c81e434608b316e38ffb6c">&#9670;&#160;</a></span>size()</h2>
+<a id="acb9bc49a9e72827ae5db0fbab5261457" name="acb9bc49a9e72827ae5db0fbab5261457"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb9bc49a9e72827ae5db0fbab5261457">&#9670;&#160;</a></span>data() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
+template&lt;ArenaMode M, typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">size_type <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M &gt;::size </td>
+          <td class="memname">pointer <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::data </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00073">73</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a85b488bef2b0d4fb6651ef6b2dc57973" name="a85b488bef2b0d4fb6651ef6b2dc57973"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85b488bef2b0d4fb6651ef6b2dc57973">&#9670;&#160;</a></span>empty()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;ArenaMode M, typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::empty </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -989,6 +726,269 @@ template&lt;ArenaMode M = ArenaMode::Standard&gt; </div>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00087">87</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a54a934cc2665ea8d53c0e44a98d5b360" name="a54a934cc2665ea8d53c0e44a98d5b360"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a54a934cc2665ea8d53c0e44a98d5b360">&#9670;&#160;</a></span>end() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;ArenaMode M, typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const_iterator <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::end </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00081">81</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a5ae7354f54ae64c0adc34e04a0ae2b47" name="a5ae7354f54ae64c0adc34e04a0ae2b47"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ae7354f54ae64c0adc34e04a0ae2b47">&#9670;&#160;</a></span>end() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;ArenaMode M, typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">iterator <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::end </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00078">78</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a7ae3e32dd2e6eccc5c1916dbff913df6" name="a7ae3e32dd2e6eccc5c1916dbff913df6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ae3e32dd2e6eccc5c1916dbff913df6">&#9670;&#160;</a></span>front() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;ArenaMode M, typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">reference <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::front </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00067">67</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a1f6915ef843eafd159c2da46eb0481fa" name="a1f6915ef843eafd159c2da46eb0481fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f6915ef843eafd159c2da46eb0481fa">&#9670;&#160;</a></span>front() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;ArenaMode M, typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const_reference <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::front </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00068">68</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a63bf03153746e7c85e497935149046f9" name="a63bf03153746e7c85e497935149046f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63bf03153746e7c85e497935149046f9">&#9670;&#160;</a></span>get_offset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;ArenaMode M, typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::get_offset </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00091">91</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a47f72855c4adc9e85a51b4cd2aeafac2" name="a47f72855c4adc9e85a51b4cd2aeafac2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47f72855c4adc9e85a51b4cd2aeafac2">&#9670;&#160;</a></span>max_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;ArenaMode M, typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_type <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::max_size </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00089">89</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+
+</div>
+</div>
+<a id="af5c02ddc68352c1c62baded42df49247" name="af5c02ddc68352c1c62baded42df49247"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5c02ddc68352c1c62baded42df49247">&#9670;&#160;</a></span>operator[]() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;ArenaMode M, typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">reference <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::operator[] </td>
+          <td>(</td>
+          <td class="paramtype">size_type&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00055">55</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ada02d0a14c82387a8b63b4f4441433fe" name="ada02d0a14c82387a8b63b4f4441433fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada02d0a14c82387a8b63b4f4441433fe">&#9670;&#160;</a></span>operator[]() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;ArenaMode M, typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const_reference <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::operator[] </td>
+          <td>(</td>
+          <td class="paramtype">size_type&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00056">56</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a05605d6952761bd5995f5c535a947e9e" name="a05605d6952761bd5995f5c535a947e9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a05605d6952761bd5995f5c535a947e9e">&#9670;&#160;</a></span>size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;ArenaMode M, typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_type <a class="el" href="classArenaBufferHandle.html">ArenaBufferHandle</a>&lt; M, T &gt;::size </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="arena__allocator_8hpp_source.html#l00088">88</a> of file <a class="el" href="arena__allocator_8hpp_source.html">arena_allocator.hpp</a>.</p>
 
 </div>
 </div>
