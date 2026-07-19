@@ -15,7 +15,7 @@
 template <ArenaMode M>
 class ArenaAllocator;
 
-template <ArenaMode M = ArenaMode::Standard>
+template <ArenaMode M, typename T>
 class ArenaBufferHandle
 {
 public:
@@ -123,7 +123,7 @@ class ArenaAllocator
     using CopyPtr = std::conditional_t<IsLightweight, std::monostate, CopyFunction>;
     using DestructPtr = std::conditional_t<IsLightweight, std::monostate, DestructorFunction>;
 
-    template <ArenaMode Mode>
+    template <ArenaMode Mode, typename T>
     friend class ArenaBufferHandle;
 
 private:
@@ -805,10 +805,10 @@ public:
      * @param alignment The required alignment boundary.
      * @return ArenaBufferHandle<M> An STL-compatible container view that survives arena reallocation.
      */
-    ArenaBufferHandle<M> allocateRaw(std::size_t size, std::size_t alignment)
+    ArenaBufferHandle<M, std::byte> allocateRaw(std::size_t size, std::size_t alignment)
     {
         // 1. Safety check for empty allocations
-        if (size == 0) return ArenaBufferHandle<M>();
+        if (size == 0) return ArenaBufferHandle<M, std::byte>();
 
         // 2. Trivial constructor lambda with safe type conversion to prevent compiler errors
         auto construct = [](void* ptr) {
@@ -840,7 +840,7 @@ public:
         allocate0<std::byte>(construct, alignment, size, copy, destruct);
 
         // 7. Return the stable handle pointing to this exact offset block
-        return ArenaBufferHandle<M>(this, estimated_header_offset, size);
+        return ArenaBufferHandle<M, std::byte>(this, estimated_header_offset, size);
     }
 
 
@@ -1331,8 +1331,11 @@ using TypeAwareArenaAllocator = ArenaAllocator<ArenaMode::TypeAware>;
 using LightweightArenaAllocator = ArenaAllocator<ArenaMode::Lightweight>;
 
 // Corresponding handles matching your existing arena aliases
-using PlainArenaBufferHandle       = ArenaBufferHandle<ArenaMode::Standard>;
-using TypeAwareArenaBufferHandle   = ArenaBufferHandle<ArenaMode::TypeAware>;
-using LightweightArenaBufferHandle = ArenaBufferHandle<ArenaMode::Lightweight>;
+template<typename T>
+using PlainArenaBufferHandle       = ArenaBufferHandle<ArenaMode::Standard, T>;
+template<typename T>
+using TypeAwareArenaBufferHandle   = ArenaBufferHandle<ArenaMode::TypeAware, T>;
+template<typename T>
+using LightweightArenaBufferHandle = ArenaBufferHandle<ArenaMode::Lightweight, T>;
 
 #endif
