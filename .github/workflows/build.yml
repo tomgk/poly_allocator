@@ -23,15 +23,24 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    # 1. Setup Cache for CMake and Third-Party Dependencies (e.g., Googletest)
+    - name: Cache Build Directory
+      uses: actions/cache@v4
+      with:
+        path: ${{ github.workspace }}/build
+        key: ${{ runner.os }}-cmake-${{ hashFiles('**/CMakeLists.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-cmake-
+
+    # 2. Configure with Parallel Build Support enabled
     - name: Configure CMake
-      # Configure CMake in a 'build' subdirectory
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
+    # 3. Build in parallel utilizing all available CPU cores
     - name: Build
-      # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --parallel 4
 
+    # 4. Execute Tests with output on failure
     - name: Test
       working-directory: ${{github.workspace}}/build
-      # Execute tests and show output immediately if any test fails
       run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure
