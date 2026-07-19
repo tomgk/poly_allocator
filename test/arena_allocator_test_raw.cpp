@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include "arena_allocator.hpp"
 #include <algorithm>
-#include <vector>
 
 TEST(ArenaAllocatorRawTest, HandleActsLikeAnSTLContainer)
 {
