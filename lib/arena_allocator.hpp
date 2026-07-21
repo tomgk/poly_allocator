@@ -506,7 +506,11 @@ private:
     }
 
 public:
-    ///forces a reallocating which will trigger moving objects
+    /**
+     * @brief forces a reallocating which will trigger moving objects
+     *
+     * Mainly for testing purposes to see if moving objects into new buffer works
+     */
     void forceReallocate()
     {
         reallocate(buffer.capacity()+1);
