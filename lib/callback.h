@@ -7,7 +7,7 @@ namespace callback
 {
 
 template <ArenaAllocatorConstructable T, typename AllocationHeader>
-static void Callback_CopyObject(void* src, void* dst, std::ptrdiff_t offset)
+static void CopyObject(void* src, void* dst, std::ptrdiff_t offset)
 {
     T* src_array = reinterpret_cast<T*>(src);
     T* dst_array = reinterpret_cast<T*>(dst);
@@ -54,7 +54,7 @@ static void Callback_CopyObject(void* src, void* dst, std::ptrdiff_t offset)
 }
 
 template<typename T>
-void Callback_CopyObjectWithNoObject(void* src, void *dst, std::ptrdiff_t offset)
+void CopyObjectWithNoObject(void* src, void *dst, std::ptrdiff_t offset)
 {
 #ifdef ARENA_ALLOCATOR_LOG
     std::cout << "Copy " << typeid(T).name() << " " << src << " to " << dst << std::endl;
@@ -63,7 +63,7 @@ void Callback_CopyObjectWithNoObject(void* src, void *dst, std::ptrdiff_t offset
 }
 
 template<typename T>
-void Callback_DestructObject(void* ptr)
+void DestructObject(void* ptr)
 {
 #ifdef ARENA_ALLOCATOR_LOG
     std::cout << "Destruct " << typeid(T).name() << " " << ptr << std::endl;

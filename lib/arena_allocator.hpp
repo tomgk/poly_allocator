@@ -775,7 +775,7 @@ public:
             return new (ptr) T(std::forward<Args>(args)...);
         };
 
-        CopyFunction copy = callback::Callback_CopyObject<T, AllocationHeader>;
+        CopyFunction copy = callback::CopyObject<T, AllocationHeader>;
         DestructorFunction destruct = Callback_Destruct<T>;
 
         return allocate0<T>(construct, alignof(T), sizeof(T), copy, destruct);
@@ -796,8 +796,8 @@ public:
             return new (ptr) T(std::forward<Args>(args)...);
         };
 
-        CopyFunction copy = callback::Callback_CopyObjectWithNoObject<T>;
-        DestructorFunction destruct = callback::Callback_DestructObject<T>;
+        CopyFunction copy = callback::CopyObjectWithNoObject<T>;
+        DestructorFunction destruct = callback::DestructObject<T>;
 
         return allocate0<T>(construct, alignof(T), sizeof(T), copy, destruct);
     }
