@@ -1041,6 +1041,9 @@ public:
     /**
      * @brief Returns the number of elements in the array
      *
+     * If a non-array non-nullptr is passed then the function will return 1
+     * (array of size 1 and object are not distinguished)
+     *
      * \warning The array must have been allocated with this allocator or else it is undefined behaviour
      * \todo add unit tests
      *
@@ -1071,6 +1074,15 @@ public:
     }
 
 private:
+    /**
+     * @brief actually does the allocation, potentionally resizing the buffer to make it fit
+     * @param construct constructor function, gets passed a pointer to the memory location, returning constructed object pointer
+     * @param align alignment to be used
+     * @param objectSize the size of the object to allocate, might be an array
+     * @param copy copy callback function
+     * @param destruct deconstructor callback function
+     * @return
+     */
     template <typename T, typename C>
     T* allocate0(C construct, size_t align, size_t objectSize, CopyFunction copy, DestructorFunction destruct)
     {
