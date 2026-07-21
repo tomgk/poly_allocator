@@ -3,8 +3,11 @@
 
 #include "arena_allocator_basic.h"
 
+namespace callback
+{
+
 template<typename T>
-static void Callback_CopyArray_Independent(void* src, void* dst, std::size_t element_count, std::ptrdiff_t offset)
+static void CopyArray(void* src, void* dst, std::size_t element_count, std::ptrdiff_t offset)
 {
     if (!src || !dst || element_count == 0) return;
 
@@ -46,6 +49,8 @@ static void Callback_CopyArray_Independent(void* src, void* dst, std::size_t ele
             throw;
         }
     }
+}
+
 }
 
 #endif // CALLBACK_ARRAY_H

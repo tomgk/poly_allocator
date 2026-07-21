@@ -862,7 +862,7 @@ private:
         std::size_t element_count = header->size / sizeof(T);
 
         // 2. Eigentliche Logik an die unabhängige Funktion übergeben
-        Callback_CopyArray_Independent<T>(src, dst, element_count, offset);
+        callback::CopyArray<T>(src, dst, element_count, offset);
     }
 
     template<typename T>
