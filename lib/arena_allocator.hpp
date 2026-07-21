@@ -850,21 +850,20 @@ public:
 
 private:
     template<typename T>
-    static void Callback_CopyArray(void* src, void* dst, std::ptrdiff_t offset)
+    static void Callback_CopyArray_Independent(void* src, void* dst, std::size_t element_count, std::ptrdiff_t offset)
     {
+        if (!src || !dst || element_count == 0) return;
+
         T* src_array = reinterpret_cast<T*>(src);
         T* dst_array = reinterpret_cast<T*>(dst);
+        std::size_t total_bytes = element_count * sizeof(T);
 
-        // Wichtig: Ohne exakten Alignment-Fix ist diese Zeile gefährlich,
-        // aber wir korrigieren zumindest die Kopierlogik:
-        std::byte* header_ptr = reinterpret_cast<std::byte*>(src) - sizeof(AllocationHeader);
-        AllocationHeader* header = reinterpret_cast<AllocationHeader*>(header_ptr);
-        std::size_t element_count = header->size / sizeof(T);
-
+        // Pfad 1: Für triviale Typen/Plain Objects (memcpy)
         if constexpr (PlainObject<T>)
         {
-            std::memcpy(dst, src, header->size);
+            std::memcpy(dst, src, total_bytes);
         }
+        // Pfad 2: Für komplexe Objekte (Placement-New mit Element-Iterierung)
         else
         {
             std::size_t copied = 0;
@@ -878,8 +877,7 @@ private:
                     }
                     else
                     {
-                        // FIX: Falls der Typ kein Custom-Offset unterstützt,
-                        // nutzen wir ein normales Placement-New mit std::move
+                        // Fallback für Typen ohne Custom-Offset-Unterstützung
                         new (&dst_array[copied]) T(std::move(src_array[copied]));
                     }
                 }
@@ -894,6 +892,20 @@ private:
                 throw;
             }
         }
+    }
+
+    template<typename T>
+    static void Callback_CopyArray(void* src, void* dst, std::ptrdiff_t offset)
+    {
+        // 1. Metadaten aus dem AllocationHeader auslesen (Abhängiger Teil)
+        std::byte* header_ptr = reinterpret_cast<std::byte*>(src) - sizeof(AllocationHeader);
+        AllocationHeader* header = reinterpret_cast<AllocationHeader*>(header_ptr);
+
+        // Elementanzahl berechnen
+        std::size_t element_count = header->size / sizeof(T);
+
+        // 2. Eigentliche Logik an die unabhängige Funktion übergeben
+        Callback_CopyArray_Independent<T>(src, dst, element_count, offset);
     }
 
     template<typename T>
