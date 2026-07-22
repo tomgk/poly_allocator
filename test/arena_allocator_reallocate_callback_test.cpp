@@ -37,7 +37,7 @@ TEST(ArenaAllocatorCallbackTest, CallbackFiresWhenCapacityIsExceeded)
 
     // Fill the arena with a large array allocation to break past the INITIAL_CAPACITY
     std::size_t safe_large_count = arena.get_capacity() + 10;
-    arena.allocateArray2<std::byte>(safe_large_count);
+    arena.allocateArraywithdefault<std::byte>(safe_large_count);
 
     // The callback must have been triggered exactly once during the allocation process
     EXPECT_EQ(trigger_count, 1);

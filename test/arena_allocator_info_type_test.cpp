@@ -29,7 +29,7 @@ TEST(ArenaAllocatorTypeMetricsTest, ArrayAllocationsAreCountedPerElement)
     TypeAwareArenaAllocator arena;
 
     // Allocate an array of 5 integers
-    arena.allocateArray2<int>(5);
+    arena.allocateArraywithdefault<int>(5);
 
     // Elements inside arrays are tracked via their aggregated block size
     EXPECT_EQ(arena.get_allocation_count<int>(), 5);
