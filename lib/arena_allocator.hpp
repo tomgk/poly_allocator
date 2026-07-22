@@ -410,7 +410,7 @@ private:
     size_t getOffset(void *ptr)
     {
         if(!contains(ptr))
-            throw std::invalid_argument();
+            throw std::invalid_argument("pointer outside of range");
 
         return static_cast<std::byte*>(ptr) - buffer.data();
     }
@@ -931,7 +931,6 @@ private:
     }
 
 public:
-
     /**
      * @brief Allocates a continuous array of type T with 'count' elements.
      *
@@ -942,7 +941,7 @@ public:
      * @return Pointer to the first element of the newly created array
      */
     template <ArenaAllocatorConstructable T>
-    ArenaBufferHandle<M, T> allocateArray1(std::size_t count, bool zero_initialize = false) requires std::is_default_constructible_v<T>
+    ArenaBufferHandle<M, T> allocateArrayWithDefault(std::size_t count, bool zero_initialize = false) requires std::is_default_constructible_v<T>
     {
         if (count == 0)
             return {};
@@ -990,68 +989,7 @@ public:
         DestructorFunction destruct = Callback_DestructArray<T>;
 
         T* raw_ptr = allocate0<T>(construct, alignof(T), objectSize, copy, destruct);
-        return ArenaBufferHandle<M, T>(this, getOffset(raw_ptr), count);
-    }
-
-    /**
-     * @brief Allocates a continuous array of type T with 'count' elements.
-     *
-     * @tparam T Type of the array elements
-     * @param count Number of elements in the array
-     * @param zero_initialize If true and T is a primitive/trivial type, the memory will be filled with zeros.
-     *                        For custom objects, they are always default-constructed.
-     * @return Pointer to the first element of the newly created array
-     */
-    template <ArenaAllocatorConstructable T>
-    ArenaArrayResult<T> allocateArray2(std::size_t count, bool zero_initialize = false) requires std::is_default_constructible_v<T>
-    {
-        if (count == 0)
-            return ArenaArrayResult<T>();
-
-        std::size_t objectSize = count * sizeof(T);
-
-        // Lambda for continuous construction of all array elements
-        auto construct = [count, zero_initialize](void* ptr) {
-            T* array_start = reinterpret_cast<T*>(ptr);
-
-            if constexpr (PlainObject<T>)
-            {
-                if (zero_initialize)
-                {
-                    // Highly optimized zero-initialization for primitive types
-                    std::memset(ptr, 0, count * sizeof(T));
-                }
-                return array_start;
-            }
-            else
-            {
-                // Normal loop only for custom objects with constructors
-                std::size_t constructed = 0;
-                try
-                {
-                    for (; constructed < count; ++constructed)
-                    {
-                        new (&array_start[constructed]) T();
-                    }
-                }
-                catch (...)
-                {
-                    // Rollback in case a constructor throws
-                    for (std::size_t i = constructed; i > 0; --i)
-                    {
-                        array_start[i - 1].~T();
-                    }
-                    throw;
-                }
-                return array_start;
-            }
-        };
-
-        CopyFunction copy = Callback_CopyArray<T>;
-        DestructorFunction destruct = Callback_DestructArray<T>;
-
-        T* raw_ptr = allocate0<T>(construct, alignof(T), objectSize, copy, destruct);
-        return ArenaArrayResult<T>(raw_ptr, count);
+        return {this, getOffset(raw_ptr), count};
     }
 
     /**

@@ -31,9 +31,9 @@ std::string getTypeName(const std::type_info &type)
 
 namespace
 {
-void test(TypeAwareArenaAllocator &a)
+void test2(TypeAwareArenaAllocator &a)
 {
-    auto arr = a.allocateArray1<int>(10);
+    auto arr = a.allocateArrayWithDefault<int>(10);
     arr.data();
     arr.size();
 }
