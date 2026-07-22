@@ -1003,10 +1003,10 @@ public:
      * @return Pointer to the first element of the newly created array
      */
     template <ArenaAllocatorConstructable T>
-    ArenaArrayResult<T> allocateArray2(std::size_t count, bool zero_initialize = false) requires std::is_default_constructible_v<T>
+    ArenaBufferHandle<M, T> allocateArray2(std::size_t count, bool zero_initialize = false) requires std::is_default_constructible_v<T>
     {
         if (count == 0)
-            return ArenaArrayResult<T>();
+            return {};
 
         std::size_t objectSize = count * sizeof(T);
 
@@ -1051,7 +1051,7 @@ public:
         DestructorFunction destruct = Callback_DestructArray<T>;
 
         T* raw_ptr = allocate0<T>(construct, alignof(T), objectSize, copy, destruct);
-        return ArenaArrayResult<T>(raw_ptr, count);
+        return {this, getOffset(raw_ptr), count};
     }
 
     /**
