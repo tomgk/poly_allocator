@@ -120,7 +120,7 @@ TEST(ArenaAllocatorIteratorTest, ArrayAllocationTraversal)
     TypeAwareArenaAllocator arena;
 
     // Allocate a contiguous block array
-    arena.allocateArray<int>(3);
+    arena.allocateArray1<int>(3);
 
     auto it = arena.begin();
     ASSERT_NE(it, arena.end());
