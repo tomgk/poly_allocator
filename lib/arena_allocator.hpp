@@ -410,7 +410,7 @@ private:
     size_t getOffset(void *ptr)
     {
         if(!contains(ptr))
-            throw std::invalid_argument();
+            throw std::invalid_argument("pointer outside of range");
 
         return static_cast<std::byte*>(ptr) - buffer.data();
     }
