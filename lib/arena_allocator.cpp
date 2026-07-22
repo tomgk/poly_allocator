@@ -33,7 +33,7 @@ namespace
 {
 void test2(TypeAwareArenaAllocator &a)
 {
-    auto arr = a.allocateArraywithdefault<int>(10);
+    auto arr = a.allocateArrayWithDefault<int>(10);
     arr.data();
     arr.size();
 }

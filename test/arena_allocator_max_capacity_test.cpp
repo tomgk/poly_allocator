@@ -10,7 +10,7 @@ TEST(ArenaAllocatorMaxCapacityTest, ThrowsWhenCustomLimitIsExceeded)
 
     // This allocation fits within the default 1MB, but must breach our 512 bytes limit
     EXPECT_THROW({
-        arena.allocateArraywithdefault<std::byte>(600);
+        arena.allocateArrayWithDefault<std::byte>(600);
     }, std::runtime_error);
 }
 
@@ -23,7 +23,7 @@ TEST(ArenaAllocatorMaxCapacityTest, AllowsExpandingBeyondDefaultOneMegabyte)
 
     // This allocation would crash with the old hardcoded 1 MB limit, but must succeed now
     EXPECT_NO_THROW({
-        arena.allocateArraywithdefault<std::byte>(2 * 1024 * 1024);
+        arena.allocateArrayWithDefault<std::byte>(2 * 1024 * 1024);
     });
 }
 
@@ -35,7 +35,7 @@ TEST(ArenaAllocatorMaxCapacityTest, ExactLimitMatchDoesNotThrow)
 
     // Allocating exactly up to a boundary that matches or stays below 512 after growth is fine
     EXPECT_NO_THROW({
-        arena.allocateArraywithdefault<std::byte>(100);
+        arena.allocateArrayWithDefault<std::byte>(100);
     });
 }
 

@@ -941,7 +941,7 @@ public:
      * @return Pointer to the first element of the newly created array
      */
     template <ArenaAllocatorConstructable T>
-    ArenaBufferHandle<M, T> allocateArraywithdefault(std::size_t count, bool zero_initialize = false) requires std::is_default_constructible_v<T>
+    ArenaBufferHandle<M, T> allocateArrayWithDefault(std::size_t count, bool zero_initialize = false) requires std::is_default_constructible_v<T>
     {
         if (count == 0)
             return {};
