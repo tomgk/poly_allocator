@@ -745,19 +745,6 @@ public:
         return buffer.size();
     }
 
-private:
-    template <ArenaAllocatorConstructable T>
-    static void Callback_Destruct(void* ptr)
-    {
-#ifdef ARENA_ALLOCATOR_LOG
-        std::cout << "Destruct " << typeid(T).name() << " " << ptr << std::endl;
-#endif
-        auto str = reinterpret_cast<T*>(ptr);
-        str->~T();
-    };
-
-public:
-
     /**
      * @brief Allocate memory for an object of type T and construct it.
      * 
@@ -782,7 +769,7 @@ public:
         };
 
         CopyFunction copy = callback::CopyObject<T, AllocationHeader>;
-        DestructorFunction destruct = Callback_Destruct<T>;
+        DestructorFunction destruct = callback::DestructObject<T>;
 
         return allocate0<T>(construct, alignof(T), sizeof(T), copy, destruct);
     }
@@ -1030,7 +1017,7 @@ public:
             return array_start;
         };
         CopyFunction copy = Callback_CopyArray<T>;
-        DestructorFunction destruct = Callback_Destruct<T>;
+        DestructorFunction destruct = callback::DestructObject<T>;
 
         T* raw_ptr = allocate0<T>(construct, alignof(T), objectSize, copy, destruct);
         return ArenaArrayResult<T>(raw_ptr, count);
