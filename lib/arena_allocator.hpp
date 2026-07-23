@@ -835,6 +835,7 @@ public:
         }
 
         // 6. Allocate using your core 5-parameter template engine
+        ///\todo use returned pointer maybe instead of estimated_header_offset
         allocate0<std::byte>(construct, alignment, size, copy, destruct);
 
         // 7. Return the stable handle pointing to this exact offset block
