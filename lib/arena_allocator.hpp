@@ -142,11 +142,13 @@ private:
 
         AllocationHeader() : size(0), is_alive(false)
         {
-            if constexpr (!IsLightweight) {
+            if constexpr (!IsLightweight)
+            {
                 copy = nullptr;
                 destructor = nullptr;
             }
-            if constexpr (StoreTypeInfo) {
+            if constexpr (StoreTypeInfo)
+            {
                 type_info = nullptr;
             }
         }
@@ -479,9 +481,7 @@ public:
     double get_fragmentation_ratio() const noexcept
     {
         if (current_offset == 0)
-        {
             return 0.0;
-        }
 
         return static_cast<double>(get_dead_bytes()) / static_cast<double>(current_offset);
     }
@@ -722,9 +722,7 @@ public:
     void reserve(std::size_t new_capacity)
     {
         if (new_capacity <= buffer.capacity())
-        {
             return;
-        }
 
         // Calculate how many additional bytes are needed starting from current_offset
         // to reach the requested absolute new_capacity boundary.
@@ -737,9 +735,9 @@ public:
     /**
      * @brief Construct an empty arena allocator.
      */
-    ArenaAllocator()
+    ArenaAllocator(size_t initialCapacity = INITIAL_CAPACITY)
     {
-        buffer.resize(INITIAL_CAPACITY);
+        buffer.resize(initialCapacity);
     }
 
     size_t byteSize() const
