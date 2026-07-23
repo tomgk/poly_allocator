@@ -2,7 +2,7 @@ var classArenaAllocator =
 [
     [ "Entry", "classArenaAllocator_1_1Entry.html", "classArenaAllocator_1_1Entry" ],
     [ "IteratorImpl", "classArenaAllocator_1_1IteratorImpl.html", "classArenaAllocator_1_1IteratorImpl" ],
-    [ "ArenaAllocator", "classArenaAllocator.html#a0efe6260d43fae78d06ab91a61fb2115", null ],
+    [ "ArenaAllocator", "classArenaAllocator.html#a3516a6f11ab860a64859e7eb23ff2246", null ],
     [ "~ArenaAllocator", "classArenaAllocator.html#a18956dd419b2c7c5a80c5fb4fa0eb078", null ],
     [ "allocate", "classArenaAllocator.html#a410cfc5048f4b44fbe48f7d9eba681b5", null ],
     [ "allocateArray", "classArenaAllocator.html#adcbf7165623c74e5704c3925cc31ca28", null ],
