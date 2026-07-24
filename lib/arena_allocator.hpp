@@ -172,6 +172,11 @@ public:
 
         }
 
+        /**
+         * @brief Retrieves the metadata header associated with this allocation.
+         *
+         * @return A constant reference to the AllocationHeader structure.
+         */
         const AllocationHeader& get_header() const
         {
             return arena->get_header(offset);
@@ -180,6 +185,16 @@ public:
         template<typename T>
         using ref_type = std::conditional_t<Const, const T, T>;
 
+        /**
+         * @brief Retrieves a reference to the stored object with type-safety checks.
+         *
+         * This overload is only available if runtime type information is stored.
+         *
+         * @tparam T The expected type of the stored object.
+         * @return A reference to the object, conditionally qualified with const based on \p C.
+         * @throws std::invalid_argument If the requested type \p T does not match the stored type info.
+         * @note This function requires the concept or condition StoreTypeInfo to be true.
+         */
         template<typename T>
         ref_type<T>& get() requires StoreTypeInfo
         {
@@ -189,6 +204,16 @@ public:
             return *reinterpret_cast<ref_type<T>*>(arena->get_object_pointer(offset));
         }
 
+        /**
+         * @brief Retrieves a read-only reference to the stored object with type-safety checks.
+         *
+         * This overload is only available if runtime type information is stored.
+         *
+         * @tparam T The expected type of the stored object.
+         * @return A constant reference to the object.
+         * @throws std::invalid_argument If the requested type \p T does not match the stored type info.
+         * @note This function requires the concept or condition StoreTypeInfo to be true.
+         */
         template<typename T>
         const T& get() const requires StoreTypeInfo
         {
