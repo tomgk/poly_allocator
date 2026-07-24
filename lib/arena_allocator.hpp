@@ -1019,29 +1019,10 @@ public:
 
         std::size_t objectSize = count * sizeof(T);
 
-        // Lambda for continuous construction by copying the provided value
-        auto construct = [count, &value](void* ptr) {
-            ///\todo maybe std::uninitialized_fill already does this
-
+        auto construct = [count, &value](void* ptr)
+        {
             T* array_start = reinterpret_cast<T*>(ptr);
-            std::size_t constructed = 0;
-            try
-            {
-                for (; constructed < count; ++constructed)
-                {
-                    // Copy-construct the value into the arena memory
-                    new (&array_start[constructed]) T(value);
-                }
-            }
-            catch (...)
-            {
-                // Rollback: Destroy already constructed elements in reverse order if an exception occurs
-                for (std::size_t i = constructed; i > 0; --i)
-                {
-                    array_start[i - 1].~T();
-                }
-                throw;
-            }
+            std::uninitialized_fill_n(array_start, count, value);
             return array_start;
         };
         CopyFunction copy = Callback_CopyArray<T>;
