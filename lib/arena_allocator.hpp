@@ -1025,6 +1025,7 @@ public:
         T* raw_ptr = allocate0<T>(construct, alignof(T), objectSize, copy, destruct);
         return ArenaArrayResult<T>(raw_ptr, count);
     }
+
     /**
      * @brief Returns the number of elements in the array
      *
