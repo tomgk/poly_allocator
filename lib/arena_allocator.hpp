@@ -1270,10 +1270,18 @@ public:
     }
 
     /**
-     * @brief Counts how many currently alive allocations belong to the specific type T.
+     * @brief Calculates the logical instance metric for currently alive objects of type T.
+     *
+     * @details Unlike a structural block counter, this metric measures the total number of
+     *          active object instances. For scalar allocations, this increments by 1.
+     *          For array allocations (e.g., via allocateArray), it evaluates the total number
+     *          of elements contained within that array block.
+     *
+     * @note This behavior is intentional to track individual entity metrics per type
+     *       and does not reflect the physical number of allocation headers in the buffer.
      *
      * @tparam T The type to query.
-     * @return std::size_t Number of alive instances of type T.
+     * @return std::size_t Aggregate count of alive instances/elements of type T.
      */
     template <typename T>
     std::size_t get_allocation_count() const
