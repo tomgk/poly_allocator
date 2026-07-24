@@ -984,7 +984,7 @@ public:
      * @tparam T Type of the array elements (Must be copy-constructible)
      * @param count Number of elements in the array
      * @param value The object to copy into every element of the array
-     * @return Pointer to the first element of the newly created array
+     * @return ArenaArrayResult wrapping the pointer and the element count
      */
     template <ArenaAllocatorConstructable T>
     ArenaArrayResult<T> allocateArray(std::size_t count, const T& value) requires std::is_copy_constructible_v<T>
@@ -1018,7 +1018,7 @@ public:
             return array_start;
         };
         CopyFunction copy = Callback_CopyArray<T>;
-        DestructorFunction destruct = callback::DestructObject<T>;
+        DestructorFunction destruct = Callback_DestructArray<T>;
 
         T* raw_ptr = allocate0<T>(construct, alignof(T), objectSize, copy, destruct);
         return ArenaArrayResult<T>(raw_ptr, count);

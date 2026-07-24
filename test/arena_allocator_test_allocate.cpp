@@ -149,16 +149,15 @@ TEST_F(ArenaAllocatorTest, AllocateArrayCopyIsolationTest)
 
 // Test to verify the behavior with primitive types
 ///\todo at times this test fails randomly and then randomly starts working again
-TEST_F(ArenaAllocatorTest, DISABLED_AllocatePrimitiveArrayTest)
+TEST_F(ArenaAllocatorTest, AllocatePrimitiveArrayTest)
 {
     size_t count = 5;
 
-    // Act: Allocate a zero-initialized primitive array
-    int* zero_array = arena.allocateArray<int>(count, true).data();
+    // Fixed: Pass the actual prototype value (0) instead of a boolean flag
+    int* zero_array = arena.allocateArray<int>(count, 0).data();
 
-    // Assert: Verify all elements are strictly 0
+    // Assert: Verify all elements are strictly 0 and isolation works
     ASSERT_NE(zero_array, nullptr);
-    // Explicitly using the template-parameter version of getArrayCount here
     EXPECT_EQ(arena.getArrayCount<int>(zero_array), count);
 
     for (size_t i = 0; i < count; ++i)
@@ -168,3 +167,24 @@ TEST_F(ArenaAllocatorTest, DISABLED_AllocatePrimitiveArrayTest)
 
     arena.deallocate(zero_array);
 }
+
+TEST_F(ArenaAllocatorTest, AllocatePrimitiveArrayWithDefaultZeroInitTest)
+{
+    size_t count = 5;
+
+    // Act: Allocate using the default array allocator with explicit zero-initialization enabled
+    // This utilizes the optimized std::memset branch internally
+    int* zero_array = arena.allocateArrayWithDefault<int>(count, true).data();
+
+    // Assert: Verify the memory was cleanly wiped out to zero
+    ASSERT_NE(zero_array, nullptr);
+
+    // Note: getArrayCount works seamlessly since both layouts map to identical headers
+    for (size_t i = 0; i < count; ++i)
+    {
+        EXPECT_EQ(zero_array[i], 0);
+    }
+
+    arena.deallocate(zero_array);
+}
+
