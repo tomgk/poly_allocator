@@ -996,6 +996,8 @@ public:
 
         // Lambda for continuous construction by copying the provided value
         auto construct = [count, &value](void* ptr) {
+            ///\todo maybe std::uninitialized_fill already does this
+
             T* array_start = reinterpret_cast<T*>(ptr);
             std::size_t constructed = 0;
             try
