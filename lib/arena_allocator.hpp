@@ -1270,24 +1270,23 @@ public:
     }
 
     /**
-     * @brief Calculates the logical instance metric for currently alive objects of type T.
+     * @brief Calculates the total number of alive instances for type T.
      *
-     * @details Unlike a structural block counter, this metric measures the total number of
-     *          active object instances. For scalar allocations, this increments by 1.
-     *          For array allocations (e.g., via allocateArray), it evaluates the total number
-     *          of elements contained within that array block.
+     * @details This metric counts individual object instances rather than physical allocation
+     *          blocks. For scalar allocations, it increments by 1. For array allocations
+     *          (e.g., allocated via allocateArray), it counts every element contained within
+     *          the array block.
      *
-     * @note This behavior is intentional to track individual entity metrics per type
-     *       and does not reflect the physical number of allocation headers in the buffer.
+     * @note This behavior is intentional to track aggregate entity metrics per type and does
+     *       not represent the number of active AllocationHeaders in the buffer.
      *
      * @tparam T The type to query.
      * @return std::size_t Aggregate count of alive instances/elements of type T.
      */
     template <typename T>
-    std::size_t get_allocation_count() const
+    std::size_t get_instance_count() const
     {
-        // Safety check: Type tracking must be active for this operation
-        static_assert(StoreTypeInfo, "ArenaAllocator: get_allocation_count requires StoreTypeInfo to be enabled.");
+        static_assert(StoreTypeInfo, "ArenaAllocator: get_instance_count requires StoreTypeInfo to be enabled.");
 
         std::size_t count = 0;
         std::size_t offset = 0;

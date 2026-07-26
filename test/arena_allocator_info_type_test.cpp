@@ -7,7 +7,7 @@ TEST(ArenaAllocatorTypeMetricsTest, TrackCountsAndBytesCorrectly)
     TypeAwareArenaAllocator arena;
 
     // Initially everything must be zero
-    EXPECT_EQ(arena.get_allocation_count<int>(), 0);
+    EXPECT_EQ(arena.get_instance_count<int>(), 0);
     EXPECT_EQ(arena.get_total_bytes_for_type<int>(), 0);
 
     // Allocate some individual integers
@@ -17,10 +17,10 @@ TEST(ArenaAllocatorTypeMetricsTest, TrackCountsAndBytesCorrectly)
     // Allocate a different type to ensure isolation
     arena.allocate<double>(3.14);
 
-    EXPECT_EQ(arena.get_allocation_count<int>(), 2);
+    EXPECT_EQ(arena.get_instance_count<int>(), 2);
     EXPECT_EQ(arena.get_total_bytes_for_type<int>(), 2 * sizeof(int));
 
-    EXPECT_EQ(arena.get_allocation_count<double>(), 1);
+    EXPECT_EQ(arena.get_instance_count<double>(), 1);
     EXPECT_EQ(arena.get_total_bytes_for_type<double>(), sizeof(double));
 }
 
@@ -32,7 +32,7 @@ TEST(ArenaAllocatorTypeMetricsTest, ArrayAllocationsAreCountedPerElement)
     arena.allocateArrayWithDefault<int>(5);
 
     // Elements inside arrays are tracked via their aggregated block size
-    EXPECT_EQ(arena.get_allocation_count<int>(), 5);
+    EXPECT_EQ(arena.get_instance_count<int>(), 5);
     EXPECT_EQ(arena.get_total_bytes_for_type<int>(), 5 * sizeof(int));
 }
 
@@ -43,12 +43,12 @@ TEST(ArenaAllocatorTypeMetricsTest, DeallocationReducesMetrics)
     int* a = arena.allocate<int>(100);
     int* b = arena.allocate<int>(200);
 
-    ASSERT_EQ(arena.get_allocation_count<int>(), 2);
+    ASSERT_EQ(arena.get_instance_count<int>(), 2);
 
     // Kill one object
     arena.deallocate(a);
 
     // The counts and bytes must decrease accordingly
-    EXPECT_EQ(arena.get_allocation_count<int>(), 1);
+    EXPECT_EQ(arena.get_instance_count<int>(), 1);
     EXPECT_EQ(arena.get_total_bytes_for_type<int>(), sizeof(int));
 }
