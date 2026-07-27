@@ -1061,19 +1061,19 @@ private:
      * @brief actually does the allocation, potentionally resizing the buffer to make it fit
      * @param construct constructor function, gets passed a pointer to the memory location, returning constructed object pointer
      * @param align alignment to be used
-     * @param objectSize the size of the object to allocate, might be an array
+     * @param blockSize the size of the memory to allocate, how to deal with it is done by the callbacks
      * @param copy copy callback function
      * @param destruct deconstructor callback function
      * @return
      */
     template <typename T, typename C>
-    T* allocate0(C construct, size_t align, size_t objectSize, CopyFunction copy, DestructorFunction destruct)
+    T* allocate0(C construct, size_t align, size_t blockSize, CopyFunction copy, DestructorFunction destruct)
     {
         std::size_t header_offset = current_offset;
         std::size_t object_offset = align_offset(header_offset + HEADER_SIZE, align);
-        std::size_t required_size = object_offset - header_offset + objectSize;
+        std::size_t required_size = object_offset - header_offset + blockSize;
 
-        std::size_t end_offset = object_offset + objectSize;
+        std::size_t end_offset = object_offset + blockSize;
 
         // 1. If the new object does not fit into the current size, we must act
         if (end_offset > buffer.size())
@@ -1084,7 +1084,7 @@ private:
                 reallocate(required_size);
                 header_offset = current_offset;
                 object_offset = align_offset(header_offset + HEADER_SIZE, align);
-                end_offset = object_offset + objectSize;
+                end_offset = object_offset + blockSize;
             }
 
             // 3. In both cases (after reallocate OR if we just had unused capacity left),
@@ -1094,7 +1094,7 @@ private:
 
         // 4. Construction safely happens within the officially resized vector bounds
         AllocationHeader& header = *reinterpret_cast<AllocationHeader*>(buffer.data() + header_offset);
-        header.size = objectSize;
+        header.size = blockSize;
         header.is_alive = true;
 
         //lightweight mode has no copy and destructor
