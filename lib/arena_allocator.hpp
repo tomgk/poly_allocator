@@ -553,17 +553,16 @@ public:
 
     /**
      * @brief Reallocate to a larger buffer and move all alive objects.
-     * 
+     *
      * Doubles capacity until the new allocation fits. All alive objects are
      * moved and destructors of old objects are called.
-     * 
+     *
      * @param required_size Minimum additional bytes needed
      */
     void reallocate(std::size_t required_size)
     {
-        std::size_t old_capacity = buffer.capacity();
-        std::size_t new_capacity = buffer.capacity();
-        if (new_capacity == 0) new_capacity = INITIAL_CAPACITY;
+        std::size_t old_capacity = buffer.size(); // size() spiegelt den genutzten RAM-Puffer wider
+        std::size_t new_capacity = buffer.empty() ? INITIAL_CAPACITY : buffer.size();
 
         while (new_capacity < current_offset + required_size)
         {
@@ -578,24 +577,28 @@ public:
             m_reallocation_callback(old_capacity, new_capacity);
         }
 #ifdef ARENA_ALLOCATOR_LOG
-        std::cout << "reallocate: " << buffer.capacity() << " -> " << new_capacity << std::endl;
+        std::cout << "reallocate: " << old_capacity << " -> " << new_capacity << std::endl;
 #endif
 
-        std::vector<std::byte> new_buffer;
-        new_buffer.resize(new_capacity);
+        // Optimierung: Direkt mit der Zielgröße initialisieren (vermeidet resize-Overhead)
+        std::vector<std::byte> new_buffer(new_capacity);
 
         std::ptrdiff_t memoryRelocationOffset = new_buffer.data() - buffer.data();
 
         std::size_t new_offset = 0;
         std::size_t old_offset = 0;
+        std::byte* old_data = buffer.data();
 
-        // SCHRITT 1: Objekte in den neuen Buffer verschieben/kopieren
         try
         {
             while (old_offset < current_offset)
             {
-                AllocationHeader& old_header = get_header(old_offset);
+                AllocationHeader& old_header = *reinterpret_cast<AllocationHeader*>(old_data + old_offset);
                 std::size_t object_size = old_header.size;
+
+                // BUGFIX: Berechne exakt den Offset, an dem der NÄCHSTE Header liegen würde
+                std::size_t next_old_offset = old_offset + HEADER_SIZE + object_size;
+                next_old_offset = (next_old_offset + alignof(AllocationHeader) - 1) & ~(alignof(AllocationHeader) - 1);
 
                 if (old_header.is_alive)
                 {
@@ -609,38 +612,63 @@ public:
                     new_header = old_header;
 
                     void *dst = new_buffer.data() + aligned_new_offset + HEADER_SIZE;
-                    void *src = get_object_pointer(old_offset);
+                    void *src = old_data + old_offset + HEADER_SIZE;
 
                     if constexpr (IsLightweight)
                     {
-                        // Blazing fast direct memory migration without overhead
-                        std::memcpy(dst, src, old_header.size);
+                        std::memcpy(dst, src, object_size);
                     }
                     else
                     {
-                        //std::ptrdiff_t exactObjectOffset = reinterpret_cast<std::byte*>(dst) - reinterpret_cast<std::byte*>(src);
-                        new_header.copy(src, dst, memoryRelocationOffset);
+                        if (old_header.copy != nullptr)
+                        {
+                            new_header.copy(src, dst, memoryRelocationOffset);
+
+                            // BUGFIX: Altes Objekt DIREKT nach dem Verschieben destruieren,
+                            // um Double-Free/Ressourcenkonflikte zu vermeiden!
+                            if (old_header.destructor != nullptr)
+                            {
+                                old_header.destructor(src);
+                            }
+                        }
+                        else
+                        {
+                            // Schneller Fallback für triviale Typen im Standard-Modus
+                            std::memcpy(dst, src, object_size);
+                        }
                     }
 
                     new_offset = aligned_new_offset + HEADER_SIZE + object_size;
                 }
+                else
+                {
+                    // Altes, bereits totes Objekt direkt aufräumen falls nötig
+                    if constexpr (!IsLightweight)
+                    {
+                        if (old_header.destructor != nullptr)
+                        {
+                            old_header.destructor(old_data + old_offset + HEADER_SIZE);
+                        }
+                    }
+                }
 
-                old_offset += HEADER_SIZE + object_size;
+                // BUGFIX: Verwende den aligned Offset für den nächsten Schleifendurchlauf
+                old_offset = next_old_offset;
             }
         }
         catch (...)
         {
-            //destroy newly constructed objects in case of an exception
+            // Bei einer Exception im Move-Konstruktor: Neue Objekte aufräumen
             destroy_objects_in_range(new_buffer.data(), new_offset);
             throw;
         }
 
-        //in case no errors occured destroy old objects
-        destroy_objects_in_range(buffer.data(), current_offset);
+        // Da wir lebende und tote Objekte nun direkt in der Schleife destruiert haben,
+        // entfällt der fehleranfällige destroy_objects_in_range Aufruf für den alten Buffer!
 
         // Buffer austauschen
         buffer = std::move(new_buffer);
-        current_offset = new_offset;
+        current_offset = (new_offset + alignof(AllocationHeader) - 1) & ~(alignof(AllocationHeader) - 1);
     }
 
     /**
