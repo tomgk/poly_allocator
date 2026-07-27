@@ -1157,10 +1157,10 @@ $(document).ready(function(){initNavTree('arena__allocator_8hpp_source.html','')
 <div class="line"><a id="l01000" name="l01000"></a><span class="lineno"> 1000</span><span class="comment">     */</span></div>
 <div class="line"><a id="l01001" name="l01001"></a><span class="lineno"> 1001</span>    <span class="keyword">template</span> &lt;ArenaAllocatorConstructable T&gt;</div>
 <div class="foldopen" id="foldopen01002" data-start="{" data-end="}">
-<div class="line"><a id="l01002" name="l01002"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#adcbf7165623c74e5704c3925cc31ca28"> 1002</a></span>    <a class="code hl_class" href="classArenaArrayView.html">ArenaArrayResult&lt;T&gt;</a> <a class="code hl_function" href="classArenaAllocator.html#adcbf7165623c74e5704c3925cc31ca28">allocateArray</a>(std::size_t count, <span class="keyword">const</span> T&amp; value) <span class="keyword">requires</span> std::is_copy_constructible_v&lt;T&gt;</div>
+<div class="line"><a id="l01002" name="l01002"></a><span class="lineno"><a class="line" href="classArenaAllocator.html#adcbf7165623c74e5704c3925cc31ca28"> 1002</a></span>    ArenaArrayResult&lt;T&gt; <a class="code hl_function" href="classArenaAllocator.html#adcbf7165623c74e5704c3925cc31ca28">allocateArray</a>(std::size_t count, <span class="keyword">const</span> T&amp; value) <span class="keyword">requires</span> std::is_copy_constructible_v&lt;T&gt;</div>
 <div class="line"><a id="l01003" name="l01003"></a><span class="lineno"> 1003</span>    {</div>
 <div class="line"><a id="l01004" name="l01004"></a><span class="lineno"> 1004</span>        <span class="keywordflow">if</span> (count == 0)</div>
-<div class="line"><a id="l01005" name="l01005"></a><span class="lineno"> 1005</span>            <span class="keywordflow">return</span> <a class="code hl_class" href="classArenaArrayView.html">ArenaArrayResult&lt;T&gt;</a>();</div>
+<div class="line"><a id="l01005" name="l01005"></a><span class="lineno"> 1005</span>            <span class="keywordflow">return</span> ArenaArrayResult&lt;T&gt;();</div>
 <div class="line"><a id="l01006" name="l01006"></a><span class="lineno"> 1006</span> </div>
 <div class="line"><a id="l01007" name="l01007"></a><span class="lineno"> 1007</span>        std::size_t objectSize = count * <span class="keyword">sizeof</span>(T);</div>
 <div class="line"><a id="l01008" name="l01008"></a><span class="lineno"> 1008</span> </div>
@@ -1176,7 +1176,7 @@ $(document).ready(function(){initNavTree('arena__allocator_8hpp_source.html','')
 <div class="line"><a id="l01018" name="l01018"></a><span class="lineno"> 1018</span>            destruct = Callback_DestructNonPODArray&lt;T&gt;;</div>
 <div class="line"><a id="l01019" name="l01019"></a><span class="lineno"> 1019</span> </div>
 <div class="line"><a id="l01020" name="l01020"></a><span class="lineno"> 1020</span>        T* raw_ptr = allocate0&lt;T&gt;(construct, <span class="keyword">alignof</span>(T), objectSize, copy, destruct);</div>
-<div class="line"><a id="l01021" name="l01021"></a><span class="lineno"> 1021</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classArenaArrayView.html">ArenaArrayResult&lt;T&gt;</a>(raw_ptr, count);</div>
+<div class="line"><a id="l01021" name="l01021"></a><span class="lineno"> 1021</span>        <span class="keywordflow">return</span> ArenaArrayResult&lt;T&gt;(raw_ptr, count);</div>
 <div class="line"><a id="l01022" name="l01022"></a><span class="lineno"> 1022</span>    }</div>
 </div>
 <div class="line"><a id="l01023" name="l01023"></a><span class="lineno"> 1023</span><span class="comment"></span> </div>
@@ -1222,19 +1222,19 @@ $(document).ready(function(){initNavTree('arena__allocator_8hpp_source.html','')
 <div class="line"><a id="l01061" name="l01061"></a><span class="lineno"> 1061</span><span class="comment">     * @brief actually does the allocation, potentionally resizing the buffer to make it fit</span></div>
 <div class="line"><a id="l01062" name="l01062"></a><span class="lineno"> 1062</span><span class="comment">     * @param construct constructor function, gets passed a pointer to the memory location, returning constructed object pointer</span></div>
 <div class="line"><a id="l01063" name="l01063"></a><span class="lineno"> 1063</span><span class="comment">     * @param align alignment to be used</span></div>
-<div class="line"><a id="l01064" name="l01064"></a><span class="lineno"> 1064</span><span class="comment">     * @param objectSize the size of the object to allocate, might be an array</span></div>
+<div class="line"><a id="l01064" name="l01064"></a><span class="lineno"> 1064</span><span class="comment">     * @param blockSize the size of the memory to allocate, how to deal with it is done by the callbacks</span></div>
 <div class="line"><a id="l01065" name="l01065"></a><span class="lineno"> 1065</span><span class="comment">     * @param copy copy callback function</span></div>
 <div class="line"><a id="l01066" name="l01066"></a><span class="lineno"> 1066</span><span class="comment">     * @param destruct deconstructor callback function</span></div>
 <div class="line"><a id="l01067" name="l01067"></a><span class="lineno"> 1067</span><span class="comment">     * @return</span></div>
 <div class="line"><a id="l01068" name="l01068"></a><span class="lineno"> 1068</span><span class="comment">     */</span></div>
 <div class="line"><a id="l01069" name="l01069"></a><span class="lineno"> 1069</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> C&gt;</div>
-<div class="line"><a id="l01070" name="l01070"></a><span class="lineno"> 1070</span>    T* allocate0(C construct, <span class="keywordtype">size_t</span> align, <span class="keywordtype">size_t</span> objectSize, CopyFunction copy, DestructorFunction destruct)</div>
+<div class="line"><a id="l01070" name="l01070"></a><span class="lineno"> 1070</span>    T* allocate0(C construct, <span class="keywordtype">size_t</span> align, <span class="keywordtype">size_t</span> blockSize, CopyFunction copy, DestructorFunction destruct)</div>
 <div class="line"><a id="l01071" name="l01071"></a><span class="lineno"> 1071</span>    {</div>
 <div class="line"><a id="l01072" name="l01072"></a><span class="lineno"> 1072</span>        std::size_t header_offset = current_offset;</div>
 <div class="line"><a id="l01073" name="l01073"></a><span class="lineno"> 1073</span>        std::size_t object_offset = align_offset(header_offset + HEADER_SIZE, align);</div>
-<div class="line"><a id="l01074" name="l01074"></a><span class="lineno"> 1074</span>        std::size_t required_size = object_offset - header_offset + objectSize;</div>
+<div class="line"><a id="l01074" name="l01074"></a><span class="lineno"> 1074</span>        std::size_t required_size = object_offset - header_offset + blockSize;</div>
 <div class="line"><a id="l01075" name="l01075"></a><span class="lineno"> 1075</span> </div>
-<div class="line"><a id="l01076" name="l01076"></a><span class="lineno"> 1076</span>        std::size_t end_offset = object_offset + objectSize;</div>
+<div class="line"><a id="l01076" name="l01076"></a><span class="lineno"> 1076</span>        std::size_t end_offset = object_offset + blockSize;</div>
 <div class="line"><a id="l01077" name="l01077"></a><span class="lineno"> 1077</span> </div>
 <div class="line"><a id="l01078" name="l01078"></a><span class="lineno"> 1078</span>        <span class="comment">// 1. If the new object does not fit into the current size, we must act</span></div>
 <div class="line"><a id="l01079" name="l01079"></a><span class="lineno"> 1079</span>        <span class="keywordflow">if</span> (end_offset &gt; buffer.size())</div>
@@ -1245,7 +1245,7 @@ $(document).ready(function(){initNavTree('arena__allocator_8hpp_source.html','')
 <div class="line"><a id="l01084" name="l01084"></a><span class="lineno"> 1084</span>                <a class="code hl_function" href="classArenaAllocator.html#aebda68453b0af3b4690fb4fb2ae56432">reallocate</a>(required_size);</div>
 <div class="line"><a id="l01085" name="l01085"></a><span class="lineno"> 1085</span>                header_offset = current_offset;</div>
 <div class="line"><a id="l01086" name="l01086"></a><span class="lineno"> 1086</span>                object_offset = align_offset(header_offset + HEADER_SIZE, align);</div>
-<div class="line"><a id="l01087" name="l01087"></a><span class="lineno"> 1087</span>                end_offset = object_offset + objectSize;</div>
+<div class="line"><a id="l01087" name="l01087"></a><span class="lineno"> 1087</span>                end_offset = object_offset + blockSize;</div>
 <div class="line"><a id="l01088" name="l01088"></a><span class="lineno"> 1088</span>            }</div>
 <div class="line"><a id="l01089" name="l01089"></a><span class="lineno"> 1089</span> </div>
 <div class="line"><a id="l01090" name="l01090"></a><span class="lineno"> 1090</span>            <span class="comment">// 3. In both cases (after reallocate OR if we just had unused capacity left),</span></div>
@@ -1255,7 +1255,7 @@ $(document).ready(function(){initNavTree('arena__allocator_8hpp_source.html','')
 <div class="line"><a id="l01094" name="l01094"></a><span class="lineno"> 1094</span> </div>
 <div class="line"><a id="l01095" name="l01095"></a><span class="lineno"> 1095</span>        <span class="comment">// 4. Construction safely happens within the officially resized vector bounds</span></div>
 <div class="line"><a id="l01096" name="l01096"></a><span class="lineno"> 1096</span>        AllocationHeader&amp; header = *<span class="keyword">reinterpret_cast&lt;</span>AllocationHeader*<span class="keyword">&gt;</span>(buffer.data() + header_offset);</div>
-<div class="line"><a id="l01097" name="l01097"></a><span class="lineno"> 1097</span>        header.size = objectSize;</div>
+<div class="line"><a id="l01097" name="l01097"></a><span class="lineno"> 1097</span>        header.size = blockSize;</div>
 <div class="line"><a id="l01098" name="l01098"></a><span class="lineno"> 1098</span>        header.is_alive = <span class="keyword">true</span>;</div>
 <div class="line"><a id="l01099" name="l01099"></a><span class="lineno"> 1099</span> </div>
 <div class="line"><a id="l01100" name="l01100"></a><span class="lineno"> 1100</span>        <span class="comment">//lightweight mode has no copy and destructor</span></div>
@@ -1589,7 +1589,6 @@ $(document).ready(function(){initNavTree('arena__allocator_8hpp_source.html','')
 <div class="ttc" id="aclassArenaAllocator_html_aeacac709b8b6592bdaa86cc49ab01363"><div class="ttname"><a href="classArenaAllocator.html#aeacac709b8b6592bdaa86cc49ab01363">ArenaAllocator::get_used_bytes</a></div><div class="ttdeci">std::size_t get_used_bytes() const</div><div class="ttdoc">Get the current buffer usage in bytes.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l01224">arena_allocator.hpp:1224</a></div></div>
 <div class="ttc" id="aclassArenaAllocator_html_aebda68453b0af3b4690fb4fb2ae56432"><div class="ttname"><a href="classArenaAllocator.html#aebda68453b0af3b4690fb4fb2ae56432">ArenaAllocator::reallocate</a></div><div class="ttdeci">void reallocate(std::size_t required_size)</div><div class="ttdoc">Reallocate to a larger buffer and move all alive objects.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00562">arena_allocator.hpp:562</a></div></div>
 <div class="ttc" id="aclassArenaAllocator_html_af7735ae942039fca82833cf58f10efa2"><div class="ttname"><a href="classArenaAllocator.html#af7735ae942039fca82833cf58f10efa2">ArenaAllocator::get_instance_count</a></div><div class="ttdeci">std::size_t get_instance_count() const</div><div class="ttdoc">Calculates the total number of alive instances for type T.</div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l01275">arena_allocator.hpp:1275</a></div></div>
-<div class="ttc" id="aclassArenaArrayView_html"><div class="ttname"><a href="classArenaArrayView.html">ArenaArrayView</a></div><div class="ttdef"><b>Definition</b> <a href="arena__allocator__basic_8h_source.html#l00054">arena_allocator_basic.h:55</a></div></div>
 <div class="ttc" id="aclassArenaBufferHandle_html"><div class="ttname"><a href="classArenaBufferHandle.html">ArenaBufferHandle</a></div><div class="ttdef"><b>Definition</b> <a href="arena__allocator_8hpp_source.html#l00021">arena_allocator.hpp:22</a></div></div>
 <div class="ttc" id="aconceptArenaAllocatorConstructable_html"><div class="ttname"><a href="conceptArenaAllocatorConstructable.html">ArenaAllocatorConstructable</a></div><div class="ttdef"><b>Definition</b> <a href="arena__allocator__basic_8h_source.html#l00051">arena_allocator_basic.h:51</a></div></div>
 <div class="ttc" id="aconceptPlainObject_html"><div class="ttname"><a href="conceptPlainObject.html">PlainObject</a></div><div class="ttdef"><b>Definition</b> <a href="arena__allocator__basic_8h_source.html#l00044">arena_allocator_basic.h:44</a></div></div>

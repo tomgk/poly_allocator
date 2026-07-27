@@ -8,6 +8,5 @@ var searchData=
   ['arenaallocator_5',['arenaallocator',['../classArenaAllocator.html',1,'ArenaAllocator&lt; M &gt;'],['../classArenaAllocator.html#a3516a6f11ab860a64859e7eb23ff2246',1,'ArenaAllocator::ArenaAllocator()']]],
   ['arenaallocator_3c_20m_20_3e_6',['ArenaAllocator&lt; M &gt;',['../classArenaAllocator.html',1,'']]],
   ['arenaallocatorconstructable_7',['ArenaAllocatorConstructable',['../conceptArenaAllocatorConstructable.html',1,'']]],
-  ['arenaarrayview_8',['ArenaArrayView',['../classArenaArrayView.html',1,'']]],
-  ['arenabufferhandle_9',['ArenaBufferHandle',['../classArenaBufferHandle.html',1,'']]]
+  ['arenabufferhandle_8',['ArenaBufferHandle',['../classArenaBufferHandle.html',1,'']]]
 ];
