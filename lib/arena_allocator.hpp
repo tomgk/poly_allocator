@@ -884,45 +884,29 @@ private:
         // 2. Eigentliche Logik an die unabhängige Funktion übergeben
         callback::CopyArray<T>(src, dst, element_count, offset);
     }
-    template<typename T>
-    static void Callback_DestructArray_Independent(void* ptr, std::size_t element_count)
-    {
-        // Trivial types (PlainObjects) do not need their destructors called
-        if constexpr (!PlainObject<T>)
-        {
-            if (!ptr || element_count == 0) return;
-
-            T* array_start = reinterpret_cast<T*>(ptr);
-
-            // Destroy elements in reverse order of construction
-            for (std::size_t i = element_count; i > 0; --i)
-            {
-                array_start[i - 1].~T();
-            }
-        }
-    }
 
     template<typename T>
-    static void Callback_DestructArray(void* ptr)
+    static void Callback_DestructNonPODArray(void* ptr)
     {
+        static_assert(!PlainObject<T>);
+
+        if (!ptr)
+            return;
+
 #ifdef ARENA_ALLOCATOR_LOG
         std::cout << "Destruct Array of " << typeid(T).name() << " at " << ptr << std::endl;
 #endif
 
-        // Extract metadata from the AllocationHeader if the type requires destruction
-        if constexpr (!PlainObject<T>)
-        {
-            std::byte* header_ptr = reinterpret_cast<std::byte*>(ptr) - sizeof(AllocationHeader);
-            AllocationHeader* header = reinterpret_cast<AllocationHeader*>(header_ptr);
-            std::size_t element_count = header->size / sizeof(T);
+        std::byte* header_ptr = reinterpret_cast<std::byte*>(ptr) - sizeof(AllocationHeader);
+        AllocationHeader* header = reinterpret_cast<AllocationHeader*>(header_ptr);
+        std::size_t element_count = header->size / sizeof(T);
 
-            // Delegate to the independent implementation
-            Callback_DestructArray_Independent<T>(ptr, element_count);
-        }
-        else
+        T* array_start = reinterpret_cast<T*>(ptr);
+
+        // Destroy elements in reverse order of construction
+        for (std::size_t i = element_count; i > 0; --i)
         {
-            // For trivial types, we can skip header extraction and pass 0 elements
-            Callback_DestructArray_Independent<T>(ptr, 0);
+            array_start[i - 1].~T();
         }
     }
 
@@ -998,7 +982,9 @@ public:
         };
 
         CopyFunction copy = Callback_CopyArray<T>;
-        DestructorFunction destruct = Callback_DestructArray<T>;
+        DestructorFunction destruct = nullptr;
+        if constexpr(!PlainObject<T>)
+            destruct = Callback_DestructNonPODArray<T>;
 
         T* raw_ptr = allocate0<T>(construct, alignof(T), objectSize, copy, destruct);
         return {this, getOffset(raw_ptr), count};
@@ -1027,7 +1013,9 @@ public:
             return array_start;
         };
         CopyFunction copy = Callback_CopyArray<T>;
-        DestructorFunction destruct = Callback_DestructArray<T>;
+        DestructorFunction destruct = nullptr;
+        if constexpr(!PlainObject<T>)
+            destruct = Callback_DestructNonPODArray<T>;
 
         T* raw_ptr = allocate0<T>(construct, alignof(T), objectSize, copy, destruct);
         return ArenaArrayResult<T>(raw_ptr, count);
