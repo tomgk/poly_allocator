@@ -11,5 +11,5 @@ var searchData=
   ['get_5ftotal_5fbytes_5ffor_5ftype_8',['get_total_bytes_for_type',['../classArenaAllocator.html#a286a7c27d0e68a1765dc66a440f362b3',1,'ArenaAllocator']]],
   ['get_5ftype_5finfo_9',['get_type_info',['../classArenaAllocator.html#a37a5d3a32ff5077cb307e6326e4ea0b8',1,'ArenaAllocator']]],
   ['get_5fused_5fbytes_10',['get_used_bytes',['../classArenaAllocator.html#aeacac709b8b6592bdaa86cc49ab01363',1,'ArenaAllocator']]],
-  ['getarraycount_11',['getArrayCount',['../classArenaAllocator.html#a5b2bac56526e9399c6ecb83bbc2ec5b9',1,'ArenaAllocator']]]
+  ['getarraycount_11',['getArrayCount',['../classArenaAllocator.html#aaf15d330cc091eb18b68a17fc0cfd972',1,'ArenaAllocator']]]
 ];
