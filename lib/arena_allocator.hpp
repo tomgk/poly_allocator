@@ -999,26 +999,36 @@ public:
      * @return ArenaArrayResult wrapping the pointer and the element count
      */
     template <ArenaAllocatorConstructable T>
-    ArenaArrayResult<T> allocateArray(std::size_t count, const T& value) requires std::is_copy_constructible_v<T>
+    ArenaBufferHandle<M, T> allocateArray(std::size_t count, const T& value) requires std::is_copy_constructible_v<T>
     {
         if (count == 0)
-            return ArenaArrayResult<T>();
+            return {};
 
         std::size_t objectSize = count * sizeof(T);
 
+        // ZURÜCK AUF REFERENZ: Verhindert die 2 ungewollten Stack-Kopien für den Tracker-Zähler
         auto construct = [count, &value](void* ptr)
         {
             T* array_start = reinterpret_cast<T*>(ptr);
             std::uninitialized_fill_n(array_start, count, value);
             return array_start;
         };
+
         CopyFunction copy = Callback_CopyArray<T>;
         DestructorFunction destruct = nullptr;
         if constexpr(!PlainObject<T>)
             destruct = Callback_DestructNonPODArray<T>;
 
+        // allocate0 führt das Lambda synchron aus
         T* raw_ptr = allocate0<T>(construct, alignof(T), objectSize, copy, destruct);
-        return ArenaArrayResult<T>(raw_ptr, count);
+
+        // Synchronisiere die Array-Metadaten für deallocate() und getArrayCount()
+        std::size_t obj_offset = static_cast<std::byte*>(static_cast<void*>(raw_ptr)) - buffer.data();
+        AllocationHeader& header = get_header(obj_offset - HEADER_SIZE);
+        header.size = objectSize;
+        header.is_alive = true;
+
+        return {this, obj_offset - HEADER_SIZE, count};
     }
 
     /**
@@ -1035,25 +1045,16 @@ public:
      * @return number of elements or 0 if nullptr gets passed
      */
     template <typename T>
-    std::size_t getArrayCount(const T* ptr) const
+    std::size_t getArrayCount(const void* ptr) const
     {
-        if (!ptr)
-            return 0;
+        if (!ptr || !contains(ptr)) return 0;
 
-        //access header which is before array
-        const std::byte* header_ptr = reinterpret_cast<const std::byte*>(ptr) - HEADER_SIZE;
-        const AllocationHeader* header = reinterpret_cast<const AllocationHeader*>(header_ptr);
+        const std::byte* byte_ptr = reinterpret_cast<const std::byte*>(ptr);
+        std::size_t obj_offset = byte_ptr - buffer.data();
+        const AllocationHeader& header = get_header(obj_offset - HEADER_SIZE);
 
-        //optional runtime check to see if the function was called with the wrong type
-        if constexpr (StoreTypeInfo)
-        {
-            if (header->type_info && *header->type_info != typeid(T))
-            {
-                throw std::invalid_argument("ArenaAllocator: ArrayCount was called with wrong type");
-            }
-        }
-
-        return header->size / sizeof(T);
+        // Berechnet die Elementanzahl anhand der im Header gespeicherten Bytegröße
+        return header.size / sizeof(T);
     }
 
 private:

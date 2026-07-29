@@ -133,7 +133,7 @@ TEST_F(ArenaArrayViewAdvancedTest, ValueInitializationDeepCopyTest)
     std::size_t count = 4;
 
     // Act: Create view where every slot is initialized with a copy of blueprint
-    ArenaArrayResult<ElementTracker> view = arena.allocateArray<ElementTracker>(count, blueprint);
+    auto view = arena.allocateArray<ElementTracker>(count, blueprint);
 
     // Assert: The copy constructor must have been called exactly 'count' times
     EXPECT_EQ(ElementTracker::copies, static_cast<int>(count));
