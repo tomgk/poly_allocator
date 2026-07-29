@@ -1095,6 +1095,10 @@ private:
 
         // 4. Construction safely happens within the officially resized vector bounds
         AllocationHeader& header = *reinterpret_cast<AllocationHeader*>(buffer.data() + header_offset);
+
+        //construct first, if it throws an exception the allocation block won't be used
+        T* obj = construct(buffer.data() + object_offset);
+
         header.size = blockSize;
         header.is_alive = true;
 
@@ -1107,8 +1111,6 @@ private:
 
         if constexpr (StoreTypeInfo)
             header.type_info = &typeid(T);
-
-        T* obj = construct(buffer.data() + object_offset);
 
 #ifdef ARENA_ALLOCATOR_LOG
         std::cout << "Construct " << typeid(T).name() << " " << (void*)obj << std::endl;
