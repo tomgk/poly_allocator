@@ -93,6 +93,50 @@ public:
     std::size_t get_offset() const noexcept { return m_offset; }
 };
 
+//NOT USED YET because unit tests fail after it gets used
+/**
+ * @brief A custom stateless allocator specialized for std::byte that bypasses
+ *        value-initialization during std::vector::resize calls.
+ */
+struct ArenaByteAllocator
+{
+    using value_type = std::byte;
+
+    // Fix for GCC/MinGW: Explicitly define the rebind structure so the STL
+    // knows that any rebind request always yields ArenaByteAllocator.
+    template <typename U>
+    struct rebind {
+        using other = ArenaByteAllocator;
+    };
+
+    ArenaByteAllocator() noexcept = default;
+
+    // Corrected templated copy constructor for allocator copying
+    template <typename U>
+    constexpr ArenaByteAllocator(const ArenaByteAllocator&) noexcept {}
+
+    [[nodiscard]] std::byte* allocate(std::size_t n)
+    {
+        return static_cast<std::byte*>(::operator new(n * sizeof(std::byte)));
+    }
+
+    void deallocate(std::byte* p, std::size_t n) noexcept
+    {
+        ::operator delete(static_cast<void*>(p), n);
+    }
+
+    // The core optimization: replacing the standard construct routine with a no-op.
+    // This stops std::vector from zero-initializing bytes during resize().
+    template <typename U, typename... Args>
+    void construct(U*, Args&&...) noexcept
+    {
+
+    }
+
+    bool operator==(const ArenaByteAllocator&) const noexcept { return true; }
+    bool operator!=(const ArenaByteAllocator&) const noexcept { return false; }
+};
+
 /**
  * @brief A growth-based arena allocator that stores objects in contiguous memory.
  * 
