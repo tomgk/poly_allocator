@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['iteratorimpl_0',['IteratorImpl',['../classArenaAllocator_1_1IteratorImpl.html',1,'ArenaAllocator']]]
+  ['rebind_0',['rebind',['../structArenaByteAllocator_1_1rebind.html',1,'ArenaByteAllocator']]]
 ];

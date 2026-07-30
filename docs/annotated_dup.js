@@ -1,5 +1,6 @@
 var annotated_dup =
 [
     [ "ArenaAllocator", "classArenaAllocator.html", "classArenaAllocator" ],
-    [ "ArenaBufferHandle", "classArenaBufferHandle.html", null ]
+    [ "ArenaBufferHandle", "classArenaBufferHandle.html", null ],
+    [ "ArenaByteAllocator", "structArenaByteAllocator.html", "structArenaByteAllocator" ]
 ];
